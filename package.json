@@ -9,7 +9,23 @@
     "start": "next start",
     "lint": "next lint"
   },
+  "contributes": {
+    "grammars": [
+      {
+        "scopeName": "mdx.mermaid.codeblock",
+        "path": "./syntaxes/mdx.mermaid.tmLanguage.json",
+        "injectTo": [
+          "source.mdx"
+        ],
+        "embeddedLanguages": {
+          "source.mermaid": "mermaid"
+        }
+      }
+    ]
+  },
   "dependencies": {
+    "@mdx-js/language-server": "^0.5.0",
+    "@mdx-js/language-service": "^0.6.0",
     "clsx": "^2.1.1",
     "contentlayer2": "^0.5.3",
     "date-fns": "^4.1.0",
@@ -17,9 +33,15 @@
     "next-contentlayer2": "^0.5.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "rehype-autolink-headings": "^7.1.0",
+    "rehype-pretty-code": "^0.14.0",
+    "remark-alerts": "^0.0.1",
+    "remark-gfm": "^4.0.0",
     "tailwind-merge": "^2.5.5"
   },
   "devDependencies": {
+    "@shikijs/rehype": "^1.24.0",
+    "@tailwindcss/typography": "^0.5.15",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "@types/mdx": "^2.0.13",
     "@types/node": "^20",
@@ -30,6 +52,8 @@
     "eslint-config-next": "15.0.3",
     "postcss": "^8",
     "prettier": "^3.3.3",
+    "remark-github-blockquote-alert": "^1.3.0",
+    "shiki": "^1.24.0",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   }

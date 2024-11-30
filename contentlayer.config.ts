@@ -1,61 +1,10 @@
 import { defineDocumentType, makeSource } from "contentlayer2/source-files";
-
-// https://contentlayer.dev/docs/sources/files/mdx-d747e46d
-// const Post = defineDocumentType(() => ({
-//   name: "Post",
-//   // filePathPattern: "Post/**/*.mdx",
-//   // contentType: "mdx",
-//   // fields: {
-//   //   title: { type: "string", required: true },
-//   //   date: { type: "date", required: true },
-//   //   categories: { type: "list", of: { type: "string" }, default: [] },
-//   //   draft: { type: "boolean" },
-//   //   featured: { type: "boolean" },
-//   //   ["featured-image"]: { type: "string", required: true },
-//   //   layout: { type: "string" },
-//   //   canonicalUrl: { type: "string" },
-//   // },
-//   // computedFields: {
-//   //   slug: {
-//   //     type: "string",
-//   //     resolve: (doc) => doc._raw.flattenedPath.replace(/^.+?(\/)/, ""),
-//   //   },
-//   //   path: {
-//   //     type: "string",
-//   //     resolve: (doc) => doc._raw.flattenedPath,
-//   //   },
-//   //   filePath: {
-//   //     type: "string",
-//   //     resolve: (doc) => doc._raw.sourceFilePath,
-//   //   },
-//   //   url: {
-//   //     type: "string",
-//   //     resolve: (blog) => `/blog/${blog._raw.flattenedPath}`,
-//   //   },
-//   // },
-//   filePathPattern: `blog/**/*.md`,
-//   fields: {
-//     title: { type: "string", required: true },
-//     date: { type: "date", required: true },
-//   },
-//   computedFields: {
-//     url: {
-//       type: "string",
-//       resolve: (post) => `/blog/${post._raw.flattenedPath}`,
-//     },
-//   },
-// }));
-
-// export default makeSource({
-//   contentDirPath: "posts",
-//   mdx: {
-//     // plugins etc.
-//     // cwd: process.cwd(),
-//   },
-//   documentTypes: [Post],
-// });
-
-//
+import { remarkAlert } from "remark-github-blockquote-alert";
+import rehypePrettyCode, {
+  type Options as PrettyCodeOptions,
+} from "rehype-pretty-code";
+import remarkGfm from "remark-gfm";
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
 
 const Blog = defineDocumentType(() => ({
   name: "Blog",
@@ -86,10 +35,31 @@ const Blog = defineDocumentType(() => ({
   },
 }));
 
+const prettyCodeOptions: PrettyCodeOptions = {
+  theme: "slack-dark",
+  grid: false,
+  onVisitHighlightedChars(node) {
+    node.properties.className = ["word"];
+  },
+};
+
 export default makeSource({
   contentDirPath: "blog",
   mdx: {
-    // cwd: process.cwd(),
+    remarkPlugins: [remarkAlert, remarkGfm],
+    rehypePlugins: [
+      [rehypePrettyCode, prettyCodeOptions],
+      [
+        rehypeAutolinkHeadings,
+        {
+          behavior: "prepend",
+          headingProperties: {
+            className: ["content-header"],
+          },
+          content: "tag",
+        },
+      ],
+    ],
   },
   documentTypes: [Blog],
 });

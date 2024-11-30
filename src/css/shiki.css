@@ -1,0 +1,49 @@
+/**
+ * CSS Styles for code highlighting.
+ * [rehype-pretty-code](https://rehype-pretty.pages.dev/) is the plugin used for code formatting.
+ */
+
+code {
+  @apply min-w-full;
+}
+/* Highlight lines/words */
+[data-highlighted-line] {
+  display: inline-block;
+  @apply -mx-4 border-l-4 border-neutral-300 bg-neutral-600 bg-opacity-50 pl-3 w-[calc(100%+16px+1rem)];
+}
+
+[data-highlight-line]::after {
+  @apply content-[''] block bg-neutral-500 size-2.5 mr-2.5;
+}
+
+code[data-line-numbers] {
+  counter-reset: line;
+}
+
+code[data-line-numbers] > [data-line]::before {
+  counter-increment: line;
+  content: counter(line);
+
+  /* Other styling */
+  display: inline-block;
+  width: 0.75rem;
+  margin-right: 2rem;
+  text-align: right;
+  color: gray;
+}
+
+code[data-line-numbers-max-digits="2"] > [data-line]::before {
+  width: 1.25rem;
+}
+
+code[data-line-numbers-max-digits="3"] > [data-line]::before {
+  width: 1.75rem;
+}
+
+code[data-line-numbers-max-digits="4"] > [data-line]::before {
+  width: 2.25rem;
+}
+
+[data-rehype-pretty-code-title] {
+  @apply rounded-t bg-gradient-to-b from-neutral-600 to-neutral-800/80 px-4 py-3 font-mono text-xs font-bold text-neutral-300;
+}

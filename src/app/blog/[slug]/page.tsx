@@ -1,6 +1,9 @@
 import { getMDXComponent } from "next-contentlayer2/hooks";
 import { notFound } from "next/navigation";
 
+import "@/css/shiki.css";
+import "remark-github-blockquote-alert/alert.css";
+
 import { format, parseISO } from "date-fns";
 
 import { components } from "@/components/mdx-components";
@@ -29,7 +32,7 @@ export default async function Post({ params }: PostPageProps) {
   const MDXContent = getMDXComponent(post.body.code);
 
   return (
-    <article className="py-8 mx-auto max-w-xl">
+    <article className="prose prose-neutral prose-invert py-8 mx-auto max-w-xl">
       <div className="mb-8 text-center">
         <time dateTime={post.date} className="mb-1 text-sm text-neutral-400 ">
           {format(parseISO(post.date), "LLLL d, yyyy")}

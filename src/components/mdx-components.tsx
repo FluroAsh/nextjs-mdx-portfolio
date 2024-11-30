@@ -1,7 +1,8 @@
 import type { MDXComponents } from "mdx/types";
+import { Pre } from "./pre";
+// import Image from "next/image";
 
 export const components: MDXComponents = {
-  pre: (props) => (
-    <pre className="bg-slate-800 p-4 mt-2 rounded-sm" {...props} />
-  ),
+  pre: Pre,
+  // Image: (props) => <Image {...props} />,
 };
