@@ -31,7 +31,7 @@ export default function RootLayout({
         className={cn(
           `${geistSans.variable} ${geistMono.variable} antialiased text-white`,
           "before:pointer-events-none before:content-[''] before:bg-[url('/static/images/otis-redding.png')] before:bg-repeat before:bg-[length:150px]",
-          "before:absolute before:inset-0 before:opacity-[25%]",
+          "before:fixed before:inset-0 before:opacity-[25%]",
         )}
       >
         {children}

@@ -3,9 +3,6 @@
  * [rehype-pretty-code](https://rehype-pretty.pages.dev/) is the plugin used for code formatting.
  */
 
-code {
-  @apply min-w-full;
-}
 /* Highlight lines/words */
 [data-highlighted-line] {
   display: inline-block;
