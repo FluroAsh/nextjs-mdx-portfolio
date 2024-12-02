@@ -39,7 +39,9 @@ export default async function Post({ params }: PostPageProps) {
         </time>
         <h1 className="text-3xl">{post.title}</h1>
       </div>
+
       <MDXContent components={components} />
+
       <div className="pt-2">
         <Link className="underline text-sky-500" href="/blog">
           Back to Blog
