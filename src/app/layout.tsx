@@ -34,7 +34,13 @@ export default function RootLayout({
           "before:fixed before:inset-0 before:opacity-[25%]",
         )}
       >
+        <header />
         {children}
+        <footer>
+          <p>X</p>
+          <p>LinkedIn</p>
+          <p>Github</p>
+        </footer>
       </body>
     </html>
   );

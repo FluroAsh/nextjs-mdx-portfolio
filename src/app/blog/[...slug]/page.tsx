@@ -1,29 +1,31 @@
 import { getMDXComponent } from "next-contentlayer2/hooks";
 import { notFound } from "next/navigation";
+import Link from "next/link";
 
 import "@/css/shiki.css";
 import "remark-github-blockquote-alert/alert.css";
 
 import { format, parseISO } from "date-fns";
 
-import { components } from "@/components/mdx-components";
 import { allBlogs } from "contentlayer/generated";
-import Link from "next/link";
+import { components } from "@/components/mdx-components";
 
 type PostPageProps = {
   params: {
-    slug: string;
+    slug: string[];
   };
 };
 
 export async function generateStaticParams() {
-  return allBlogs.map((post) => ({
-    slug: post.slug,
+  return allBlogs.map((p) => ({
+    slug: p.slug.split("/").map((name) => decodeURI(name)),
   }));
 }
 
-export default async function Post({ params }: PostPageProps) {
-  const post = allBlogs.find((post) => post.slug === params.slug);
+export default async function Post(props: PostPageProps) {
+  const params = await props.params;
+  const slug = decodeURI(params.slug.join("/"));
+  const post = allBlogs.find((post) => post.slug === slug);
 
   if (!post) {
     return notFound();

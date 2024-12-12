@@ -1,5 +1,7 @@
-import type { MDXComponents } from "mdx/types";
-// import Image from "next/image";
+import { type MDXComponents } from "mdx/types";
+import Image, { type ImageProps } from "next/image";
+
+const basePath = process.env.BASE_PATH;
 
 export const components: MDXComponents = {
   pre: (props: React.ComponentPropsWithoutRef<"pre">) => (
@@ -8,5 +10,7 @@ export const components: MDXComponents = {
       {...props}
     />
   ),
-  // Image: (props) => <Image {...props} />,
+  Image: ({ src, ...rest }: ImageProps) => (
+    <Image src={`${basePath || ""}${src}`} {...rest} />
+  ),
 };
