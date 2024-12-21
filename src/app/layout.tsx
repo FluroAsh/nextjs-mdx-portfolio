@@ -24,8 +24,8 @@ const BackgroundOverlay = ({ children }: { children: React.ReactNode }) => (
   <div
     className={cn(
       "before:pointer-events-none after:pointer-events-none before:content-[''] before:bg-[url('/static/images/green-dust-and-scratches.png')] before:bg-repeat",
-      "before:fixed before:inset-0 before:opacity-30",
-      "after:content-[''] after:fixed after:inset-0 after:bg-gradient-to-t after:from-transparent after:to-neutral-900/50 after:z-[-1]",
+      "before:absolute before:inset-0 before:min-h-full before:opacity-30",
+      "after:content-[''] after:absolute after:inset-0 after:bg-gradient-to-t after:from-transparent after:to-lime-900/10 after:z-[-1]",
     )}
   >
     {children}
@@ -40,7 +40,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased text-white`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased text-white relative`}
       >
         <BackgroundOverlay>
           <header />

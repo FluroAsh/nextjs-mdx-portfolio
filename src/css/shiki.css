@@ -5,11 +5,7 @@
 
 /* Highlight lines/words */
 [data-highlighted-line] {
-  @apply inline-block -mx-4 border-l-4 border-green-500 bg-neutral-600/50 pl-3 w-[calc(100%+1rem*2)];
-}
-
-[data-highlight-line]::after {
-  @apply content-[''] block bg-neutral-500 size-2.5 mr-2.5;
+  @apply inline-block -mx-4 border-l-4 border-green-500 bg-green-500/5 pl-3 w-[calc(100%+1rem*2)];
 }
 
 code[data-line-numbers] {
@@ -19,7 +15,7 @@ code[data-line-numbers] {
 code[data-line-numbers] > [data-line]::before {
   counter-increment: line;
   content: counter(line);
-  @apply inline-block mr-8 text-right w-3 text-green-600 text-opacity-80;
+  @apply inline-block mr-8 text-right w-3 text-green-500;
 }
 
 code[data-line-numbers-max-digits="2"] > [data-line]::before {
@@ -35,5 +31,5 @@ code[data-line-numbers-max-digits="4"] > [data-line]::before {
 }
 
 [data-rehype-pretty-code-title] {
-  @apply rounded-t bg-gradient-to-b from-neutral-600 font-mono to-neutral-800 px-4 py-2 text-xs font-bold text-neutral-300 relative z-10;
+  @apply rounded-t font-mono bg-gradient-to-b from-neutral-700 to-neutral-800 px-4 py-2 text-xs font-bold text-neutral-100 relative z-10;
 }
