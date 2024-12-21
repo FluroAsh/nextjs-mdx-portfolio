@@ -51,7 +51,7 @@ const Blog = defineDocumentType(() => ({
 }));
 
 const prettyCodeOptions: PrettyCodeOptions = {
-  theme: "slack-dark",
+  theme: "vitesse-dark",
   grid: false,
   onVisitHighlightedChars(node) {
     node.properties.className = ["word"];

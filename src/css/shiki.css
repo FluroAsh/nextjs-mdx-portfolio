@@ -5,8 +5,7 @@
 
 /* Highlight lines/words */
 [data-highlighted-line] {
-  display: inline-block;
-  @apply -mx-4 border-l-4 border-neutral-300 bg-neutral-600 bg-opacity-50 pl-3 w-[calc(100%+16px+1rem)];
+  @apply inline-block -mx-4 border-l-4 border-green-500 bg-neutral-600/50 pl-3 w-[calc(100%+1rem*2)];
 }
 
 [data-highlight-line]::after {
@@ -20,13 +19,7 @@ code[data-line-numbers] {
 code[data-line-numbers] > [data-line]::before {
   counter-increment: line;
   content: counter(line);
-
-  /* Other styling */
-  display: inline-block;
-  width: 0.75rem;
-  margin-right: 2rem;
-  text-align: right;
-  color: gray;
+  @apply inline-block mr-8 text-right w-3 text-green-600 text-opacity-80;
 }
 
 code[data-line-numbers-max-digits="2"] > [data-line]::before {
@@ -42,5 +35,5 @@ code[data-line-numbers-max-digits="4"] > [data-line]::before {
 }
 
 [data-rehype-pretty-code-title] {
-  @apply rounded-t bg-gradient-to-b from-neutral-600 to-neutral-800/80 px-4 py-3 font-mono text-xs font-bold text-neutral-300;
+  @apply rounded-t bg-gradient-to-b from-neutral-600 font-mono to-neutral-800 px-4 py-2 text-xs font-bold text-neutral-300 relative z-10;
 }
