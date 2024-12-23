@@ -26,17 +26,17 @@ body {
   @apply relative scroll-m-4 leading-none;
 }
 .content-header .link-icon {
-  @apply pr-1 opacity-0 fill-sky-600 transition;
+  @apply pr-1 opacity-0 fill-green-600 transition;
 }
 .content-header:hover .link-icon {
   @apply opacity-100;
 }
 
 .link-icon {
-  @apply transition fill-sky-600;
+  @apply transition fill-green-600;
 }
 .link-icon:hover {
-  @apply fill-sky-400 opacity-100;
+  @apply fill-green-400 opacity-100;
 }
 
 .content-header-link {

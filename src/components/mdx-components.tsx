@@ -6,7 +6,7 @@ const basePath = process.env.BASE_PATH;
 export const components: MDXComponents = {
   pre: (props: React.ComponentPropsWithoutRef<"pre">) => (
     <pre
-      className="p-4 not-prose text-sm font-mono rounded-md relative bottom-1"
+      className="p-4 not-prose text-sm font-mono rounded-md relative bottom-1 shadow-pre shadow-green-600/80"
       {...props}
     />
   ),
