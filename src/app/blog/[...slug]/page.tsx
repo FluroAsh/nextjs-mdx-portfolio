@@ -1,14 +1,12 @@
 import { getMDXComponent } from "next-contentlayer2/hooks";
 import { notFound } from "next/navigation";
-import Link from "next/link";
 
 import "@/css/shiki.css";
 import "remark-github-blockquote-alert/alert.css";
 
-import { format, parseISO } from "date-fns";
-
 import { allBlogs } from "contentlayer/generated";
-import { components } from "@/components/mdx-components";
+import { components as mdxComponents } from "@/components/mdx-components";
+import PostLayout from "@/layouts/post-layout";
 
 type PostPageProps = {
   params: {
@@ -33,22 +31,29 @@ export default async function Post(props: PostPageProps) {
 
   const MDXContent = getMDXComponent(post.body.code);
 
+  // TODO: Author details
+  // TODO: Footnotes
+
   return (
-    <article className="prose prose-neutral prose-invert py-8 mx-auto max-w-xl">
-      <div className="mb-8 text-center">
-        <time dateTime={post.date} className="mb-1 text-sm text-neutral-400 ">
-          {format(parseISO(post.date), "LLLL d, yyyy")}
-        </time>
-        <h1 className="text-3xl">{post.title}</h1>
-      </div>
+    <PostLayout post={post}>
+      <MDXContent components={mdxComponents} />
+    </PostLayout>
 
-      <MDXContent components={components} />
+    // <article className="mx-auto pb-2">
+    //   <header className="text-center py-2 pb-0">
+    //     <h1 className="text-3xl font-bold">{post.title}</h1>
+    //     <time dateTime={post.date} className="text-sm text-neutral-400 ">
+    //       {format(parseISO(post.date), "LLLL d, yyyy")}
+    //     </time>
+    //   </header>
+    //   <hr className="mb-2" />
 
-      <div className="pt-2">
-        <Link className="underline text-sky-500" href="/blog">
-          Back to Blog
-        </Link>
-      </div>
-    </article>
+    //   <div className="flex">
+    //     {/* <SideBar /> */}
+    //     <div className="prose prose-invert">
+    //       <MDXContent components={components} />
+    //     </div>
+    //   </div>
+    // </article>
   );
 }

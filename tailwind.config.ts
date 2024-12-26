@@ -9,10 +9,17 @@ export default {
   ],
   theme: {
     extend: {
+      typography: {
+        DEFAULT: {
+          css: {
+            maxWidth: "80ch", // 80 characters by default
+          },
+        },
+      },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
-        // Temp Theme Colors
+        // Theme Colors
         primary: "#BFE81C",
         secondary: "#B0C84E",
         white: "#FEFEFE",

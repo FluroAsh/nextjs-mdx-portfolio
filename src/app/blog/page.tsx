@@ -1,4 +1,5 @@
 import { allBlogs } from "contentlayer/generated";
+import Link from "next/link";
 
 export default async function Page() {
   return (
@@ -12,9 +13,9 @@ export default async function Page() {
         {allBlogs.map((post) => (
           <div key={post._id} className="flex-1 bg-neutral-600 p-4">
             <p className="">{post.title}</p>
-            <a className="text-sky-500 underline" href={post.url}>
+            <Link className="text-sky-500 underline" href={post.url}>
               Read More
-            </a>
+            </Link>
           </div>
         ))}
       </div>

@@ -21,6 +21,10 @@ body {
   margin-top: 0;
 }
 
+::selection {
+  @apply bg-green-600 text-white;
+}
+
 /* ---- Anchor Link Styles ---- */
 .content-header {
   @apply relative scroll-m-4 leading-none;
@@ -29,7 +33,7 @@ body {
   @apply pr-1 opacity-0 fill-green-600 transition;
 }
 .content-header:hover .link-icon {
-  @apply opacity-100;
+  opacity: 100%;
 }
 
 .link-icon {
@@ -45,4 +49,9 @@ body {
 
 .content-header .content-header-link > svg {
   @apply h-full w-8;
+}
+
+/* ---- Prose Overrides ---- */
+.prose h1:first-child {
+  @apply mt-2;
 }
