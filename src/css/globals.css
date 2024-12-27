@@ -55,3 +55,19 @@ body {
 .prose h1:first-child {
   @apply mt-2;
 }
+
+/* ---- Progressive Enhancements ---- */
+/* ---- Webkit ---- */
+
+::-webkit-scrollbar {
+  display: block;
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-neutral-900;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-green-800 rounded-full hover:bg-green-700 h-10;
+}

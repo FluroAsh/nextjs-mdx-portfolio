@@ -46,9 +46,9 @@ export default function RootLayout({
           <div className="page-inner min-h-screen flex flex-col">
             <BackgroundOverlay />
             <header />
-            <div className="flex-1 flex justify-center flex-grow [&>div]:w-full">
+            <main className="flex-1 flex justify-center flex-grow [&>div]:w-full">
               {children}
-            </div>
+            </main>
             <Footer />
           </div>
         </div>
