@@ -31,5 +31,5 @@ code[data-line-numbers-max-digits="4"] > [data-line]::before {
 }
 
 [data-rehype-pretty-code-title] {
-  @apply rounded-t font-mono bg-gradient-to-b from-neutral-700 to-neutral-800 px-4 py-2 text-xs font-bold text-neutral-100 relative z-10;
+  @apply bg-green-800 relative z-10 p-2 px-4 rounded-tl-md rounded-tr-md text-white font-mono font-bold;
 }
