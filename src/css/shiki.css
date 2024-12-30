@@ -5,7 +5,7 @@
 
 /* Highlight lines/words */
 [data-highlighted-line] {
-  @apply inline-block -mx-4 border-l-4 border-green-600 bg-green-500/5 pl-3 w-[calc(100%+1rem*2)];
+  @apply inline-block -mx-4 border-l-4 border-secondary bg-green-500/5 pl-3 w-[calc(100%+1rem*2)];
 }
 
 code[data-line-numbers] {
