@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
+import { catamaran, firaSans } from "./fonts";
 import "@/css/globals.css";
 
 import { cn } from "@/lib/utils";
@@ -20,38 +20,6 @@ const BackgroundOverlay = () => (
     )}
   />
 );
-
-const catamaran = localFont({
-  src: [
-    {
-      path: "./fonts/Catamaran-Medium.ttf",
-      weight: "500",
-    },
-    {
-      path: "./fonts/Catamaran-SemiBold.ttf",
-      weight: "600",
-    },
-    {
-      path: "./fonts/Catamaran-Bold.ttf",
-      weight: "700",
-    },
-  ],
-  variable: "--font-catamaran",
-});
-
-const firaSans = localFont({
-  src: [
-    {
-      path: "./fonts/FiraSans-Medium.ttf",
-      weight: "500",
-    },
-    {
-      path: "./fonts/FiraSans-Bold.ttf",
-      weight: "700",
-    },
-  ],
-  variable: "--font-fira-sans",
-});
 
 export default function RootLayout({
   children,
