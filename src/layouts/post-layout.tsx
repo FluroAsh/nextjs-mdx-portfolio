@@ -35,7 +35,7 @@ export default function PostLayout({
 
         <div className="flex">
           <SideBar />
-          <article className=" prose prose-invert">{children}</article>
+          <article className="prose prose-invert">{children}</article>
         </div>
       </div>
     </div>

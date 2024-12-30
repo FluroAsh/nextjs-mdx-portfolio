@@ -1,7 +1,6 @@
 import { withContentlayer } from "next-contentlayer2";
 
 const nextConfig = {
-  // output: "export",
   images: {
     remotePatterns: [
       {
@@ -9,6 +8,19 @@ const nextConfig = {
         hostname: "images.unsplash.com",
       },
     ],
+  },
+  async rewrites() {
+    return [
+      {
+        // TODO: Store images in a S3 bucket via a CloudFront distribution
+        source: "/images/:path*",
+        destination: "https://your-s3-bucket.s3.amazonaws.com/images/:path*",
+      },
+      {
+        source: "/static/:path*",
+        destination: "/static/:path*", // Serve static content from the local /static directory
+      },
+    ];
   },
 };
 

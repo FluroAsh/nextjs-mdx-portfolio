@@ -28,8 +28,6 @@ export default async function Post(props: PostPageProps) {
 
   const MDXContent = getMDXComponent(post.body.code);
 
-  // TODO: Author details
-
   return (
     <PostLayout post={post}>
       <MDXContent components={mdxComponents} />
