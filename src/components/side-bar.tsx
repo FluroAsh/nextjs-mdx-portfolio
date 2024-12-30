@@ -2,14 +2,14 @@ import Link from "next/link";
 import clsx from "clsx";
 
 import { type Networks, NETWORKS } from "@/data/site-metadata";
-import { GitHub, Instagram, LinkedIn, X } from "./social-icons";
+import * as SocialIcons from "./social-icons";
 import Image from "next/image";
 
-const SocialIcons = {
-  [NETWORKS.X]: X,
-  [NETWORKS.LinkedIn]: LinkedIn,
-  [NETWORKS.GitHub]: GitHub,
-  [NETWORKS.Instagram]: Instagram,
+const SocialIconMap = {
+  [NETWORKS.X]: SocialIcons.X,
+  [NETWORKS.LinkedIn]: SocialIcons.LinkedIn,
+  [NETWORKS.GitHub]: SocialIcons.GitHub,
+  [NETWORKS.Instagram]: SocialIcons.Instagram,
 };
 
 const PostAuthor = ({
@@ -43,7 +43,7 @@ const PostAuthor = ({
           )}
         >
           {socials.map(({ handle, network }) => {
-            const IconComponent = SocialIcons[network];
+            const IconComponent = SocialIconMap[network];
 
             return (
               <a
