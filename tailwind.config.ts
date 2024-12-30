@@ -1,3 +1,4 @@
+import theme from "tailwindcss/defaultTheme";
 import type { Config } from "tailwindcss";
 import tailwindTypography from "@tailwindcss/typography";
 
@@ -10,6 +11,11 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        firaSans: ["var(--font-fira-sans)", ...theme.fontFamily.sans],
+        catamaran: ["var(--font-catamaran)", ...theme.fontFamily.sans],
+        ...theme.fontFamily,
+      },
       typography: {
         DEFAULT: {
           css: {

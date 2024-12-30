@@ -14,7 +14,7 @@ html {
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  @apply font-catamaran;
 }
 
 .markdown-alert-title {
@@ -23,6 +23,12 @@ body {
 
 ::selection {
   @apply bg-green-600 text-white;
+}
+
+h1,
+h2,
+h3 {
+  @apply font-firaSans;
 }
 
 /* ---- Anchor Link Styles ---- */
