@@ -110,7 +110,9 @@ const PreviousArticle = ({
 const TableOfContents = () => {
   return (
     <nav className="sticky top-4 my-4 px-2">
-      <h2 className="text-lg font-bold mb-2 uppercase">Table of Contents</h2>
+      <h2 className="text-lg font-bold mb-2 uppercase tracking-tight">
+        Contents
+      </h2>
       <ul className="list-inside list-decimal tracking-wide">
         <li className="mb-2">
           Heading 1
