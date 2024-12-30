@@ -5,13 +5,12 @@ import { type Networks, NETWORKS } from "@/data/site-metadata";
 import { GitHub, Instagram, LinkedIn, X } from "./social-icons";
 import Image from "next/image";
 
-const SocialIcons = (className: string) =>
-  ({
-    [NETWORKS.X]: <X className={className} />,
-    [NETWORKS.LinkedIn]: <LinkedIn className={className} />,
-    [NETWORKS.GitHub]: <GitHub className={className} />,
-    [NETWORKS.Instagram]: <Instagram className={className} />,
-  }) as Record<Networks, React.ReactNode>;
+const SocialIcons = {
+  [NETWORKS.X]: X,
+  [NETWORKS.LinkedIn]: LinkedIn,
+  [NETWORKS.GitHub]: GitHub,
+  [NETWORKS.Instagram]: Instagram,
+};
 
 const PostAuthor = ({
   name,
@@ -28,7 +27,7 @@ const PostAuthor = ({
   return (
     <div className="flex py-2">
       <Image
-        className="size-16 rounded-full mr-2 aspect-square shadow-md drop-shadow-sm shadow-neutral-300/30"
+        className="size-16 rounded-full mr-2 aspect-square shadow-md drdop-shadow-sm shadow-neutral-200/30"
         src="/static/images/ash-avatar.png"
         width={84}
         height={84}
@@ -44,6 +43,8 @@ const PostAuthor = ({
           )}
         >
           {socials.map(({ handle, network }) => {
+            const IconComponent = SocialIcons[network];
+
             return (
               <a
                 key={network}
@@ -55,11 +56,7 @@ const PostAuthor = ({
                   !hideHandles && "gap-x-1 max-w-[155px]",
                 )}
               >
-                {
-                  SocialIcons("min-w-4 min-h-4 group-hover:fill-green-400")[
-                    network
-                  ]
-                }
+                <IconComponent className="min-w-4 min-h-4 group-hover:fill-green-400" />
                 {socials.length <= 2 && (
                   <span className="group-hover:text-green-400 tracking-wide truncate">
                     {handle}
@@ -74,20 +71,18 @@ const PostAuthor = ({
   );
 };
 
-const PostTags = ({ items }: { items: string[] }) => {
-  return (
-    <div className="my-4 px-2">
-      <p className="font-bold uppercase">Tags</p>
-      <ul className="list-inside flex flex-wrap gap-x-2 gap-y-1 text-green-500">
-        {items.map((item, idx) => (
-          <li key={`tag-${idx}`} className="text-sm">
-            {item}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-};
+const PostTags = ({ items }: { items: string[] }) => (
+  <div className="my-4 px-2">
+    <h3 className="font-bold uppercase">Tags</h3>
+    <ul className="list-inside flex flex-wrap gap-x-2 gap-y-1 text-green-500 font-semibold">
+      {items.map((item, idx) => (
+        <li key={`tag-${idx}`} className="text-sm">
+          {item}
+        </li>
+      ))}
+    </ul>
+  </div>
+);
 
 const PreviousArticle = ({
   heading,
@@ -97,36 +92,31 @@ const PreviousArticle = ({
   heading: string;
   article: string;
   children: React.ReactNode;
-}) => {
-  return (
-    <div className="my-4 px-2">
-      <p className="font-bold uppercase">{heading}</p>
-      <p className="text-sm">{article}</p>
-      {children}
-    </div>
-  );
-};
+}) => (
+  <div className="my-4 px-2">
+    <h3 className="font-bold uppercase">{heading}</h3>
+    <p className="text-sm">{article}</p>
+    {children}
+  </div>
+);
 
-const TableOfContents = () => {
-  return (
-    <nav className="sticky top-4 my-4 px-2">
-      <h2 className="text-lg font-bold mb-2 uppercase tracking-tight">
-        Contents
-      </h2>
-      <ul className="list-inside list-decimal tracking-wide">
-        <li className="mb-2">
-          Heading 1
-          <ol className="list-inside list-decimal ml-4">
-            <li className="mb-1 text-sm">Subheading 1</li>
-            <li className="mb-1 text-sm">Subheading 2</li>
-          </ol>
-        </li>
-        <li className="mb-2">Heading 2</li>
-        <li className="mb-2">Heading 3</li>
-      </ul>
-    </nav>
-  );
-};
+// TODO: Implement dynamic Table of Contents
+const TableOfContents = () => (
+  <nav className="sticky top-4 my-4 px-2">
+    <h3 className="font-bold mb-2 uppercase">Contents</h3>
+    <ul className="list-inside list-decimal tracking-wide">
+      <li className="mb-2">
+        Heading 1
+        <ol className="list-inside list-decimal ml-4">
+          <li className="mb-1 text-sm">Subheading 1</li>
+          <li className="mb-1 text-sm">Subheading 2</li>
+        </ol>
+      </li>
+      <li className="mb-2">Heading 2</li>
+      <li className="mb-2">Heading 3</li>
+    </ul>
+  </nav>
+);
 
 export default function SideBar() {
   return (
@@ -140,7 +130,9 @@ export default function SideBar() {
       />
       <hr className="my-2" />
 
-      <PostTags items={["Tag1", "Tag2", "Tag3", "Tag4", "Tag5", "Tag6"]} />
+      <PostTags
+        items={["JavaScript", "CSS", "Design", "TypeScript", "Web Development"]}
+      />
       <hr className="my-2" />
 
       {/* TODO: If none exists, don't render this element */}
@@ -155,7 +147,6 @@ export default function SideBar() {
           </Link>
         </div>
       </PreviousArticle>
-
       <hr className="my-2" />
 
       <TableOfContents />

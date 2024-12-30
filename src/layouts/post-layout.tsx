@@ -24,7 +24,7 @@ export default function PostLayout({
     <div className="flex flex-col">
       <div className="mx-auto px-6">
         <header className="text-center pt-4  mx-auto">
-          <h1 className="text-3xl font-bold">{post.title}</h1>
+          <h1 className="text-3xl ">{post.title}</h1>
           <time dateTime={post.date} className="text-sm text-neutral-400 ">
             {format(parseISO(post.date), "LLLL d, yyyy")}
           </time>{" "}
@@ -35,7 +35,7 @@ export default function PostLayout({
 
         <div className="flex">
           <SideBar />
-          <article className="prose prose-invert">{children}</article>
+          <article className="prose prose-invert pt-2">{children}</article>
         </div>
       </div>
     </div>
