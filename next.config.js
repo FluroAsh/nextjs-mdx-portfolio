@@ -1,7 +1,7 @@
 import { withContentlayer } from "next-contentlayer2";
 
 const nextConfig = {
-  output: "export",
+  // output: "export",
   images: {
     remotePatterns: [
       {

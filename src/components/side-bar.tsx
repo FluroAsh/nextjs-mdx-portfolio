@@ -3,6 +3,7 @@ import clsx from "clsx";
 
 import { type Networks, NETWORKS } from "@/data/site-metadata";
 import { GitHub, Instagram, LinkedIn, X } from "./social-icons";
+import Image from "next/image";
 
 const SocialIcons = (className: string) =>
   ({
@@ -26,7 +27,13 @@ const PostAuthor = ({
 
   return (
     <div className="flex py-2">
-      <div className="bg-neutral-600 size-12 rounded-full mr-2 aspect-square"></div>
+      <Image
+        className="size-16 rounded-full mr-2 aspect-square shadow-md drop-shadow-sm shadow-neutral-300/30"
+        src="/static/images/ash-avatar.png"
+        width={84}
+        height={84}
+        alt="Ashley Thompson Avatar"
+      />
       <div className="leading-6 flex flex-col justify-center">
         <p className="font-bold">{name}</p>
 
