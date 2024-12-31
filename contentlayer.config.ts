@@ -9,6 +9,7 @@ import rehypePrettyCode, {
 } from "rehype-pretty-code";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeSlug from "rehype-slug";
+import readingTime from "reading-time";
 
 // heroicon mini link
 const icon = fromHtmlIsomorphic(
@@ -47,6 +48,11 @@ const Blog = defineDocumentType(() => ({
       type: "string",
       resolve: (doc) => `${doc._raw.sourceFileName.replace(/\.mdx$/, "")}`,
     },
+    readingTime: {
+      type: "json",
+      resolve: (doc) => readingTime(doc.body.raw),
+    },
+    // toc: { type: 'json', resolve: (doc) => extractTocHeadings(doc.body.raw) },
   },
 }));
 

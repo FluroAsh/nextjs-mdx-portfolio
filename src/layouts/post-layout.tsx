@@ -8,10 +8,9 @@
 import "@/css/shiki.css";
 import "remark-github-blockquote-alert/alert.css";
 
-import { format, parseISO } from "date-fns";
-
 import { type Blog } from "contentlayer/generated";
 import SideBar from "@/components/side-bar";
+import ArticleDateTime from "@/components/reading-time";
 
 export default function PostLayout({
   post,
@@ -23,13 +22,9 @@ export default function PostLayout({
   return (
     <div className="flex flex-col">
       <div className="mx-auto px-6">
-        <header className="text-center pt-4  mx-auto">
+        <header className="text-center pt-4 mx-auto">
           <h1 className="text-3xl ">{post.title}</h1>
-          <time dateTime={post.date} className="text-sm text-neutral-400 ">
-            {format(parseISO(post.date), "LLLL d, yyyy")}
-          </time>{" "}
-          {/* TODO: Reading time */}
-          <span className="text-neutral-400 text-sm">• 15 minute read</span>
+          <ArticleDateTime date={post.date} stats={post.readingTime} />
           <hr className="my-2" />
         </header>
 

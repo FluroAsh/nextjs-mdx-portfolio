@@ -17,10 +17,10 @@ const PostAuthor = ({
   socials,
 }: {
   name: string;
-  socials: Array<{
+  socials: {
     handle: string;
     network: Networks;
-  }>;
+  }[];
 }) => {
   const hideHandles = socials.length > 2;
 
