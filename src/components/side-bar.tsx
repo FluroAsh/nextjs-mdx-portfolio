@@ -1,9 +1,9 @@
 import Link from "next/link";
-import clsx from "clsx";
+import Image from "next/image";
 
+import { cn } from "@/lib/utils";
 import { type Networks, NETWORKS } from "@/data/site-metadata";
 import * as SocialIcons from "./social-icons";
-import Image from "next/image";
 
 const SocialIconMap = {
   [NETWORKS.X]: SocialIcons.X,
@@ -22,12 +22,10 @@ const PostAuthor = ({
     network: Networks;
   }[];
 }) => {
-  const hideHandles = socials.length > 2;
-
   return (
     <div className="flex py-2">
       <Image
-        className="size-16 rounded-full mr-2 aspect-square shadow-md drdop-shadow-sm shadow-neutral-200/30"
+        className="size-16 rounded-full mr-2 aspect-square shadow-md drdop-shadow-sm shadow-neutral-200/30 self-center"
         src="/static/images/ash-avatar.png"
         width={84}
         height={84}
@@ -37,9 +35,9 @@ const PostAuthor = ({
         <p className="font-bold">{name}</p>
 
         <div
-          className={clsx(
+          className={cn(
             "flex gap-y-[2px] w-full",
-            hideHandles ? "gap-x-1.5" : "flex-col",
+            socials.length > 3 ? "gap-x-1.5" : "flex-col",
           )}
         >
           {socials.map(({ handle, network }) => {
@@ -51,13 +49,15 @@ const PostAuthor = ({
                 href={`https://www.${network.toLowerCase()}.com/${network === "LinkedIn" ? "in/" : ""}${handle}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={clsx(
+                className={cn(
                   "group flex text-xs [&>*]:transition-colors",
-                  !hideHandles && "gap-x-1 max-w-[155px]",
+                  socials.length < 4 && "gap-x-1 max-w-[155px]",
                 )}
               >
-                <IconComponent className="min-w-4 min-h-4 group-hover:fill-green-400" />
-                {socials.length <= 2 && (
+                <IconComponent
+                  className={"min-w-4 min-h-4 group-hover:fill-green-400"}
+                />
+                {socials.length < 4 && (
                   <span className="group-hover:text-green-400 tracking-wide truncate">
                     {handle}
                   </span>
@@ -120,12 +120,13 @@ const TableOfContents = () => (
 
 export default function SideBar() {
   return (
-    <aside className="pr-10 w-[250px] hidden lg:block">
+    <aside className="pr-10 min-w-[250px] max-w-[250px] hidden lg:block">
       <PostAuthor
         name="Ashley Thompson"
         socials={[
           { handle: "ashleygthompson", network: "X" },
           { handle: "ashley-thompson-dev", network: "LinkedIn" },
+          { handle: "FluroAsh", network: "GitHub" },
         ]}
       />
       <hr className="my-2" />
