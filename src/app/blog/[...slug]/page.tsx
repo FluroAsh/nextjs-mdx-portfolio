@@ -4,11 +4,10 @@ import { notFound } from "next/navigation";
 import { allBlogs } from "contentlayer/generated";
 import { components as mdxComponents } from "@/components/mdx-components";
 import PostLayout from "@/layouts/post-layout";
+import { PostProvider } from "@/lib/providers/post-provider";
 
 type PostPageProps = {
-  params: {
-    slug: string[];
-  };
+  params: { slug: string[] };
 };
 
 export async function generateStaticParams() {
@@ -29,9 +28,11 @@ export default async function Post(props: PostPageProps) {
   const MDXContent = getMDXComponent(post.body.code);
 
   return (
-    <PostLayout post={post}>
-      <MDXContent components={mdxComponents} />
-      {/* TODO: Footnotes */}
-    </PostLayout>
+    <PostProvider post={post}>
+      <PostLayout>
+        <MDXContent components={mdxComponents} />
+        {/* TODO: Footnotes */}
+      </PostLayout>
+    </PostProvider>
   );
 }

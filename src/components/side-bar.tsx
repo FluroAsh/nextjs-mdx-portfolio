@@ -101,6 +101,7 @@ const PreviousArticle = ({
 );
 
 // TODO: Implement dynamic Table of Contents
+// Add a cool vertical "line" element and transition each when navigating between headings using a scroll spy
 const TableOfContents = () => (
   <nav className="sticky top-4 my-4 px-2">
     <h3 className="font-bold mb-2 uppercase">Contents</h3>

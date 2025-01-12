@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * TODO:
  * 1. Add a "table of contents" to the blog layout that lists all the headings in the post (only shown on >= 800px)
@@ -8,17 +10,17 @@
 import "@/css/shiki.css";
 import "remark-github-blockquote-alert/alert.css";
 
-import { type Blog } from "contentlayer/generated";
 import SideBar from "@/components/side-bar";
 import ArticleDateTime from "@/components/reading-time";
+import { usePostContext } from "@/lib/providers/post-provider";
 
 export default function PostLayout({
-  post,
   children,
 }: {
-  post: Blog;
   children: React.ReactNode;
 }) {
+  const { post } = usePostContext();
+
   return (
     <div className="flex flex-col">
       <div className="mx-auto px-6">
