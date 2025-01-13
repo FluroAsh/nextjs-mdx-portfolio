@@ -4,6 +4,8 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { type Networks, NETWORKS } from "@/data/site-metadata";
 import * as SocialIcons from "./social-icons";
+import { usePostContext } from "@/lib/providers/post-provider";
+import { TocItem } from "@/lib/plugins/extract-headings";
 
 const SocialIconMap = {
   [NETWORKS.X]: SocialIcons.X,
@@ -100,24 +102,31 @@ const PreviousArticle = ({
   </div>
 );
 
-// TODO: Implement dynamic Table of Contents
-// Add a cool vertical "line" element and transition each when navigating between headings using a scroll spy
-const TableOfContents = () => (
-  <nav className="sticky top-4 my-4 px-2">
-    <h3 className="font-bold mb-2 uppercase">Contents</h3>
-    <ul className="list-inside list-decimal tracking-wide">
-      <li className="mb-2">
-        Heading 1
-        <ol className="list-inside list-decimal ml-4">
-          <li className="mb-1 text-sm">Subheading 1</li>
-          <li className="mb-1 text-sm">Subheading 2</li>
-        </ol>
-      </li>
-      <li className="mb-2">Heading 2</li>
-      <li className="mb-2">Heading 3</li>
-    </ul>
-  </nav>
-);
+const getPaddingClass = (depth: number) => {
+  const paddingMap = [undefined, "pl-2", "pl-4", "pl-6", "pl-8", "pl-10"];
+  return paddingMap[depth - 2];
+};
+
+const generateTOC = (headings: TocItem[]) =>
+  headings.map((heading) => (
+    <li className={cn(getPaddingClass(heading.depth), "list-none leading-7")}>
+      <a href={heading.url}>{heading.value}</a>
+    </li>
+  ));
+
+// TODO: Add a cool vertical "line" element and transition each when navigating between headings using a scroll spy
+const TableOfContents = () => {
+  const headings = usePostContext().post.toc;
+
+  return (
+    <nav className="sticky top-4 my-4 px-2">
+      <h3 className="font-bold mb-2 uppercase">Contents</h3>
+      <ul className="list-inside list-decimal tracking-wide">
+        {generateTOC(headings)}
+      </ul>
+    </nav>
+  );
+};
 
 export default function SideBar() {
   return (
