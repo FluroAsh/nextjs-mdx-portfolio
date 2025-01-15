@@ -1,7 +1,8 @@
-import { TocItem } from "@/lib/plugins/extract-headings";
-import { usePostContext } from "@/lib/providers/post-provider";
+import { useEffect, useRef, useState } from "react";
+
 import { cn } from "@/lib/utils";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { type TocItem } from "@/lib/plugins/extract-headings";
+import { usePostContext } from "@/lib/providers/post-provider";
 
 const getPaddingClass = (depth: number) => {
   const paddingMap = [undefined, "pl-2", "pl-4", "pl-6", "pl-8", "pl-10"];
@@ -9,6 +10,7 @@ const getPaddingClass = (depth: number) => {
 };
 
 const generateTOC = (headings: TocItem[], activeId: string) => {
+  console.log(headings);
   return headings.map((heading) => (
     <li
       key={heading.url}
