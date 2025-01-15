@@ -11,6 +11,8 @@ const SocialIconMap = {
   [NETWORKS.Instagram]: SocialIcons.Instagram,
 };
 
+const linkedinProfilePath = "in/";
+
 export const PostAuthor = ({
   name,
   socials,
@@ -45,7 +47,7 @@ export const PostAuthor = ({
             return (
               <a
                 key={network}
-                href={`https://www.${network.toLowerCase()}.com/${network === "LinkedIn" ? "in/" : ""}${handle}`}
+                href={`https://www.${network.toLowerCase()}.com/${network === "LinkedIn" ? linkedinProfilePath : ""}${handle}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={cn(

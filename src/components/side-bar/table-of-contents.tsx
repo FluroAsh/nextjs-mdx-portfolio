@@ -29,11 +29,11 @@ const generateTOC = (headings: TocItem[], activeId: string) => {
 };
 
 export const TableOfContents = () => {
-  const tocHeadings = usePostContext().post.toc;
-
   const listRef = useRef<HTMLUListElement>(null);
   const [activeId, setActiveId] = useState<string>("");
   const [indicatorStyle, setIndicatorStyle] = useState({});
+
+  const tocHeadings = usePostContext().post.toc;
 
   useEffect(() => {
     const headings = Array.from(
