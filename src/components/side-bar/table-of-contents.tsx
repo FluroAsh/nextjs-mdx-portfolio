@@ -9,26 +9,28 @@ const getPaddingClass = (depth: number) => {
   return paddingMap[depth - 2];
 };
 
-const generateTOC = (headings: TocItem[], activeId: string) => {
-  console.log(headings);
-  return headings.map((heading) => (
-    <li
-      key={heading.url}
-      className={cn(
-        getPaddingClass(heading.depth),
-        activeId === heading.url.split("#")[1]
-          ? "text-green-500 brightness-125"
-          : "text-neutral-400",
-        activeId !== heading.url.split("#")[1] && "hover:text-neutral-200",
-        "list-none text-sm leading-6 transition-colors duration-75 font-semibold",
-      )}
-    >
-      <a className="block truncate whitespace-nowrap" href={heading.url}>
-        {heading.value}
-      </a>
-    </li>
-  ));
-};
+const TOCHeading = ({
+  id,
+  activeId,
+  heading,
+}: {
+  id: string;
+  activeId: string;
+  heading: TocItem;
+}) => (
+  <li
+    className={cn(
+      getPaddingClass(heading.depth),
+      activeId === id ? "text-green-500 brightness-125" : "text-neutral-400",
+      activeId !== id && "hover:text-neutral-200",
+      "list-none text-sm leading-6 transition-colors duration-75 font-semibold",
+    )}
+  >
+    <a className="block truncate whitespace-nowrap" href={heading.url}>
+      {heading.value}
+    </a>
+  </li>
+);
 
 export const TableOfContents = () => {
   const listRef = useRef<HTMLUListElement>(null);
@@ -84,7 +86,6 @@ export const TableOfContents = () => {
 
       if (scrollTop + clientHeight >= scrollHeight - 5) {
         const lastHeading = tocHeadings[tocHeadings.length - 1];
-
         lastHeading && setActiveId(lastHeading.url.split("#")[1]);
       }
     };
@@ -105,7 +106,14 @@ export const TableOfContents = () => {
           className="list-inside list-decimal tracking-wide border-l border-neutral-500 pl-4"
           ref={listRef}
         >
-          {generateTOC(tocHeadings, activeId)}
+          {tocHeadings.map((heading: TocItem) => (
+            <TOCHeading
+              key={heading.value}
+              heading={heading}
+              id={heading.url.split("#")[1]}
+              activeId={activeId}
+            />
+          ))}
         </ul>
       </div>
     </nav>
