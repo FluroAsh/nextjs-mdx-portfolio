@@ -5,7 +5,7 @@ import { type TocItem } from "@/lib/plugins/extract-headings";
 import { usePostContext } from "@/lib/providers/post-provider";
 
 const getPaddingClass = (depth: number) => {
-  const paddingMap = [undefined, "pl-2", "pl-4", "pl-6", "pl-8", "pl-10"];
+  const paddingMap = [undefined, "pl-2", "pl-6", "pl-10", "pl-12", "pl-16"];
   return paddingMap[depth - 2];
 };
 
@@ -37,16 +37,23 @@ export const TableOfContents = () => {
   const [activeId, setActiveId] = useState<string>("");
   const [indicatorStyle, setIndicatorStyle] = useState({});
 
-  const tocHeadings = usePostContext().post.toc;
+  const tocHeadings: TocItem[] = usePostContext().post.toc;
 
   useEffect(() => {
+    if (!activeId && window.location.hash) {
+      setActiveId(window.location.hash.slice(1));
+    }
+
     const headings = Array.from(
       document.querySelectorAll("h2, h3, h4, h5, h6"),
     ).filter((heading) => heading.classList?.contains("content-header"));
 
     const handleIntersection = (entries: IntersectionObserverEntry[]) => {
       entries.forEach((entry) => {
-        entry.isIntersecting && setActiveId(entry.target.id);
+        if (entry.isIntersecting) {
+          history.replaceState(null, "", `#${entry.target.id}`); // prevent browser default scroll behavior when updating the hash
+          setActiveId(entry.target.id);
+        }
       });
     };
 
@@ -106,7 +113,7 @@ export const TableOfContents = () => {
           className="list-inside list-decimal tracking-wide border-l border-neutral-500 pl-4"
           ref={listRef}
         >
-          {tocHeadings.map((heading: TocItem) => (
+          {tocHeadings.map((heading) => (
             <TOCHeading
               key={heading.value}
               heading={heading}
