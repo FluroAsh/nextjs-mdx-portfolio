@@ -2,7 +2,7 @@ import { getMDXComponent } from "next-contentlayer2/hooks";
 import { notFound } from "next/navigation";
 
 import { allBlogs } from "contentlayer/generated";
-import { components as mdxComponents } from "@/components/mdx-components";
+import { components as mdxComponents } from "@/components/mdx/mdx-components";
 import PostLayout from "@/layouts/post-layout";
 import { PostProvider } from "@/lib/providers/post-provider";
 

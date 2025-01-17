@@ -11,6 +11,7 @@ import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeSlug from "rehype-slug";
 import readingTime from "reading-time";
 import { extractTocHeadings } from "@/lib/plugins/extract-headings";
+import rehypeUnwrapImages from "rehype-unwrap-images";
 
 // heroicon mini link
 const icon = fromHtmlIsomorphic(
@@ -71,6 +72,7 @@ export default makeSource({
     remarkPlugins: [remarkAlert, remarkGfm],
     rehypePlugins: [
       [rehypePrettyCode, prettyCodeOptions],
+      rehypeUnwrapImages,
       rehypeSlug,
       [
         rehypeAutolinkHeadings,
