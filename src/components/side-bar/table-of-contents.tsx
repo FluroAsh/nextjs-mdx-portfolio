@@ -115,7 +115,7 @@ export const TableOfContents = () => {
         >
           {tocHeadings.map((heading) => (
             <TOCHeading
-              key={heading.value}
+              key={heading.url}
               heading={heading}
               id={heading.url.split("#")[1]}
               activeId={activeId}
