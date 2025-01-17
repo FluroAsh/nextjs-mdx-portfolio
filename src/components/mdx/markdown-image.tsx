@@ -2,6 +2,7 @@ import Image from "next/image";
 
 import { cn } from "@/lib/utils";
 import { getImagePlaceholder } from "@/server/image";
+import { env } from "@/lib/env";
 
 type MarkDownImageProps = React.ComponentProps<"img">;
 
@@ -17,7 +18,10 @@ export const MarkdownImage = async ({
     throw new Error("Images must include src and alt attributes");
 
   const { orientation, aspectRatio, width, height, base64 } =
-    await getImagePlaceholder(src, "large");
+    await getImagePlaceholder(
+      src,
+      src.includes(env.basePath) ? "large" : undefined,
+    );
 
   return (
     <Image

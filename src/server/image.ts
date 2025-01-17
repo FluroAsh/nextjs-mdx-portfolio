@@ -24,9 +24,15 @@ const calculateOrientation = (
   }
 };
 
+const fetchPlaceholder = async (src: string) => {
+  const res = await fetch(src);
+  const buffer = Buffer.from(await res.arrayBuffer());
+  return await getPlaiceholder(buffer);
+};
+
 export const getImagePlaceholder = async (
   sourceURL: string,
-  resizedSize: Size,
+  resizedSize: Size | undefined,
 ) => {
   const { basePath } = env;
   const fileName = sourceURL.split(`${basePath}/`)[1];
@@ -35,13 +41,9 @@ export const getImagePlaceholder = async (
     ? `${basePath}/${resizedSize}_${fileName}`
     : sourceURL;
 
-  // FYI: S3 will cap the image width/height to the users screen dimensions if we're using a large src image
-  const { width, height } = await probe(`${basePath}/large_${fileName}`);
+  const { width, height } = await probe(imageSrc);
 
-  const res = await fetch(imageSrc);
-  const buffer = Buffer.from(await res.arrayBuffer());
-  const { base64 } = await getPlaiceholder(buffer);
-
+  const { base64 } = await fetchPlaceholder(imageSrc);
   const orientation = calculateOrientation(width, height);
   const aspectRatio = (width / height).toFixed(2);
 
