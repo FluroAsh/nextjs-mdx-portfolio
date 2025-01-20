@@ -27,7 +27,7 @@
 ### In Progress
 
 - [ ] Blog Post Layout & Styling
-  - [ ] Differentiate between anchor, internal and external link styles
+  - [x] Differentiate between anchor, internal and external link styles
 - [ ] Add "Tags" and "Featured Image" support for MDX _frontmatter_
 - [ ] Add "Tags" and "Featured Image" to Blog Post Layout
   - [ ] Add featured image to blog post layout

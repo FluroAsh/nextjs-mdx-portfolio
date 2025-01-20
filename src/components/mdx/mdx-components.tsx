@@ -1,6 +1,7 @@
 import { type MDXComponents } from "mdx/types";
 
 import { MarkdownImage } from "./markdown-image";
+import { CustomLink } from "./link";
 
 export const components: MDXComponents = {
   pre: (props: React.ComponentPropsWithoutRef<"pre">) => (
@@ -16,4 +17,5 @@ export const components: MDXComponents = {
   img: ({ src, alt, ...props }) => (
     <MarkdownImage src={src} alt={alt} {...props} />
   ),
+  a: CustomLink,
 };
