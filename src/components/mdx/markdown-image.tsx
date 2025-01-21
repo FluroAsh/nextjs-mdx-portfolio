@@ -10,17 +10,22 @@ export const MarkdownImage = async ({
   src,
   alt,
   ...props
-}: {
-  src: string | undefined;
-  alt: string | undefined;
-} & MarkDownImageProps) => {
+}: MarkDownImageProps) => {
   if (!src || !alt)
     throw new Error("Images must include src and alt attributes");
 
-  const { orientation, width, height, base64 } = await getImagePlaceholder(
+  const {
+    orientation,
+    width: probedWidth,
+    height: probedHeight,
+    base64,
+  } = await getImagePlaceholder(
     src,
     src.includes(env.basePath) ? "large" : undefined,
   );
+
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+  const { width, height, ...newProps } = props; // removes unused width/height props
 
   return (
     <Image
@@ -30,13 +35,13 @@ export const MarkdownImage = async ({
         "rounded-sm max-w-full mx-auto transition-opacity",
       )}
       alt={alt}
-      width={width as any}
-      height={height as any}
+      width={probedWidth}
+      height={probedHeight}
       loading="lazy"
       placeholder="blur"
       blurDataURL={base64}
       // sizes="(max-width: 600px) 750px, 1000px"
-      {...props}
+      {...newProps}
     />
   );
 };

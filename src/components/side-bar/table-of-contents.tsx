@@ -67,6 +67,7 @@ export const TableOfContents = () => {
     }
 
     return () => topObserver.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -93,7 +94,7 @@ export const TableOfContents = () => {
 
       if (scrollTop + clientHeight >= scrollHeight - 5) {
         const lastHeading = tocHeadings[tocHeadings.length - 1];
-        lastHeading && setActiveId(lastHeading.url.split("#")[1]);
+        if (lastHeading) setActiveId(lastHeading.url.split("#")[1]);
       }
     };
 
