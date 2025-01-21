@@ -4,7 +4,7 @@ import { MarkdownImage } from "./markdown-image";
 import { CustomLink } from "./link";
 
 export const components: MDXComponents = {
-  pre: (props: React.ComponentPropsWithoutRef<"pre">) => (
+  pre: (props: React.ComponentProps<"pre">) => (
     <pre
       className="p-4 text-sm font-mono rounded-md relative bottom-1 border border-green-600/80"
       {...props}
@@ -14,8 +14,6 @@ export const components: MDXComponents = {
   // Image: ({ src, ...rest }: ImageProps) => (
   //   <Image src={`${basePath || ""}${src}`} {...rest} />
   // ),
-  img: ({ src, alt, ...props }) => (
-    <MarkdownImage src={src} alt={alt} {...props} />
-  ),
+  img: MarkdownImage,
   a: CustomLink,
 };
