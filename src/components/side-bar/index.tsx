@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { TableOfContents } from "./table-of-contents";
 import { PostAuthor } from "./post-author";
+import { usePostContext } from "@/lib/providers/post-provider";
 
 const PreviousArticle = ({
   heading,
@@ -22,17 +23,23 @@ const PreviousArticle = ({
 const PostTags = ({ items }: { items: string[] }) => (
   <div className="my-4 px-2">
     <h3 className="font-bold uppercase">Tags</h3>
-    <ul className="list-inside flex flex-wrap gap-x-2 gap-y-1 text-green-500 font-semibold">
+    <ul className="list-inside flex flex-wrap gap-x-2">
       {items.map((item, idx) => (
-        <li key={`tag-${idx}`} className="text-sm">
-          {item}
-        </li>
+        <Link
+          key={`tag-${idx}`}
+          href={`/blog/tags/${item}`}
+          className="text-green-500 font-semibold text-sm hover:text-green-300 transition-colors duration-75"
+        >
+          <li>{item}</li>
+        </Link>
       ))}
     </ul>
   </div>
 );
 
 export const SideBar = () => {
+  const { tags } = usePostContext().post;
+
   return (
     <aside className="pr-10 min-w-[250px] max-w-[250px] hidden lg:block">
       <PostAuthor
@@ -45,16 +52,14 @@ export const SideBar = () => {
       />
       <hr className="my-2" />
 
-      <PostTags
-        items={["JavaScript", "CSS", "Design", "TypeScript", "Web Development"]}
-      />
+      <PostTags items={tags} />
       <hr className="my-2" />
 
       {/* TODO: If none exists, don't render this element */}
       <PreviousArticle heading="Previous Article" article="Name of the Article">
         <div className="mt-2 w-fit ">
           <Link
-            className="hover:text-green-500 text-sm py-2 transition-colors"
+            className="hover:text-green-500 text-sm py-2 transition-colors duration-75"
             href="/blog"
           >
             <span>&larr; </span>
