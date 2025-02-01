@@ -24,6 +24,13 @@ const calculateOrientation = (
   }
 };
 
+/**
+ * Fetches an image from the provided source URL, converts it to a buffer,
+ * and generates a placeholder using the `getPlaiceholder` lib.
+ *
+ * This function is useful for generating low-quality image placeholders (LQIP)
+ * for images to improve perceived performance and user experience.
+ */
 const fetchPlaceholder = async (src: string) => {
   const res = await fetch(src);
   const buffer = Buffer.from(await res.arrayBuffer());
