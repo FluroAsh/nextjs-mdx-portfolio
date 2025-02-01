@@ -32,11 +32,7 @@
 - [ ] Add "Tags" and "Featured Image" to Blog Post Layout
   - [ ] Add featured image to blog post layout
 - [ ] Add a _global_ "Scroll to Top" button below 500px scroll height
-- [ ] Previous & Next post links to sidebar
-
-### Completed
-
-- [ ] ...
+- [x] Previous & Next post links to sidebar
 
 ### Stretch Goals
 

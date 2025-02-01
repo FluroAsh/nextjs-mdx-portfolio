@@ -1,21 +1,26 @@
 "use client";
 
-import { createContext, useContext } from "react";
+import React, { createContext, useContext } from "react";
 import { type Blog } from "contentlayer/generated";
 
 type PostContextType = {
   post: Blog;
+  next: Blog | undefined;
+  prev: Blog | undefined;
 };
 
 const PostContext = createContext<PostContextType | undefined>(undefined);
 
 export const PostProvider = ({
   post,
+  next,
+  prev,
   children,
-}: {
-  post: Blog;
-  children: React.ReactNode;
-}) => <PostContext.Provider value={{ post }}>{children}</PostContext.Provider>;
+}: PostContextType & { children: React.ReactNode }) => (
+  <PostContext.Provider value={{ post, next, prev }}>
+    {children}
+  </PostContext.Provider>
+);
 
 export const usePostContext = () => {
   const context = useContext(PostContext);

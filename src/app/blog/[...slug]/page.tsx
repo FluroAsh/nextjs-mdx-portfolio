@@ -19,7 +19,8 @@ export async function generateStaticParams() {
 export default async function Post(props: PostPageProps) {
   const params = await props.params;
   const slug = decodeURI(params.slug.join("/"));
-  const post = allBlogs.find((post) => post.slug === slug);
+  const postIndex = allBlogs.findIndex((post) => post.slug === slug);
+  const post = allBlogs[postIndex];
 
   if (!post) {
     return notFound();
@@ -28,7 +29,11 @@ export default async function Post(props: PostPageProps) {
   const MDXContent = getMDXComponent(post.body.code);
 
   return (
-    <PostProvider post={post}>
+    <PostProvider
+      post={post}
+      next={allBlogs[postIndex + 1]}
+      prev={allBlogs[postIndex - 1]}
+    >
       <PostLayout>
         <MDXContent components={mdxComponents} />
         {/* TODO: Footnotes */}
