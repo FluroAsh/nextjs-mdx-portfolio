@@ -31,7 +31,7 @@ export default async function TagPage(props: { params: { tag: string } }) {
           <div className="overflow-hidden">
             <Link
               href={`/blog/${post.slug}`}
-              className="leading-8 hover:text-green-500 inline-block text-xl transition-colors duration-75"
+              className="leading-8 hover:text-green-500 inline-block text-2xl tracking-tight transition-colors duration-75"
             >
               <h2>{post.title}</h2>
             </Link>

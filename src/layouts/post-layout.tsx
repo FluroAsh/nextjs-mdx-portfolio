@@ -23,7 +23,7 @@ export default function PostLayout({
     <div className="flex flex-col">
       <div className="mx-auto px-6">
         <header className="text-center pt-4 mx-auto">
-          <h1 className="text-3xl ">{post.title}</h1>
+          <h1 className="text-3xl tracking-tight">{post.title}</h1>
           <ArticleDateTime date={post.date} stats={post.readingTime} />
           <hr className="my-2" />
         </header>
