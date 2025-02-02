@@ -25,13 +25,16 @@ export default async function TagPage(props: { params: { tag: string } }) {
       {filteredPosts.map((post) => (
         <div key={post._id} className="w-full">
           {/* Date */}
-          <PublicationDate date={post.date} className="inline-block" />
+          <PublicationDate
+            date={post.date}
+            className="inline-block text-md pb-1"
+          />
 
           {/* Post Title */}
           <div className="overflow-hidden">
             <Link
               href={`/blog/${post.slug}`}
-              className="leading-8 hover:text-green-500 inline-block text-2xl tracking-tight transition-colors duration-75"
+              className="inline-block pb-1 leading-8 hover:text-green-500  text-2xl tracking-tight transition-colors duration-75"
             >
               <h2>{post.title}</h2>
             </Link>
@@ -41,7 +44,7 @@ export default async function TagPage(props: { params: { tag: string } }) {
               {post.tags.map((tag) => (
                 <li
                   key={tag}
-                  className="inline-block text-green-500 hover:text-green-300 font-semibold"
+                  className="inline-block text-green-500 hover:text-green-300"
                 >
                   <Link href={`/tags/${slug(tag)}`}>{tag}</Link>
                 </li>

@@ -22,7 +22,7 @@ export default function ListLayoutTags({
         "sm:grid-cols-[240px_minmax(0,auto)]",
       )}
     >
-      <div className="hidden sm:inline-block w-full max-h-fit bg-neutral-900/80 border border-neutral-700 rounded-sm px-6 py-8 ">
+      <div className="hidden sm:inline-block w-full max-h-fit bg-neutral-900/60 border border-neutral-700 rounded-sm px-6 py-8 ">
         <Link
           href="/blog"
           className="text-lg font-bold pb-2 uppercase hover:text-green-500 transition-colors duration-75"
@@ -36,9 +36,9 @@ export default function ListLayoutTags({
               <a
                 href={`/tags/${tag}`}
                 className={cn(
-                  "py-[2px] text-neutral-500 uppercase font-semibold transition-colors duration-75 text-sm",
+                  "py-[2px] text-neutral-500 uppercase  transition-colors duration-75 text-sm",
                   tag !== activeTag && "hover:text-neutral-300",
-                  tag === activeTag && "text-green-500",
+                  tag === activeTag && "text-green-500 font-bold",
                 )}
               >
                 {tag} <span className="text-sm font-mono">({count})</span>
