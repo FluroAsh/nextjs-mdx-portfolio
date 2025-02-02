@@ -1,17 +1,23 @@
+import * as fs from "fs";
+import * as path from "path";
+
+import { slug } from "github-slugger";
+import rehypeUnwrapImages from "rehype-unwrap-images";
 import { defineDocumentType, makeSource } from "contentlayer2/source-files";
 import { fromHtmlIsomorphic } from "hast-util-from-html-isomorphic";
-// Remark Plugins
+// ---- Remark Plugins ---- //
 import { remarkAlert } from "remark-github-blockquote-alert";
 import remarkGfm from "remark-gfm";
-// Rehype Plugins
+// ---- Rehype Plugins ---- //
 import rehypePrettyCode, {
   type Options as PrettyCodeOptions,
 } from "rehype-pretty-code";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeSlug from "rehype-slug";
 import readingTime from "reading-time";
+
+import type { Blog } from "contentlayer/generated";
 import { extractTocHeadings } from "@/lib/plugins/extract-headings";
-import rehypeUnwrapImages from "rehype-unwrap-images";
 
 // heroicon mini link
 const icon = fromHtmlIsomorphic(
@@ -23,6 +29,31 @@ const icon = fromHtmlIsomorphic(
   </span>`,
   { fragment: true },
 );
+
+const isProduction = process.env.NODE_ENV === "production";
+
+/** Count the occurrences of all tags across blog posts & store output in a `.json` file. */
+function createTagCount(allBlogs: Blog[]) {
+  const tagCount: Record<string, number> = {};
+
+  allBlogs.forEach((file) => {
+    if (file.tags && (!isProduction || !file.draft)) {
+      file.tags.forEach((tag) => {
+        const formattedTag = slug(tag);
+        if (formattedTag in tagCount) {
+          tagCount[formattedTag] += 1;
+        } else {
+          tagCount[formattedTag] = 1;
+        }
+      });
+    }
+  });
+
+  fs.writeFileSync(
+    path.resolve("./src/data/tag-data.json"),
+    JSON.stringify(tagCount),
+  );
+}
 
 const Blog = defineDocumentType(() => ({
   name: "Blog",
@@ -53,6 +84,15 @@ const Blog = defineDocumentType(() => ({
       type: "boolean",
       description: "Is this post a draft?",
       required: true,
+    },
+    description: {
+      type: "string",
+      description: "A short excerpt to describe the content of the post",
+      required: true,
+    },
+    image: {
+      type: "string",
+      description: "The featured image associated with the blog post",
     },
   },
   computedFields: {
@@ -103,4 +143,8 @@ export default makeSource({
     ],
   },
   documentTypes: [Blog],
+  onSuccess: async (importData) => {
+    const { allBlogs } = await importData();
+    createTagCount(allBlogs);
+  },
 });

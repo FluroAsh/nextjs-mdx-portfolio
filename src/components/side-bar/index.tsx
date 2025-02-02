@@ -3,6 +3,7 @@ import Link from "next/link";
 import { TableOfContents } from "./table-of-contents";
 import { PostAuthor } from "./post-author";
 import { usePostContext } from "@/lib/providers/post-provider";
+import { slug } from "github-slugger";
 
 const ArticleNavigation = ({
   heading,
@@ -30,7 +31,7 @@ const ArticleNavigation = ({
           className="hover:text-green-500 text-sm py-2 transition-colors duration-75"
           href="/blog"
         >
-          <span>&larr; </span>
+          <span>&larr;&nbsp;</span>
           <span className="underline">Back to Blog</span>
         </Link>
       </div>
@@ -45,7 +46,7 @@ const PostTags = ({ items }: { items: string[] }) => (
       {items.map((item, idx) => (
         <Link
           key={`tag-${idx}`}
-          href={`/blog/tags/${item}`}
+          href={`/tags/${slug(item)}`}
           className="text-green-500 font-semibold text-sm hover:text-green-300 transition-colors duration-75"
         >
           <li>{item}</li>

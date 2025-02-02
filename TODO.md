@@ -28,8 +28,8 @@
 
 - [ ] Blog Post Layout & Styling
   - [x] Differentiate between anchor, internal and external link styles
-- [ ] Add "Tags" and "Featured Image" support for MDX _frontmatter_
-- [ ] Add "Tags" and "Featured Image" to Blog Post Layout
+- [x] Add "Tags" and "Featured Image" support for MDX _frontmatter_
+- [x] Add "Tags" and "Featured Image" to Blog Post Layout
   - [ ] Add featured image to blog post layout
 - [ ] Add a _global_ "Scroll to Top" button below 500px scroll height
 - [x] Previous & Next post links to sidebar
