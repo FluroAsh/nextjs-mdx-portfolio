@@ -31,7 +31,7 @@ export const MarkdownImage = async ({
     <Image
       src={src}
       className={cn(
-        orientation === "portrait" && "w-[400px]",
+        /portrait|square/.test(orientation ?? "") && "w-[400px]",
         "rounded-sm max-w-full mx-auto transition-opacity",
       )}
       alt={alt}
