@@ -22,6 +22,7 @@ export default function ListLayoutTags({
         "sm:grid-cols-[240px_minmax(0,auto)]",
       )}
     >
+      {/* Tags Sidebar */}
       <div className="hidden sm:inline-block w-full max-h-fit bg-neutral-900/60 border border-neutral-700 rounded-sm px-6 py-8 ">
         <Link
           href="/blog"
@@ -48,7 +49,10 @@ export default function ListLayoutTags({
         </ul>
       </div>
 
-      {children}
+      {/* Posts */}
+      <div className="flex flex-col gap-4">{children}</div>
+
+      {/* TODO: Pagination */}
     </div>
   );
 }
