@@ -8,7 +8,7 @@
 import "@/css/shiki.css";
 import "remark-github-blockquote-alert/alert.css";
 
-import { SideBar } from "@/components/side-bar";
+import { PostSidebar } from "@/components/post-sidebar";
 import ArticleDateTime from "@/components/reading-time";
 import { usePostContext } from "@/lib/providers/post-provider";
 
@@ -29,7 +29,7 @@ export default function PostLayout({
         </header>
 
         <div className="flex">
-          <SideBar />
+          <PostSidebar />
           <article className="prose prose-invert pt-2">{children}</article>
         </div>
       </div>

@@ -56,7 +56,7 @@ const PostTags = ({ items }: { items: string[] }) => (
   </div>
 );
 
-export const SideBar = () => {
+export const PostSidebar = () => {
   const {
     post: { tags },
     prev,
