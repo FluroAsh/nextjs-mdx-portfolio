@@ -3,12 +3,14 @@ import Link from "next/link";
 import tagData from "@/data/tag-data.json" assert { type: "json" };
 
 export default async function Page() {
+  const tags = Object.entries(tagData);
+
   return (
     <div className="grid grid-cols-2 place-items-center mx-auto max-w-screen-lg py-8 px-6">
       <h1 className="text-4xl pb-4">Tags</h1>
 
       <div className="flex gap-4 flex-wrap">
-        {Object.entries(tagData).map(([tag, count]) => (
+        {tags.map(([tag, count]) => (
           <div key={tag}>
             <Link
               href={`tags/${tag}`}

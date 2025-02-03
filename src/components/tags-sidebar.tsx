@@ -26,7 +26,7 @@ export const TagsSidebar = () => {
             <a
               href={`/tags/${tag}`}
               className={cn(
-                "py-[2px] text-neutral-500 uppercase  transition-colors duration-75 text-sm",
+                "py-[2px] text-sm text-neutral-500 uppercase transition-colors duration-75",
                 tag !== activeTag && "hover:text-neutral-300",
                 tag === activeTag && "text-green-500 font-bold",
               )}
