@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { catamaran, firaSans } from "./fonts";
+import { catamaran, firaSans } from "../fonts";
 import "@/css/globals.css";
 
 import { cn } from "@/lib/utils";
