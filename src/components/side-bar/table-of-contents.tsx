@@ -51,7 +51,6 @@ export const TableOfContents = () => {
     const handleIntersection = (entries: IntersectionObserverEntry[]) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          history.replaceState(null, "", `#${entry.target.id}`); // prevent browser default scroll behavior when updating the hash
           setActiveId(entry.target.id);
         }
       });
