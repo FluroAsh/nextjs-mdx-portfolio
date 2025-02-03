@@ -26,10 +26,11 @@
 
 ### In Progress
 
-- [ ] Blog Post Layout & Styling
-  - [x] Differentiate between anchor, internal and external link styles
-- [x] Add "Tags" and "Featured Image" support for MDX _frontmatter_
+- [ ] Add Pagination for Tag & Blog Post Listing pages
+  - [ ] Add pagination for blog post listing page
+  - [ ] Add pagination for tag listing page
 - [x] Add "Tags" and "Featured Image" to Blog Post Layout
+  - [x] Add tags to blog post layout
   - [ ] Add featured image to blog post layout
 - [ ] Add a _global_ "Scroll to Top" button below 500px scroll height
 - [x] Previous & Next post links to sidebar

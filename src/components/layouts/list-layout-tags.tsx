@@ -1,11 +1,9 @@
 import { cn } from "@/lib/utils";
 import { TagsSidebar } from "@/components/tags-sidebar";
 
-type ListLayoutTagsProps = {
-  children: React.ReactNode;
-};
+type ListLayoutTagsProps = { children: React.ReactNode };
 
-export default function ListLayoutTags({ children }: ListLayoutTagsProps) {
+export const ListLayoutTags = ({ children }: ListLayoutTagsProps) => {
   return (
     <div
       className={cn(
@@ -14,11 +12,8 @@ export default function ListLayoutTags({ children }: ListLayoutTagsProps) {
       )}
     >
       <TagsSidebar />
-
-      {/* Posts */}
       <div className="flex flex-col gap-4">{children}</div>
-
       {/* TODO: Pagination */}
     </div>
   );
-}
+};
