@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 
 import { allBlogs } from "contentlayer/generated";
 import { components as mdxComponents } from "@/components/mdx/mdx-components";
-import PostLayout from "@/layouts/post-layout";
+import PostLayout from "@/components/layouts/post-layout";
 import { PostProvider } from "@/lib/providers/post-provider";
 
 type PostPageProps = {

@@ -2,7 +2,7 @@ import { slug } from "github-slugger";
 
 import { PublicationDate } from "@/components/reading-time";
 import tagData from "@/data/tag-data.json";
-import ListLayoutTags from "@/layouts/list-layout-tags";
+import ListLayoutTags from "@/components/layouts/list-layout-tags";
 import { allBlogs } from "contentlayer/generated";
 import Link from "next/link";
 
