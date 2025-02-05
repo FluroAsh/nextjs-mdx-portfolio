@@ -5,9 +5,11 @@ import { ListLayoutTags } from "@/components/layouts/list-layout-tags";
 import { PublicationDate } from "@/components/reading-time";
 
 export default async function Page() {
+  const posts = allBlogs.filter((post) => !post.draft);
+
   return (
     <ListLayoutTags>
-      {allBlogs.map((post) => (
+      {posts.map((post) => (
         <div key={post._id} className="w-full">
           <PublicationDate
             date={post.date}
