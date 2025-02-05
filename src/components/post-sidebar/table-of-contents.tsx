@@ -34,16 +34,14 @@ const TOCHeading = ({
 
 export const TableOfContents = () => {
   const listRef = useRef<HTMLUListElement>(null);
-  const [activeId, setActiveId] = useState<string>("");
+  const [activeId, setActiveId] = useState<string>(() =>
+    window.location.hash ? window.location.hash.slice(1) : "",
+  );
   const [indicatorStyle, setIndicatorStyle] = useState({});
 
   const tocHeadings: TocItem[] = usePostContext().post.toc;
 
   useEffect(() => {
-    if (!activeId && window.location.hash) {
-      setActiveId(window.location.hash.slice(1));
-    }
-
     const headings = Array.from(
       document.querySelectorAll("h2, h3, h4, h5, h6"),
     ).filter((heading) => heading.classList?.contains("content-header"));
