@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { type TocItem } from "@/lib/plugins/extract-headings";
 import { usePostContext } from "@/lib/providers/post-provider";
+import { isBrowser } from "@/utils/misc";
 
 const getPaddingClass = (depth: number) => {
   const paddingMap = [undefined, "pl-2", "pl-6", "pl-10", "pl-12", "pl-16"];
@@ -40,6 +41,8 @@ export const TableOfContents = () => {
   const tocHeadings: TocItem[] = usePostContext().post.toc;
 
   useEffect(() => {
+    if (!isBrowser) return;
+
     const initialActiveId = window.location.hash
       ? window.location.hash.slice(1)
       : "";
