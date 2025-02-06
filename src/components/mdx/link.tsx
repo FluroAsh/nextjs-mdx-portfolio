@@ -34,7 +34,7 @@ export const CustomLink = ({
   return (
     <a
       href={href}
-      className={cn("relative ", className)}
+      className={cn("relative", className)}
       target="_blank"
       {...props}
     >
