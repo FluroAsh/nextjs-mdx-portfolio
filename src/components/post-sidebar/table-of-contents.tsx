@@ -41,7 +41,7 @@ export const TableOfContents = () => {
   const tocHeadings: TocItem[] = usePostContext().post.toc;
 
   useEffect(() => {
-    if (!isBrowser) return;
+    if (!isBrowser) return; // prevents SSR error
 
     const initialActiveId = window.location.hash
       ? window.location.hash.slice(1)
