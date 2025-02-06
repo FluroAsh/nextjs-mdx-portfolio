@@ -8,14 +8,17 @@ import { cn } from "@/lib/utils";
 
 export const TagsSidebar = () => {
   const tags = Object.entries(tagData);
-  const pathname = usePathname();
-  const activeTag = pathname.split("/").pop();
+  const pathSegments = usePathname().split("/").filter(Boolean);
+  const activeTag = pathSegments.length >= 2 ? pathSegments[1] : null;
 
   return (
     <div className="hidden sm:inline-block w-full max-h-fit bg-neutral-900/60 border border-neutral-700 rounded-sm px-6 py-8 ">
       <Link
         href="/blog"
-        className="text-lg font-bold pb-2 uppercase hover:text-green-500 transition-colors duration-75"
+        className={cn(
+          pathSegments.length < 2 && "text-green-500",
+          "text-lg font-bold pb-2 uppercase hover:text-green-500 transition-colors duration-75",
+        )}
       >
         All Posts
       </Link>
