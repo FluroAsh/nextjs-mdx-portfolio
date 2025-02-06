@@ -34,12 +34,12 @@ export const CustomLink = ({
   return (
     <a
       href={href}
-      className={cn("relative inline-flex", className)}
+      className={cn("relative ", className)}
       target="_blank"
       {...props}
     >
       {children}
-      <ExternalLink className="ml-[2px]" size={12} />
+      <ExternalLink className="inline-block ml-[3px] mb-[12px]" size={12} />
     </a>
   );
 };
