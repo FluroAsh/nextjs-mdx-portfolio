@@ -1,4 +1,4 @@
-export default function Footer() {
+export const Footer = () => {
   return (
     <footer className="grid gap-0 justify-center py-8">
       <p>© 2025 Ashley Thompson</p>
@@ -9,4 +9,4 @@ export default function Footer() {
       </div>
     </footer>
   );
-}
+};
