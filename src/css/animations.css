@@ -1,0 +1,12 @@
+@keyframes conic-gradient {
+  0% {
+    transform: scale(120%) rotate(0deg);
+  }
+  100% {
+    transform: scale(120%) rotate(360deg);
+  }
+}
+
+.animate-conic-gradient {
+  animation: conic-gradient 3s linear infinite;
+}

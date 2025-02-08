@@ -16,6 +16,10 @@ export default {
         catamaran: ["var(--font-catamaran)", ...theme.fontFamily.sans],
         ...theme.fontFamily,
       },
+      animation: {
+        "rotate-conic-border":
+          "conic-gradient 3s cubic-bezier(0.4, 0, 0.2, 1) infinite",
+      },
       typography: {
         DEFAULT: {
           css: {

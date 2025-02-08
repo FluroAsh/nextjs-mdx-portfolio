@@ -7,7 +7,6 @@ import { useHasMounted } from "@/hooks/use-has-mounted";
 export const ScrollToTop = () => {
   const { y: scrollY } = useWindowScroll();
 
-  // useHasMounted ensures the button is only rendered after client-side hydration, preventing SSR hydration errors.
   const hasMounted = useHasMounted();
   if (!hasMounted) return null;
 
@@ -22,11 +21,23 @@ export const ScrollToTop = () => {
       )}
     >
       <button
-        className="bg-neutral-900 shadow-sm rounded-full p-2 z-10"
+        className="shadow-sm rounded-full scale-125 relative p-3.5"
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
       >
-        <ArrowUp />
-        <div className="absolute inset-0 bg-green-600 -z-10 rounded-full transform scale-[110%]" />
+        <div className="flex items-center justify-center absolute inset-0 bg-neutral-900 z-10 rounded-full transform scale-[110%]">
+          <ArrowUp className="" size={14} />
+        </div>
+
+        <div
+          className={cn(
+            "absolute inset-0 rounded-full -z-10 transform transition duration-300",
+            "animate-rotate-conic-border",
+          )}
+          style={{
+            background:
+              "conic-gradient(from 0deg, #00B846, #01772e, #008732, #00B846)",
+          }}
+        />
       </button>
     </div>
   );
