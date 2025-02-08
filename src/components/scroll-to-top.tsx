@@ -24,7 +24,7 @@ export const ScrollToTop = () => {
         className="shadow-sm rounded-full scale-125 relative p-3.5"
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
       >
-        <div className="flex items-center justify-center absolute inset-0 bg-neutral-900 z-10 rounded-full transform scale-[110%]">
+        <div className="flex items-center justify-center absolute inset-0 bg-neutral-900 z-10 rounded-full transform scale-110">
           <ArrowUp className="" size={14} />
         </div>
 
@@ -35,7 +35,7 @@ export const ScrollToTop = () => {
           )}
           style={{
             background:
-              "conic-gradient(from 0deg, #00B846, #01772e, #008732, #00B846)",
+              "conic-gradient(from 0deg, #00B846, #005722, #006927, #00B846)",
           }}
         />
       </button>
