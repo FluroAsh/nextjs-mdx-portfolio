@@ -1,9 +1,9 @@
 import Link from "next/link";
+import { slug } from "github-slugger";
 
 import { TableOfContents } from "./table-of-contents";
 import { PostAuthor } from "./post-author";
 import { usePostContext } from "@/lib/providers/post-provider";
-import { slug } from "github-slugger";
 
 const ArticleNavigation = ({
   heading,
@@ -68,14 +68,7 @@ export const PostSidebar = () => {
 
   return (
     <aside className="pr-10 min-w-[250px] max-w-[250px] hidden lg:block">
-      <PostAuthor
-        name="Ashley Thompson"
-        socials={[
-          { handle: "ashleygthompson", network: "X" },
-          { handle: "ashley-thompson-dev", network: "LinkedIn" },
-          { handle: "FluroAsh", network: "GitHub" },
-        ]}
-      />
+      <PostAuthor />
       <hr className="my-2" />
 
       <PostTags items={tags} />

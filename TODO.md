@@ -3,11 +3,9 @@
 - [ ] Blog Post Listing page
   - [ ] Complete initial layout
   - [ ] Add pagination
-  - [ ] Add filtering by tags
+  - [x] Add filtering by tags
   - [ ] Add sorting by date
-- [ ] Add global **header & footer**
-  - [ ] Add a global header
-  - [ ] Add a global footer
+- [ ] Add [microlink](https://github.com/microlinkhq/sdk) image previews for blog posts
 - [ ] Landing Page
   - [ ] Add a hero section
   - [ ] Add a featured blog post section
@@ -26,6 +24,9 @@
 
 ### In Progress
 
+- [ ] Add global **header & footer**
+  - [x] Add a global header
+  - [ ] Add a global footer
 - [ ] Add Pagination for Tag & Blog Post Listing pages
   - [ ] Add pagination for blog post listing page
   - [ ] Add pagination for tag listing page

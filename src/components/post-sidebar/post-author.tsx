@@ -1,28 +1,37 @@
 import Image from "next/image";
 
 import { cn } from "@/utils/misc";
-import { type Networks, NETWORKS } from "@/data/site-metadata";
-import * as SocialIcons from "../social-icons";
+import { author } from "@/data/author";
+import { Link } from "@/components/link";
 
-const SocialIconMap = {
-  [NETWORKS.X]: SocialIcons.X,
-  [NETWORKS.LinkedIn]: SocialIcons.LinkedIn,
-  [NETWORKS.GitHub]: SocialIcons.GitHub,
-  [NETWORKS.Instagram]: SocialIcons.Instagram,
+const filteredSocials = author.socials.filter(
+  ({ network }) => network !== "Instagram",
+);
+
+const displayVertical = filteredSocials.length < 4;
+const displayHorizontal = filteredSocials.length > 3;
+
+const SocialLinks = () => {
+  return filteredSocials.map(({ handle, network, href, Icon }) => (
+    <Link
+      key={network}
+      href={href}
+      className={cn(
+        "group flex text-xs [&>*]:transition-colors",
+        displayVertical && "gap-x-1 max-w-[155px]",
+      )}
+    >
+      <Icon className="min-w-4 min-h-4 size-4 group-hover:fill-green-400" />
+      {displayVertical && (
+        <span className="group-hover:text-green-400 tracking-wide truncate">
+          {handle}
+        </span>
+      )}
+    </Link>
+  ));
 };
 
-const linkedinProfilePath = "in/";
-
-export const PostAuthor = ({
-  name,
-  socials,
-}: {
-  name: string;
-  socials: {
-    handle: string;
-    network: Networks;
-  }[];
-}) => {
+export const PostAuthor = () => {
   return (
     <div className="flex py-2">
       <Image
@@ -33,39 +42,15 @@ export const PostAuthor = ({
         alt="Ashley Thompson Avatar"
       />
       <div className="leading-6 flex flex-col justify-center">
-        <p className="font-bold">{name}</p>
+        <p className="font-bold">{author.name}</p>
 
         <div
           className={cn(
             "flex gap-y-[2px] w-full",
-            socials.length > 3 ? "gap-x-1.5" : "flex-col",
+            displayHorizontal ? "gap-x-1.5" : "flex-col",
           )}
         >
-          {socials.map(({ handle, network }) => {
-            const IconComponent = SocialIconMap[network];
-
-            return (
-              <a
-                key={network}
-                href={`https://www.${network.toLowerCase()}.com/${network === "LinkedIn" ? linkedinProfilePath : ""}${handle}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={cn(
-                  "group flex text-xs [&>*]:transition-colors",
-                  socials.length < 4 && "gap-x-1 max-w-[155px]",
-                )}
-              >
-                <IconComponent
-                  className={"min-w-4 min-h-4 group-hover:fill-green-400"}
-                />
-                {socials.length < 4 && (
-                  <span className="group-hover:text-green-400 tracking-wide truncate">
-                    {handle}
-                  </span>
-                )}
-              </a>
-            );
-          })}
+          <SocialLinks />
         </div>
       </div>
     </div>

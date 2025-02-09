@@ -2,8 +2,9 @@
 
 import { cn } from "@/utils/misc";
 
-import { Footer } from "@/components/footer";
+import { NavBar } from "@/components/navigation/navbar";
 import { ScrollToTop } from "@/components/scroll-to-top";
+import { Footer } from "@/components/footer";
 
 export const BackgroundOverlay = () => (
   <div
@@ -24,8 +25,8 @@ export const RootLayoutWrapper = ({
   return (
     <div className="page-inner min-h-screen flex flex-col">
       <BackgroundOverlay />
-      <header />
-      <main className="flex-1 flex justify-center flex-grow [&>div]:w-full">
+      <NavBar />
+      <main className="flex-1 flex justify-center flex-grow [&>div]:w-full pt-16">
         {children}
       </main>
       <ScrollToTop />
