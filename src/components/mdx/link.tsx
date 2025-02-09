@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/misc";
 
 const className = cn("text-green-500 hover:text-green-300 transition-colors");
 

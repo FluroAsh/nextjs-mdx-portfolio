@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/misc";
 import { getImagePlaceholder } from "@/server/image";
 import { env } from "@/lib/env";
 

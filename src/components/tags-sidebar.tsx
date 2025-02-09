@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import tagData from "@/data/tag-data.json" assert { type: "json" };
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/misc";
 
 export const TagsSidebar = () => {
   const tags = Object.entries(tagData);

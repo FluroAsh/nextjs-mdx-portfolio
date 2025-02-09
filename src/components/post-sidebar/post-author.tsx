@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/misc";
 import { type Networks, NETWORKS } from "@/data/site-metadata";
 import * as SocialIcons from "../social-icons";
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/misc";
 
 import { Footer } from "@/components/footer";
 import { ScrollToTop } from "@/components/scroll-to-top";

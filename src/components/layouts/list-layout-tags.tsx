@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/misc";
 import { TagsSidebar } from "@/components/tags-sidebar";
 
 type ListLayoutTagsProps = { children: React.ReactNode };

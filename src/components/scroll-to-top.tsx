@@ -1,7 +1,7 @@
 import { useWindowScroll } from "react-use";
 import { ArrowUp } from "lucide-react";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/misc";
 import { useHasMounted } from "@/hooks/use-has-mounted";
 
 const AnimatedBorder = () => {

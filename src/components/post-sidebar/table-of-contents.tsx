@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/misc";
 import { type TocItem } from "@/lib/plugins/extract-headings";
 import { usePostContext } from "@/lib/providers/post-provider";
 import { isBrowser } from "@/utils/misc";

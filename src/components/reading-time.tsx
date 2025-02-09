@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/misc";
 import { format, parseISO } from "date-fns";
 import { type ReadTimeResults } from "reading-time";
 
