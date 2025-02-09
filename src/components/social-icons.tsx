@@ -1,3 +1,5 @@
+import { cn } from "@/utils/misc";
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type IconProps = { className?: string; [key: string]: any };
 
@@ -55,7 +57,7 @@ export const InstagramSVG = ({ className }: IconProps) => (
 
 const withIcon = (Icon: React.ComponentType<IconProps>) =>
   function ReactIcon({ className, ...props }: IconProps) {
-    return <Icon className={className} {...props} />;
+    return <Icon className={cn("fill-white", className)} {...props} />;
   };
 
 export const LinkedIn = withIcon(LinkedInSVG);

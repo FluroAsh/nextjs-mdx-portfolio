@@ -30,6 +30,7 @@
     "github-slugger": "^2.0.0",
     "hast-util-from-html-isomorphic": "^2.0.0",
     "lucide-react": "^0.472.0",
+    "motion": "^12.4.1",
     "next": "14.2.12",
     "next-contentlayer2": "^0.5.3",
     "probe-image-size": "^7.2.3",

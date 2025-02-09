@@ -1,3 +1,4 @@
+import { motion, useScroll } from "motion/react";
 import {
   LucideBookOpen,
   LucideCamera,
@@ -9,6 +10,7 @@ import { Link } from "@/components/link";
 import { author } from "@/data/author";
 import { paths } from "@/config/paths";
 import { cn } from "@/utils/misc";
+import { useEffect, useState } from "react";
 
 type NavLinkProps = {
   href: string;
@@ -21,7 +23,7 @@ const NavLink = ({ href, icon: Icon, label, className }: NavLinkProps) => {
   return (
     <Link
       href={href}
-      className="hover:text-green-600 transition-colors duration-300 "
+      className="hover:text-green-600 transition-colors duration-300 hover:cursor-pointer"
     >
       <Icon
         className={cn(
@@ -53,14 +55,42 @@ const SocialLinks = () => {
 };
 
 export const NavBar = () => {
+  const [visible, setVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
   const handleSearchClick = () => {
     // Implement search
     console.log("search clicked");
   };
 
+  const { scrollY } = useScroll();
+
+  useEffect(() => {
+    scrollY.on("change", (current) => {
+      if (current > lastScrollY + 50) {
+        setVisible(false);
+      } else if (current < lastScrollY - 50) {
+        setVisible(true);
+      }
+      setLastScrollY(current);
+    });
+  }, [scrollY, lastScrollY]);
+
   return (
-    <nav className="fixed top-4 left-1/2 transform -translate-x-1/2 z-10">
-      <ul className="flex items-center gap-4 py-3 px-4 sm:py-4 sm:px-8 bg-black/50 rounded-full backdrop-blur-sm border border-neutral-800">
+    <motion.nav
+      className="fixed top-4 left-1/2 z-10"
+      style={{ x: "-50%" }}
+      animate={{ y: visible ? 0 : -100 }}
+      transition={{
+        type: "spring",
+        stiffness: 100,
+        damping: 20,
+      }}
+    >
+      <ul
+        aria-label="navigation links"
+        className="flex items-center gap-4 py-3 px-4 sm:py-3 sm:px-8 bg-black/50 rounded-full backdrop-blur-sm border border-neutral-700"
+      >
         <li>
           <NavLink
             href={paths.home.getPathname()}
@@ -93,6 +123,6 @@ export const NavBar = () => {
         </li>
         <SocialLinks />
       </ul>
-    </nav>
+    </motion.nav>
   );
 };
