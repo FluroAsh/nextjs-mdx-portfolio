@@ -16,7 +16,11 @@ export const BackgroundOverlay = () => (
   />
 );
 
-export const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
+export const RootLayoutWrapper = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   return (
     <div className="page-inner min-h-screen flex flex-col">
       <BackgroundOverlay />
