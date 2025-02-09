@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { RootLayoutWrapper } from "@/components/layouts/layout-wrapper";
+import { RootLayoutWrapper } from "@/components/layouts/root-layout-wrapper";
 import { catamaran, firaSans } from "../fonts";
 
 import "@/css/globals.css";
