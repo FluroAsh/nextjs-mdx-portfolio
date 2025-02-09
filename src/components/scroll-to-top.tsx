@@ -4,10 +4,33 @@ import { ArrowUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useHasMounted } from "@/hooks/use-has-mounted";
 
+const AnimatedBorder = () => {
+  return (
+    <div
+      className={cn(
+        "absolute inset-0 rounded-full -z-10 transform transition duration-300",
+        "animate-rotate-conic-border",
+      )}
+      style={{
+        background:
+          "conic-gradient(from 0deg, #00B846, #004219, #006927, #00B846)",
+      }}
+    />
+  );
+};
+
+const InnerContent = () => {
+  return (
+    <div className="flex items-center justify-center absolute inset-0 bg-neutral-900 z-10 rounded-full transform scale-90">
+      <ArrowUp size={20} />
+    </div>
+  );
+};
+
 export const ScrollToTop = () => {
   const { y: scrollY } = useWindowScroll();
-
   const hasMounted = useHasMounted();
+
   if (!hasMounted) return null;
 
   const MIN_HEIGHT = 200;
@@ -21,23 +44,12 @@ export const ScrollToTop = () => {
       )}
     >
       <button
-        className="shadow-sm rounded-full scale-125 relative p-3.5"
+        className="shadow-sm rounded-full relative size-11"
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        aria-label="Scroll to top"
       >
-        <div className="flex items-center justify-center absolute inset-0 bg-neutral-900 z-10 rounded-full transform scale-110">
-          <ArrowUp className="" size={14} />
-        </div>
-
-        <div
-          className={cn(
-            "absolute inset-0 rounded-full -z-10 transform transition duration-300",
-            "animate-rotate-conic-border",
-          )}
-          style={{
-            background:
-              "conic-gradient(from 0deg, #00B846, #005722, #006927, #00B846)",
-          }}
-        />
+        <InnerContent />
+        <AnimatedBorder />
       </button>
     </div>
   );
