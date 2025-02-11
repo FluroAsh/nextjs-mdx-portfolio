@@ -54,7 +54,7 @@ const SocialLinks = () => {
   );
 };
 
-export const NavBar = () => {
+export const FloatingNav = () => {
   const [visible, setVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
@@ -74,6 +74,8 @@ export const NavBar = () => {
       }
       setLastScrollY(current);
     });
+
+    return () => scrollY.clearListeners();
   }, [scrollY, lastScrollY]);
 
   return (

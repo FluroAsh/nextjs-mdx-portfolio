@@ -2,7 +2,7 @@
 
 import { cn } from "@/utils/misc";
 
-import { NavBar } from "@/components/navigation/navbar";
+import { FloatingNav } from "@/components/navigation/navbar";
 import { ScrollToTop } from "@/components/scroll-to-top";
 import { Footer } from "@/components/footer";
 
@@ -25,7 +25,7 @@ export const RootLayoutWrapper = ({
   return (
     <div className="page-inner min-h-screen flex flex-col">
       <BackgroundOverlay />
-      <NavBar />
+      <FloatingNav />
       <main className="flex-1 flex justify-center flex-grow [&>div]:w-full pt-16">
         {children}
       </main>
