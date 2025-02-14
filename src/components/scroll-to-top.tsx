@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { useWindowScroll } from "react-use";
 import { ArrowUp } from "lucide-react";
 
@@ -37,11 +38,13 @@ export const ScrollToTop = () => {
   const isToggledOn = scrollY > MIN_HEIGHT;
 
   return (
-    <div
+    <motion.div
       className={cn(
         isToggledOn ? "opacity-100" : "opacity-0 pointer-events-none",
         "fixed bottom-4 right-4 overflow-visible transition-opacity duration-300",
       )}
+      whileTap={{ scale: 0.9 }}
+      transition={{ duration: 0.1 }}
     >
       <button
         className="shadow-sm rounded-full relative size-11"
@@ -51,6 +54,6 @@ export const ScrollToTop = () => {
         <InnerContent />
         <AnimatedBorder />
       </button>
-    </div>
+    </motion.div>
   );
 };
