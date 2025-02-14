@@ -1,10 +1,12 @@
 "use client";
 
-import { cn } from "@/utils/misc";
+import { useMedia } from "react-use";
 
-import { FloatingNav } from "@/components/navigation/navbar";
+import { cn } from "@/utils/misc";
+import { FloatingNav } from "@/components/navigation/floating-nav";
 import { ScrollToTop } from "@/components/scroll-to-top";
 import { Footer } from "@/components/footer";
+import { NavigationHeader } from "../navigation/navigation-header";
 
 export const BackgroundOverlay = () => (
   <div
@@ -22,11 +24,19 @@ export const RootLayoutWrapper = ({
 }: {
   children: React.ReactNode;
 }) => {
+  // FIXME: Error: Hydration failed because the initial UI does not match what was rendered on the server.
+  const isMobile = useMedia("(max-width: 640px)", false);
+
   return (
     <div className="page-inner min-h-screen flex flex-col">
       <BackgroundOverlay />
-      <FloatingNav />
-      <main className="flex-1 flex justify-center flex-grow [&>div]:w-full pt-16">
+      {isMobile ? <FloatingNav isMobile /> : <NavigationHeader />}
+      <main
+        className={cn(
+          isMobile && "pt-16",
+          "flex-1 flex justify-center flex-grow [&>div]:w-full",
+        )}
+      >
         {children}
       </main>
       <ScrollToTop />

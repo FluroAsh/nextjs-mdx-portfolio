@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { motion, useScroll } from "motion/react";
 import {
   LucideBookOpen,
@@ -10,7 +11,6 @@ import { Link } from "@/components/link";
 import { author } from "@/data/author";
 import { paths } from "@/config/paths";
 import { cn } from "@/utils/misc";
-import { useEffect, useState } from "react";
 
 type NavLinkProps = {
   href: string;
@@ -54,35 +54,47 @@ const SocialLinks = () => {
   );
 };
 
-export const FloatingNav = () => {
-  const [visible, setVisible] = useState(true);
+export const FloatingNav = ({
+  hideScrollYLimit = 0,
+  scrollThreshold = 50,
+  isMobile = false,
+}) => {
+  const [visible, setVisible] = useState(isMobile ? true : false);
   const [lastScrollY, setLastScrollY] = useState(0);
+
+  const { scrollY } = useScroll();
+  const visibleYOffset = isMobile ? 20 : 10;
 
   const handleSearchClick = () => {
     // Implement search
     console.log("search clicked");
   };
 
-  const { scrollY } = useScroll();
-
   useEffect(() => {
-    scrollY.on("change", (current) => {
-      if (current > lastScrollY + 50) {
+    const handleScroll = (current: number) => {
+      if (current > lastScrollY + scrollThreshold) {
         setVisible(false);
-      } else if (current < lastScrollY - 50) {
+      } else if (current < lastScrollY - scrollThreshold) {
         setVisible(true);
       }
-      setLastScrollY(current);
-    });
 
+      // Hide nav on desktop, ALWAYS, when below scrollThreshold
+      if (!isMobile && lastScrollY <= hideScrollYLimit) {
+        setVisible(false);
+      }
+
+      setLastScrollY(current);
+    };
+
+    scrollY.on("change", handleScroll);
     return () => scrollY.clearListeners();
-  }, [scrollY, lastScrollY]);
+  }, [hideScrollYLimit, scrollThreshold, isMobile, scrollY, lastScrollY]);
 
   return (
     <motion.nav
-      className="fixed top-4 left-1/2 z-10"
+      className="fixed left-1/2 z-10"
       style={{ x: "-50%" }}
-      animate={{ y: visible ? 0 : -100 }}
+      animate={{ y: visible ? visibleYOffset : -100 }}
       transition={{
         type: "spring",
         stiffness: 100,
