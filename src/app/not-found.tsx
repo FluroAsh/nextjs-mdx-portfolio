@@ -21,7 +21,7 @@ export default function NotFoundPage() {
       <p className="text-lg">Let&apos;s get you back on track.</p>
       <Link
         className="font-semibold text-lg text-green-500 hover:text-green-600 transition-colors duration-75"
-        href={paths.home.getPathname()}
+        href={paths.home.pathname}
         replace
       >
         Go to Home

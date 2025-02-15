@@ -10,26 +10,9 @@ import {
 
 import { cn } from "@/utils/misc";
 import { paths } from "@/config/paths";
-import { author } from "@/data/author";
 import { NavLink } from "./nav-link";
 import { isActive } from "@/utils/paths";
-
-const SocialLinks = () =>
-  author.socials.map(({ network, href, Icon: SocialIcon }) => (
-    <li key={network}>
-      <NavLink
-        href={href}
-        label={network}
-        icon={SocialIcon}
-        className={cn(
-          network === "X"
-            ? "fill-white hover:fill-green-500"
-            : "stroke-white hover:stroke-green-500",
-          "size-5",
-        )}
-      />
-    </li>
-  ));
+import { SocialLinks } from "./social-links";
 
 export const FloatingNav = ({
   hideScrollYLimit = 0,
