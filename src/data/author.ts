@@ -4,7 +4,7 @@ export const author = {
   name: "Ashley Thompson",
   socials: [
     {
-      handle: "ashleygthompsonwaerwrfgaergaergaer",
+      handle: "ashleygthompson",
       network: "X",
       Icon: SocialIcons.X,
       href: "https://x.com/ashleygthompson",

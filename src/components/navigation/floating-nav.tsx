@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { motion, useScroll } from "motion/react";
+import { usePathname } from "next/navigation";
+import { motion as m, useScroll } from "motion/react";
 import {
   LucideBookOpen,
   LucideCamera,
@@ -7,11 +8,10 @@ import {
   LucideSearch,
 } from "lucide-react";
 
-import { Link } from "@/components/link";
-import { author } from "@/data/author";
-import { paths } from "@/config/paths";
 import { cn } from "@/utils/misc";
-import { usePathname } from "next/navigation";
+import { paths } from "@/config/paths";
+import { author } from "@/data/author";
+import { Link } from "@/components/link";
 
 type NavLinkProps = {
   href: string;
@@ -22,10 +22,7 @@ type NavLinkProps = {
 
 const NavLink = ({ href, icon: Icon, label, className }: NavLinkProps) => {
   return (
-    <Link
-      href={href}
-      className="hover:text-green-600 transition-colors duration-300 hover:cursor-pointer"
-    >
+    <Link href={href}>
       <Icon
         className={cn(
           "size-5 sm:size-6 transition-colors duration-75",
@@ -47,7 +44,11 @@ const SocialLinks = () => {
             href={href}
             label={network}
             icon={SocialIcon}
-            className="fill-white hover:fill-green-500"
+            className={cn(
+              network === "X"
+                ? "fill-white hover:fill-green-500"
+                : "stroke-white hover:stroke-green-500",
+            )}
           />
         </li>
       ))}
@@ -106,8 +107,8 @@ export const FloatingNav = ({
   }, [pathname, isMobile, hideScrollYLimit]);
 
   return (
-    <motion.nav
-      className="fixed left-1/2 z-10"
+    <m.nav
+      className="fixed left-1/2 z-20"
       style={{ x: "-50%" }}
       initial={{ y: isMobile ? visibleYOffset : -100 }}
       animate={{ y: visible ? visibleYOffset : -100 }}
@@ -153,6 +154,6 @@ export const FloatingNav = ({
         </li>
         <SocialLinks />
       </ul>
-    </motion.nav>
+    </m.nav>
   );
 };

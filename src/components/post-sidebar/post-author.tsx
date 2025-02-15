@@ -21,7 +21,14 @@ const SocialLinks = () => {
         displayVertical && "gap-x-1 max-w-[155px]",
       )}
     >
-      <Icon className="min-w-4 min-h-4 size-4 group-hover:fill-green-400" />
+      <Icon
+        className={cn(
+          "size-4",
+          network === "X"
+            ? "group-hover:fill-green-500"
+            : "group-hover:text-green-500",
+        )}
+      />
       {displayVertical && (
         <span className="group-hover:text-green-400 tracking-wide truncate">
           {handle}
@@ -46,7 +53,7 @@ export const PostAuthor = () => {
 
         <div
           className={cn(
-            "flex gap-y-[2px] w-full",
+            "flex gap-y-[4px] w-full",
             displayHorizontal ? "gap-x-1.5" : "flex-col",
           )}
         >
