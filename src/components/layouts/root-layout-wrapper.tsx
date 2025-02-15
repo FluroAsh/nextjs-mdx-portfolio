@@ -24,7 +24,6 @@ export const RootLayoutWrapper = ({
 }: {
   children: React.ReactNode;
 }) => {
-  // FIXME: Error: Hydration failed because the initial UI does not match what was rendered on the server.
   const isMobile = useMedia("(max-width: 640px)", false);
 
   return (
