@@ -11,28 +11,7 @@ import {
 import { cn } from "@/utils/misc";
 import { paths } from "@/config/paths";
 import { author } from "@/data/author";
-import { Link } from "@/components/link";
-
-type NavLinkProps = {
-  href: string;
-  label: string;
-  icon: React.ElementType;
-  className?: string;
-};
-
-const NavLink = ({ href, icon: Icon, label, className }: NavLinkProps) => {
-  return (
-    <Link href={href}>
-      <Icon
-        className={cn(
-          "size-5 sm:size-6 transition-colors duration-75",
-          className,
-        )}
-      />
-      <span className="sr-only">{label}</span>
-    </Link>
-  );
-};
+import { NavLink } from "./nav-link";
 
 const SocialLinks = () => {
   return (
@@ -45,6 +24,7 @@ const SocialLinks = () => {
             label={network}
             icon={SocialIcon}
             className={cn(
+              "size-5 sm:size-6",
               network === "X"
                 ? "fill-white hover:fill-green-500"
                 : "stroke-white hover:stroke-green-500",
@@ -127,7 +107,7 @@ export const FloatingNav = ({
             href={paths.home.getPathname()}
             label="Home"
             icon={LucideHome}
-            className="hover:stroke-green-500"
+            className="size-5 sm:size-6 hover:stroke-green-500"
           />
         </li>
         <li>
@@ -135,7 +115,7 @@ export const FloatingNav = ({
             href={paths.blog.getPathname()}
             label="Blog"
             icon={LucideBookOpen}
-            className="hover:stroke-green-500"
+            className="size-5 sm:size-6 hover:stroke-green-500"
           />
         </li>
         <li>
@@ -143,7 +123,7 @@ export const FloatingNav = ({
             href={paths.gallery.getPathname()}
             label="Gallery"
             icon={LucideCamera}
-            className="hover:stroke-green-500"
+            className="size-5 sm:size-6 hover:stroke-green-500"
           />
         </li>
         <li className="flex">

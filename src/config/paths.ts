@@ -2,9 +2,6 @@ export const paths = {
   home: {
     getPathname: () => "/",
   },
-  about: {
-    getPathname: () => "/about",
-  },
   blog: {
     getPathname: () => "/blog",
   },
