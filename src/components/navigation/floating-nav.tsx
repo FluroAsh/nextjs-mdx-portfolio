@@ -96,8 +96,8 @@ export const FloatingNav = ({
   }, [hideScrollYLimit, scrollThreshold, isMobile, scrollY, lastScrollY]);
 
   useEffect(() => {
-    console.log("pathname", pathname);
     // Reset visibility and scroll position on route change
+    // Force hide nav on desktop when changing routes
     setVisible(isMobile ? true : false);
     lastScrollY.current = 0;
 
@@ -109,6 +109,7 @@ export const FloatingNav = ({
     <motion.nav
       className="fixed left-1/2 z-10"
       style={{ x: "-50%" }}
+      initial={{ y: isMobile ? visibleYOffset : -100 }}
       animate={{ y: visible ? visibleYOffset : -100 }}
       transition={{
         type: "spring",
