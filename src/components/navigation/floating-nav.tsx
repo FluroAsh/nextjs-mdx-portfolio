@@ -12,29 +12,24 @@ import { cn } from "@/utils/misc";
 import { paths } from "@/config/paths";
 import { author } from "@/data/author";
 import { NavLink } from "./nav-link";
+import { isActive } from "@/utils/paths";
 
-const SocialLinks = () => {
-  return (
-    <>
-      <div className="flex h-[24px] gap-4 border-l border-green-500" />
-      {author.socials.map(({ network, href, Icon: SocialIcon }) => (
-        <li key={network}>
-          <NavLink
-            href={href}
-            label={network}
-            icon={SocialIcon}
-            className={cn(
-              "size-5 sm:size-6",
-              network === "X"
-                ? "fill-white hover:fill-green-500"
-                : "stroke-white hover:stroke-green-500",
-            )}
-          />
-        </li>
-      ))}
-    </>
-  );
-};
+const SocialLinks = () =>
+  author.socials.map(({ network, href, Icon: SocialIcon }) => (
+    <li key={network}>
+      <NavLink
+        href={href}
+        label={network}
+        icon={SocialIcon}
+        className={cn(
+          network === "X"
+            ? "fill-white hover:fill-green-500"
+            : "stroke-white hover:stroke-green-500",
+          "size-5",
+        )}
+      />
+    </li>
+  ));
 
 export const FloatingNav = ({
   hideScrollYLimit = 0,
@@ -48,6 +43,12 @@ export const FloatingNav = ({
   const pathname = usePathname();
   const { scrollY } = useScroll();
   const visibleYOffset = isMobile ? 20 : 10;
+
+  const navLinkClasses = (path: string) =>
+    cn(
+      isActive(pathname, path) ? "stroke-green-500" : "stroke-white",
+      "size-5 hover:stroke-green-500",
+    );
 
   const handleSearchClick = () => {
     // Implement search
@@ -100,38 +101,41 @@ export const FloatingNav = ({
     >
       <ul
         aria-label="navigation links"
-        className="flex items-center gap-4 py-3 px-4 sm:py-3 sm:px-8 bg-black/50 rounded-full backdrop-blur-sm border border-neutral-700"
+        className="flex items-center gap-4 py-3 px-4 sm:py-3 sm:px-6 bg-black/50 rounded-full backdrop-blur-sm border border-neutral-700"
       >
         <li>
           <NavLink
-            href={paths.home.getPathname()}
+            href={paths.home.pathname}
             label="Home"
             icon={LucideHome}
-            className="size-5 sm:size-6 hover:stroke-green-500"
+            className="size-5 hover:stroke-green-500"
           />
         </li>
         <li>
           <NavLink
-            href={paths.blog.getPathname()}
+            href={paths.blog.pathname}
             label="Blog"
             icon={LucideBookOpen}
-            className="size-5 sm:size-6 hover:stroke-green-500"
+            className={navLinkClasses(paths.blog.pathname)}
           />
         </li>
         <li>
           <NavLink
-            href={paths.gallery.getPathname()}
+            href={paths.gallery.pathname}
             label="Gallery"
             icon={LucideCamera}
-            className="size-5 sm:size-6 hover:stroke-green-500"
+            className={navLinkClasses(paths.gallery.pathname)}
           />
         </li>
         <li className="flex">
           <button onClick={handleSearchClick}>
             <span className="sr-only">Search</span>
-            <LucideSearch className="size-5 sm:size-6 hover:stroke-green-500" />
+            <LucideSearch className="size-5 hover:stroke-green-500" />
           </button>
         </li>
+
+        <div className="flex h-[24px] gap-4 border-l border-green-500" />
+
         <SocialLinks />
       </ul>
     </m.nav>

@@ -11,16 +11,17 @@ import { NavLink } from "./nav-link";
 export const NavigationHeader = () => {
   const pathname = usePathname();
 
+  const navLinkClasses = (path: string) =>
+    cn(
+      isActive(pathname, path) ? "stroke-green-500" : "stroke-neutral-400",
+      "size-5 hover:stroke-green-500",
+    );
+
   return (
     <>
       <nav className="grid place-items-center bg-neutral-900 h-[55px] border-b border-neutral-700">
         <div className="flex items-center justify-between w-full max-w-screen-lg px-4">
           <a href="/" className="flex items-center gap-2">
-            {/* <img
-              src="/static/images/ash-logo.svg"
-              alt="Ash Logo"
-              className="w-8 h-8"
-            /> */}
             <span className="font-bold text-lg">
               <span className="text-green-500">A</span>
               Thompson
@@ -30,37 +31,25 @@ export const NavigationHeader = () => {
           <ul className="flex items-center gap-4">
             <li>
               <NavLink
-                href={paths.blog.getPathname()}
+                href={paths.blog.pathname}
                 label="Blog"
                 icon={LucideBookOpen}
-                className={cn(
-                  isActive(pathname, paths.blog.getPathname())
-                    ? "stroke-green-500"
-                    : "stroke-neutral-400",
-                  "size-5 hover:stroke-green-500",
-                )}
+                className={navLinkClasses(paths.blog.pathname)}
               />
             </li>
             <li>
               <NavLink
-                href={paths.gallery.getPathname()}
+                href={paths.gallery.pathname}
                 label="Gallery"
                 icon={LucideCamera}
-                className={cn(
-                  isActive(pathname, paths.gallery.getPathname())
-                    ? "stroke-green-500"
-                    : "stroke-neutral-400",
-                  "size-5 hover:stroke-green-500",
-                )}
+                className={navLinkClasses(paths.gallery.pathname)}
               />
             </li>
-            <li>
-              <NavLink
-                href="#"
-                label="Search"
-                icon={LucideSearch}
-                className="size-5 stroke-neutral-400 hover:stroke-green-500"
-              />
+            <li className="flex">
+              <button>
+                <span className="sr-only">Search</span>
+                <LucideSearch className="size-5 stroke-neutral-400 hover:stroke-green-500" />
+              </button>
             </li>
 
             <div className="border-r border-neutral-700 h-6" />

@@ -1,21 +1,21 @@
 export const paths = {
   home: {
-    getPathname: () => "/",
+    pathname: "/",
   },
   blog: {
-    getPathname: () => "/blog",
+    pathname: "/blog",
   },
   gallery: {
-    getPathname: () => "/gallery",
+    pathname: "/gallery",
   },
   notFound: {
-    getPathname: () => "/404",
+    pathname: "/404",
   },
   post: {
     getPathname: (slug: string) => `/blog/${slug}`,
   },
   tags: {
-    getPathname: () => "/tags",
+    pathname: "/tags",
   },
   tag: {
     getPathname: (tag: string) => `/tags/${tag}`,
