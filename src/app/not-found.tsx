@@ -8,7 +8,7 @@ export default function NotFoundPage() {
       <div>
         <Image
           src="/static/images/poor-milhouse.gif"
-          className="absolute inset-0 w-full h-full -z-10 opacity-50 object-cover"
+          className="absolute inset-0 w-full h-full z-[-1] object-cover brightness-50"
           height={480}
           width={274}
           alt="Ralph Wiggum from The Simpsons on a bus, chuckling."
