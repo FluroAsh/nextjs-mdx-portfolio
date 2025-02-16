@@ -1,8 +1,9 @@
 import Link from "next/link";
 
 import tagData from "@/data/tag-data.json" assert { type: "json" };
+import { paths } from "@/config/paths";
 
-export default async function Page() {
+export default function Page() {
   const tags = Object.entries(tagData);
 
   return (
@@ -13,7 +14,7 @@ export default async function Page() {
         {tags.map(([tag, count]) => (
           <div key={tag}>
             <Link
-              href={`tags/${tag}`}
+              href={paths.tag.getPathname(tag)}
               className="text-lg font-semibold uppercase hover:text-green-500 transition-colors duration-75 leading-none"
             >
               {tag} <span className="font-mono text-sm">({count})</span>

@@ -39,7 +39,7 @@ const ArticleNavigation = ({
       <div className="mt-2 w-fit ">
         <Link
           className="hover:text-green-500 text-sm py-2 transition-colors duration-75"
-          href="/blog"
+          href={paths.blog}
         >
           <span>&larr;&nbsp;</span>
           <span className="underline">Back to Blog</span>
@@ -56,7 +56,7 @@ const PostTags = ({ items }: { items: string[] }) => (
       {items.map((item, idx) => (
         <Link
           key={`tag-${idx}`}
-          href={`/tags/${slug(item)}`}
+          href={paths.tag.getPathname(slug(item))}
           className="text-green-500 font-semibold text-sm hover:text-green-300 transition-colors duration-75"
         >
           <li>{item}</li>
@@ -87,7 +87,7 @@ export const PostSidebar = () => {
         <ArticleNavigation
           heading="Previously"
           title={prev.title}
-          link={`${paths.post.getPathname(prev.slug)}`}
+          link={paths.post.getPathname(prev.slug)}
         />
       )}
 
@@ -95,7 +95,7 @@ export const PostSidebar = () => {
         <ArticleNavigation
           heading="Up Next"
           title={next.title}
-          link={`${paths.post.getPathname(next.slug)}`}
+          link={paths.post.getPathname(next.slug)}
         />
       )}
 

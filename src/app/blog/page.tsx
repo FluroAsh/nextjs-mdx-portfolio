@@ -2,7 +2,7 @@ import { allBlogs } from "contentlayer/generated";
 import { MotionPostsContainer, PostPreview } from "@/components/post-preview";
 import { ListLayoutTags } from "@/components/layouts/list-layout-tags";
 
-export default async function Page() {
+export default function Page() {
   const posts = allBlogs.filter((post) => !post.draft);
 
   return (

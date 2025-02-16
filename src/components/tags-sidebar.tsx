@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { slug } from "github-slugger";
 
 import tagData from "@/data/tag-data.json" assert { type: "json" };
 import { cn } from "@/utils/misc";
+import { paths } from "@/config/paths";
 
 export const TagsSidebar = () => {
   const tags = Object.entries(tagData);
@@ -27,7 +29,7 @@ export const TagsSidebar = () => {
         {tags.map(([tag, count]) => (
           <li key={tag}>
             <a
-              href={`/tags/${tag}`}
+              href={paths.tag.getPathname(slug(tag))}
               className={cn(
                 "py-[2px] text-sm text-neutral-500 uppercase transition-colors duration-75",
                 tag !== activeTag && "hover:text-neutral-300",

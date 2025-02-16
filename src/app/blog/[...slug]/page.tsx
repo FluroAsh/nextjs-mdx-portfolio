@@ -10,7 +10,7 @@ type PostPageProps = {
   params: { slug: string[] };
 };
 
-export async function generateStaticParams() {
+export function generateStaticParams() {
   return allBlogs.map((p) => ({
     slug: p.slug.split("/").map((name) => decodeURI(name)),
   }));
