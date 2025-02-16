@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { slug } from "github-slugger";
 
+import { paths } from "@/config/paths";
+import { usePostContext } from "@/lib/contexts/post-context";
 import { TableOfContents } from "./table-of-contents";
 import { PostAuthor } from "./post-author";
-import { usePostContext } from "@/lib/providers/post-provider";
 
 const ArticleNavigation = ({
   heading,
@@ -77,7 +78,7 @@ export const PostSidebar = () => {
         <ArticleNavigation
           heading="Previously"
           title={prev.title}
-          link={`/blog/${prev.slug}`}
+          link={`${paths.post.getPathname(prev.slug)}`}
         />
       )}
 
@@ -85,7 +86,7 @@ export const PostSidebar = () => {
         <ArticleNavigation
           heading="Up Next"
           title={next.title}
-          link={`/blog/${next.slug}`}
+          link={`${paths.post.getPathname(next.slug)}`}
         />
       )}
       <hr className="my-2" />

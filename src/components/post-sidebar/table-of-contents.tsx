@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { cn } from "@/utils/misc";
 import { type TocItem } from "@/lib/plugins/extract-headings";
-import { usePostContext } from "@/lib/providers/post-provider";
+import { usePostContext } from "@/lib/contexts/post-context";
 import { isBrowser } from "@/utils/misc";
 
 const getPaddingClass = (depth: number) => {

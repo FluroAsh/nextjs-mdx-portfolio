@@ -10,7 +10,7 @@ import "remark-github-blockquote-alert/alert.css";
 
 import { PostSidebar } from "@/components/post-sidebar";
 import ArticleDateTime from "@/components/reading-time";
-import { usePostContext } from "@/lib/providers/post-provider";
+import { usePostContext } from "@/lib/contexts/post-context";
 
 export default function PostLayout({
   children,
