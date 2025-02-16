@@ -9,9 +9,8 @@ import {
 } from "lucide-react";
 
 import { cn } from "@/utils/misc";
-import { paths } from "@/config/paths";
+import { isActive, paths } from "@/config/paths";
 import { NavLink } from "./nav-link";
-import { isActive } from "@/utils/paths";
 import { SocialLinks } from "./social-links";
 
 export const FloatingNav = ({

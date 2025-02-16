@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useMedia } from "react-use";
 
 import { cn } from "@/utils/misc";
@@ -25,6 +26,8 @@ export const RootLayoutWrapper = ({
   children: React.ReactNode;
 }) => {
   const isMobile = useMedia("(max-width: 640px)", false);
+  const pathname = usePathname();
+  const isHomepage = pathname === "/";
 
   return (
     <div className="page-inner min-h-screen flex flex-col">
@@ -32,7 +35,7 @@ export const RootLayoutWrapper = ({
       {isMobile ? <FloatingNav isMobile /> : <NavigationHeader />}
       <main
         className={cn(
-          isMobile && "pt-16",
+          !isHomepage && isMobile && "pt-16",
           "flex-1 flex justify-center flex-grow [&>div]:w-full",
         )}
       >

@@ -3,8 +3,7 @@ import { usePathname } from "next/navigation";
 import { LucideBookOpen, LucideCamera, LucideSearch } from "lucide-react";
 
 import { cn } from "@/utils/misc";
-import { isActive } from "@/utils/paths";
-import { paths } from "@/config/paths";
+import { isActive, paths } from "@/config/paths";
 import { NavLink } from "./nav-link";
 import { SocialLinks } from "./social-links";
 import { FloatingNav } from "./floating-nav";
@@ -20,7 +19,7 @@ export const NavigationHeader = () => {
 
   return (
     <>
-      <nav className="grid place-items-center bg-gradient-to-t from-black/60 to-neutral-900/60 h-[55px] border-b border-neutral-800 shadow-md">
+      <nav className="grid place-items-center bg-gradient-to-t from-black/60 to-neutral-900/60 h-header border-b border-neutral-800 shadow-md">
         <div className="flex items-center justify-between w-full max-w-screen-lg px-4">
           <Link href="/" className="flex items-center gap-2">
             <span className="font-bold text-lg">

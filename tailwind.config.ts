@@ -11,6 +11,9 @@ export default {
   ],
   theme: {
     extend: {
+      height: {
+        header: "var(--header-height)",
+      },
       fontFamily: {
         firaSans: ["var(--font-fira-sans)", ...theme.fontFamily.sans],
         catamaran: ["var(--font-catamaran)", ...theme.fontFamily.sans],

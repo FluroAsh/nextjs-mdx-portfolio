@@ -21,3 +21,7 @@ export const paths = {
     getPathname: (tag: string) => `/tags/${tag}`,
   },
 };
+
+export const isActive = (pathname: string, path: string) =>
+  pathname.includes(path) ||
+  (pathname.includes(paths.tags.pathname) && path === paths.blog.pathname);
