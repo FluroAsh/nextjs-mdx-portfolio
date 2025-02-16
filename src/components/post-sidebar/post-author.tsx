@@ -40,7 +40,7 @@ const SocialLinks = () => {
 
 export const PostAuthor = () => {
   return (
-    <div className="flex py-2">
+    <div className="flex pb-2">
       <Image
         className="size-16 rounded-full mr-2 aspect-square shadow-md drdop-shadow-sm shadow-neutral-200/30 self-center"
         src="/static/images/ash-avatar.png"

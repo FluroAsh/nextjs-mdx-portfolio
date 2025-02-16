@@ -5,6 +5,15 @@ import { paths } from "@/config/paths";
 import { usePostContext } from "@/lib/contexts/post-context";
 import { TableOfContents } from "./table-of-contents";
 import { PostAuthor } from "./post-author";
+import { Separator } from "../separator";
+
+const ArticleSeparator = () => (
+  <Separator
+    from="from-neutral-600/10"
+    via="via-neutral-600"
+    to="to-neutral-600/10"
+  />
+);
 
 const ArticleNavigation = ({
   heading,
@@ -16,7 +25,7 @@ const ArticleNavigation = ({
   link: string;
 }) => (
   <>
-    <hr className="my-2" />
+    <ArticleSeparator />
 
     <div className="my-4 px-2">
       <h3 className="font-bold uppercase">{heading}</h3>
@@ -68,9 +77,9 @@ export const PostSidebar = () => {
   const showNext = !hasPrevious && !!next;
 
   return (
-    <aside className="pr-10 min-w-[250px] max-w-[250px] hidden lg:block">
+    <aside className="pr-10 min-w-[250px] max-w-[250px] hidden lg:block pt-2">
       <PostAuthor />
-      <hr className="my-2" />
+      <ArticleSeparator />
 
       <PostTags items={tags} />
 
@@ -89,8 +98,8 @@ export const PostSidebar = () => {
           link={`${paths.post.getPathname(next.slug)}`}
         />
       )}
-      <hr className="my-2" />
 
+      <ArticleSeparator />
       <TableOfContents />
     </aside>
   );

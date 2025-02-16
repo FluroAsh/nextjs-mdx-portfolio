@@ -33,13 +33,6 @@ h3 {
   @apply font-firaSans;
 }
 
-/* ---- Subheading Section Separator ---- */
-h2:not(h2:first-of-type)::after {
-  content: "";
-  @apply block absolute -bottom-1/2 w-full h-[2px] mt-2 rounded-full;
-  @apply bg-gradient-to-r from-transparent via-green-600 to-transparent;
-}
-
 /* ---- Anchor Link Styles ---- */
 .content-header {
   @apply relative scroll-m-4 leading-none;

@@ -11,6 +11,7 @@ import "remark-github-blockquote-alert/alert.css";
 import { PostSidebar } from "@/components/post-sidebar";
 import ArticleDateTime from "@/components/reading-time";
 import { usePostContext } from "@/lib/contexts/post-context";
+import { Separator } from "../separator";
 
 export default function PostLayout({
   children,
@@ -25,12 +26,16 @@ export default function PostLayout({
         <header className="text-center pt-4">
           <h1 className="text-3xl tracking-tight">{post.title}</h1>
           <ArticleDateTime date={post.date} stats={post.readingTime} />
-          <hr className="my-2" />
+          <Separator
+            from="from-neutral-600/10"
+            via="via-neutral-600"
+            to="to-neutral-600/10"
+          />
         </header>
 
         <div className="block sm:flex">
           <PostSidebar />
-          <article className="prose prose-invert pt-2">{children}</article>
+          <article className="prose prose-invert pt-4">{children}</article>
         </div>
       </div>
     </div>
