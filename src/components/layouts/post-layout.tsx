@@ -20,15 +20,15 @@ export default function PostLayout({
   const { post } = usePostContext();
 
   return (
-    <div className="flex flex-col">
-      <div className="mx-auto px-6">
-        <header className="text-center pt-4 mx-auto">
+    <div className="block: sm:flex sm:flex-col">
+      <div className="mx-auto px-8">
+        <header className="text-center pt-4">
           <h1 className="text-3xl tracking-tight">{post.title}</h1>
           <ArticleDateTime date={post.date} stats={post.readingTime} />
           <hr className="my-2" />
         </header>
 
-        <div className="flex">
+        <div className="block sm:flex">
           <PostSidebar />
           <article className="prose prose-invert pt-2">{children}</article>
         </div>

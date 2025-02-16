@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 @import "./animations.css";
 
 :root {
@@ -32,6 +33,13 @@ h3 {
   @apply font-firaSans;
 }
 
+/* ---- Subheading Section Separator ---- */
+h2:not(h2:first-of-type)::after {
+  content: "";
+  @apply block absolute -bottom-1/2 w-full h-[2px] mt-2 rounded-full;
+  @apply bg-gradient-to-r from-transparent via-green-600 to-transparent;
+}
+
 /* ---- Anchor Link Styles ---- */
 .content-header {
   @apply relative scroll-m-4 leading-none;
@@ -55,7 +63,7 @@ h3 {
 }
 
 .content-header .content-header-link > svg {
-  @apply h-full w-8;
+  @apply h-full w-6 md:w-8;
 }
 
 /* ---- Prose Overrides ---- */
@@ -65,10 +73,10 @@ h3 {
 
 /* ---- Progressive Enhancements ---- */
 /* ---- Webkit ---- */
-
 ::-webkit-scrollbar {
   display: block;
   width: 7px;
+  height: 7px;
 }
 
 ::-webkit-scrollbar-track {

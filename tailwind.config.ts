@@ -24,6 +24,8 @@ export default {
         DEFAULT: {
           css: {
             maxWidth: "80ch", // 80 characters by default
+            pre: false,
+            figcaption: false,
           },
         },
       },
