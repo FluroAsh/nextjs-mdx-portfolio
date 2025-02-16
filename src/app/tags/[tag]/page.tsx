@@ -1,10 +1,9 @@
 import { allBlogs } from "contentlayer/generated";
 import { slug } from "github-slugger";
 
-import * as Preview from "@/components/post-preview";
-import { PublicationDate } from "@/components/reading-time";
-import { ListLayoutTags } from "@/components/layouts/list-layout-tags";
 import tagData from "@/data/tag-data.json";
+import { MotionPostsContainer, PostPreview } from "@/components/post-preview";
+import { ListLayoutTags } from "@/components/layouts/list-layout-tags";
 
 export const generateStaticParams = async () => {
   return Object.keys(tagData).map((tag) => ({
@@ -21,29 +20,18 @@ export default async function TagPage(props: { params: { tag: string } }) {
 
   return (
     <ListLayoutTags>
-      {filteredPosts.map((post) => (
-        <div key={post._id} className="w-full">
-          <PublicationDate
+      <MotionPostsContainer>
+        {filteredPosts.map((post) => (
+          <PostPreview
+            key={post._id}
+            title={post.title}
+            slug={post.slug}
             date={post.date}
-            className="inline-block text-md pb-1"
+            description={post.description}
+            tags={post.tags}
           />
-
-          <div className="overflow-hidden">
-            <Preview.Title title={post.title} slug={post.slug} />
-
-            <Preview.Tags
-              items={post.tags.map((tag) => (
-                <Preview.Tag key={tag} tag={tag} />
-              ))}
-            />
-
-            <Preview.Desription
-              description={post.description}
-              characterLimit={280}
-            />
-          </div>
-        </div>
-      ))}
+        ))}
+      </MotionPostsContainer>
     </ListLayoutTags>
   );
 }

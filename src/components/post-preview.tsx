@@ -1,18 +1,23 @@
+"use client";
+
 import Link from "next/link";
 import { slug } from "github-slugger";
+import { motion as m } from "motion/react";
 
-export const Desription = ({
-  description,
+import { PublicationDate } from "./reading-time";
+
+export const Description = ({
+  text,
   characterLimit,
 }: {
-  description: string;
+  text: string;
   characterLimit: number;
 }) => {
   return (
     <p className="prose prose-invert">
-      {description.length > characterLimit
-        ? `${description.slice(0, characterLimit)}...`
-        : description}
+      {text.length > characterLimit
+        ? `${text.slice(0, characterLimit)}...`
+        : text}
     </p>
   );
 };
@@ -37,3 +42,72 @@ export const Title = ({ title, slug }: { title: string; slug: string }) => (
     <h2>{title}</h2>
   </Link>
 );
+
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      type: "spring",
+      stiffness: 100,
+      staggerChildren: 0.08,
+      ease: [0.17, 0.67, 0.83, 0.67],
+    },
+  },
+};
+
+const item = {
+  hidden: { y: -10, opacity: 0 },
+  show: { y: 0, opacity: 1 },
+};
+
+export const MotionPostsContainer = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  return (
+    <m.div
+      className="flex flex-col gap-4"
+      variants={container}
+      initial="hidden"
+      animate="show"
+    >
+      {children}
+    </m.div>
+  );
+};
+
+type PostPreviewProps = {
+  title: string;
+  slug: string;
+  date: string;
+  description: string;
+  tags: string[];
+};
+
+export const PostPreview = ({
+  title,
+  slug,
+  date,
+  description,
+  tags,
+}: PostPreviewProps) => {
+  return (
+    <m.div className="w-full" variants={item}>
+      <PublicationDate date={date} className="inline-block text-md pb-1" />
+
+      <div className="overflow-hidden">
+        <Title title={title} slug={slug} />
+
+        <Tags
+          items={tags.map((tag) => (
+            <Tag key={tag} tag={tag} />
+          ))}
+        />
+
+        <Description text={description} characterLimit={280} />
+      </div>
+    </m.div>
+  );
+};
