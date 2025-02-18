@@ -8,11 +8,11 @@ export default function Home() {
     <div className="pt-0">
       <section
         className={cn(
-          "max-w-screen-xl h-screen sm:h-[calc(100vh_-_var(--header-height))] max-h-screen relative",
+          "h-screen sm:h-[calc(100vh_-_var(--header-height))] relative",
           "bg-gradient-to-b from-black via-neutral-900 to-black",
         )}
       >
-        <div className="grid place-items-center mx-auto p-8 h-full">
+        <div className="grid place-items-center mx-auto p-8 h-full max-w-screen-xl">
           <div className="text-center">
             <p className="font-bold text-3xl tracking-wider">Ashley Thompson</p>
             <div className="mt-2">
