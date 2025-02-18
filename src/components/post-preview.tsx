@@ -68,12 +68,12 @@ export const MotionPostsContainer = ({
 }) => {
   return (
     <m.div
-      className="flex flex-col gap-4"
+      className="flex flex-col justify-between h-full"
       variants={container}
       initial="hidden"
       animate="show"
     >
-      {children}
+      <div className="flex flex-col gap-4">{children}</div>
     </m.div>
   );
 };

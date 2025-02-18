@@ -13,7 +13,6 @@ export const ListLayoutTags = ({ children }: ListLayoutTagsProps) => {
     >
       <TagsSidebar />
       <div className="flex flex-col gap-4">{children}</div>
-      {/* TODO: Pagination */}
     </div>
   );
 };
