@@ -1,10 +1,9 @@
-import { slug } from "github-slugger";
-
-import { ListLayoutTags } from "@/components/layouts/list-layout-tags";
-import { Pagination } from "@/components/pagination";
-
 import { allBlogs } from "contentlayer/generated";
-import { POSTS_PER_PAGE } from "@/config/site";
+
+import { getPaginatedPosts } from "@/lib/helpers";
+import { filterByTag } from "@/utils/blog";
+import { Pagination } from "@/components/pagination";
+import { ListLayoutTags } from "@/components/layouts/list-layout-tags";
 import { MotionPostsContainer, PostPreview } from "@/components/post-preview";
 
 export default async function Page(props: {
@@ -12,16 +11,11 @@ export default async function Page(props: {
 }) {
   const { page, tag } = await props.params;
 
-  const filteredPosts = allBlogs.filter(
-    (post) => !post.draft && post.tags.map((t) => slug(t)).includes(tag),
+  const filteredPosts = allBlogs.filter((post) => filterByTag(post, tag));
+  const { paginatedPosts, totalPages } = getPaginatedPosts(
+    parseInt(page),
+    filteredPosts,
   );
-
-  const start = (parseInt(page) - 1) * POSTS_PER_PAGE;
-  const end = parseInt(page) * POSTS_PER_PAGE;
-
-  const paginatedPosts = filteredPosts.slice(start, end);
-
-  const totalPages = Math.ceil(filteredPosts.length / POSTS_PER_PAGE);
 
   return (
     <ListLayoutTags>

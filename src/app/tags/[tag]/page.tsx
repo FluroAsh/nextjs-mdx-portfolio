@@ -1,11 +1,11 @@
 import { allBlogs } from "contentlayer/generated";
-import { slug } from "github-slugger";
 
 import tagData from "@/data/tag-data.json";
 import { MotionPostsContainer, PostPreview } from "@/components/post-preview";
 import { ListLayoutTags } from "@/components/layouts/list-layout-tags";
 import { Pagination } from "@/components/pagination";
-import { POSTS_PER_PAGE } from "@/config/site";
+import { filterByTag } from "@/utils/blog";
+import { getPaginatedPosts } from "@/lib/helpers";
 
 export const generateStaticParams = async () => {
   return Object.keys(tagData).map((tag) => ({
@@ -16,12 +16,8 @@ export const generateStaticParams = async () => {
 export default async function TagPage(props: { params: { tag: string } }) {
   const { tag } = await props.params;
 
-  const filteredPosts = allBlogs.filter(
-    (post) => !post.draft && post.tags.map((t) => slug(t)).includes(tag),
-  );
-
-  const paginatedPosts = filteredPosts.slice(0, POSTS_PER_PAGE);
-  const totalPages = Math.ceil(filteredPosts.length / POSTS_PER_PAGE);
+  const filteredPosts = allBlogs.filter((post) => filterByTag(post, tag));
+  const { paginatedPosts, totalPages } = getPaginatedPosts(1, filteredPosts);
 
   return (
     <ListLayoutTags>

@@ -2,7 +2,7 @@
 
 - [ ] Blog Post Listing page
   - [ ] Complete initial layout
-  - [ ] Add pagination
+  - [x] Add pagination
   - [x] Add filtering by tags
   - [ ] Add sorting by date
 - [ ] Add [microlink](https://github.com/microlinkhq/sdk) image previews for blog posts
@@ -27,14 +27,9 @@
 - [ ] Add global **header & footer**
   - [x] Add a global header
   - [ ] Add a global footer
-- [ ] Add Pagination for Tag & Blog Post Listing pages
-  - [ ] Add pagination for blog post listing page
-  - [ ] Add pagination for tag listing page
 - [x] Add "Tags" and "Featured Image" to Blog Post Layout
   - [x] Add tags to blog post layout
   - [ ] Add featured image to blog post layout
-- [ ] Add a _global_ "Scroll to Top" button below 500px scroll height
-- [x] Previous & Next post links to sidebar
 
 ### Stretch Goals
 
