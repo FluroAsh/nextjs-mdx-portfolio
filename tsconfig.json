@@ -18,6 +18,7 @@
       "@/*": ["./src/*"],
       "contentlayer/generated": ["./.contentlayer/generated"]
     },
+    "types": ["vitest/globals"],
     "plugins": [{ "name": "next" }]
   },
   "include": [

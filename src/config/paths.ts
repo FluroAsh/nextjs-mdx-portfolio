@@ -25,5 +25,5 @@ export const paths = {
 export const isActive = (pathname: string, targetPath: string) =>
   targetPath.includes(`${paths.tags.pathname}/`) || isBlogPage(pathname);
 
-const isBlogPage = (pathname: string) =>
+export const isBlogPage = (pathname: string) =>
   pathname === paths.blog.pathname || /^\/blog\/page\/\d+$/.test(pathname);
