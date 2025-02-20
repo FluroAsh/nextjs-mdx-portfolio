@@ -9,5 +9,5 @@ export const filterByTag = (post: Blog, tag: string) => {
   return !post.draft && post.tags.map((t) => slug(t)).includes(tag);
 };
 
-/** Returns true if post is not marked as a `draft`. */
+/** Returns true if post is not marked `draft`. */
 export const filterByDraft = (post: Blog) => !post.draft;

@@ -22,7 +22,8 @@ export const paths = {
   },
 };
 
-// FIXME: "ALL POSTS" not active when on a paginated page (eg: /blog/page/2)
-export const isActive = (pathname: string, path: string) =>
-  pathname.includes(path) ||
-  (pathname.includes(paths.tags.pathname) && path === paths.blog.pathname);
+export const isActive = (pathname: string, targetPath: string) =>
+  targetPath.includes(`${paths.tags.pathname}/`) || isBlogPage(pathname);
+
+const isBlogPage = (pathname: string) =>
+  pathname === paths.blog.pathname || /^\/blog\/page\/\d+$/.test(pathname);

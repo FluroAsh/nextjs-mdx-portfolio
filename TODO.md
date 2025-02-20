@@ -1,5 +1,8 @@
 ### Todo
 
+- [ ] Setup unit tests
+  - [ ] Add Vitest
+  - [ ] Write initial tests
 - [ ] Blog Post Listing page
   - [ ] Complete initial layout
   - [x] Add pagination

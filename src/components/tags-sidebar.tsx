@@ -6,19 +6,20 @@ import { slug } from "github-slugger";
 
 import tagData from "@/data/tag-data.json" assert { type: "json" };
 import { cn } from "@/utils/misc";
-import { paths } from "@/config/paths";
+import { isActive, paths } from "@/config/paths";
 
 export const TagsSidebar = () => {
   const tags = Object.entries(tagData);
-  const pathSegments = usePathname().split("/").filter(Boolean);
+  const pathname = usePathname();
+  const pathSegments = pathname.split("/").filter(Boolean);
   const activeTag = pathSegments.length >= 2 ? pathSegments[1] : null;
 
   return (
     <div className="hidden sm:inline-block w-full max-h-fit bg-neutral-900/60 border border-neutral-700 rounded-sm px-6 py-8 ">
       <Link
-        href="/blog"
+        href={paths.blog.pathname}
         className={cn(
-          pathSegments.length < 2 && "text-green-500",
+          isActive(pathname, paths.blog.pathname) && "text-green-500",
           "text-lg font-bold pb-2 uppercase hover:text-green-500 transition-colors duration-75",
         )}
       >
