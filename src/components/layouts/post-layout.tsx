@@ -24,7 +24,7 @@ export default function PostLayout({
     <div className="block: sm:flex sm:flex-col">
       <div className="mx-auto px-8">
         <header className="text-center sm:pt-4">
-          <h1 className="text-3xl tracking-tight text-balance">{post.title}</h1>
+          <h1 className="text-3xl font-bold text-balance">{post.title}</h1>
           <ArticleDateTime date={post.date} stats={post.readingTime} />
           <Separator
             from="from-neutral-600/10"
