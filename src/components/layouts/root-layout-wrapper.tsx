@@ -5,8 +5,8 @@ import { useMedia } from "react-use";
 
 import { cn } from "@/utils/misc";
 import { FloatingNav } from "@/components/navigation/floating-nav";
-import { ScrollToTop } from "@/components/scroll-to-top";
-import { Footer } from "@/components/footer";
+import { ScrollToTop } from "@/components/ui/scroll-to-top";
+import { Footer } from "@/components/ui/footer";
 import { NavigationHeader } from "../navigation/navigation-header";
 
 export const BackgroundOverlay = () => (

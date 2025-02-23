@@ -9,9 +9,9 @@ import "@/css/shiki.css";
 import "remark-github-blockquote-alert/alert.css";
 
 import { PostSidebar } from "@/components/post-sidebar";
-import ArticleDateTime from "@/components/reading-time";
+import ArticleDateTime from "@/components/ui/reading-time";
 import { usePostContext } from "@/lib/contexts/post-context";
-import { Separator } from "../separator";
+import { Separator } from "../ui/separator";
 
 export default function PostLayout({
   children,

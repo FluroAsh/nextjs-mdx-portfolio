@@ -1,9 +1,12 @@
 import { allBlogs } from "contentlayer/generated";
 
 import tagData from "@/data/tag-data.json";
-import { MotionPostsContainer, PostPreview } from "@/components/post-preview";
+import {
+  MotionPostsContainer,
+  PostPreview,
+} from "@/components/ui/post-preview";
 import { ListLayoutTags } from "@/components/layouts/list-layout-tags";
-import { Pagination } from "@/components/pagination";
+import { Pagination } from "@/components/ui/pagination";
 import { filterByTag } from "@/utils/blog";
 import { getPaginatedPosts } from "@/lib/helpers";
 

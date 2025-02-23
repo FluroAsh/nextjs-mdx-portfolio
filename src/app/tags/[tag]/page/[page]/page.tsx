@@ -2,9 +2,12 @@ import { allBlogs } from "contentlayer/generated";
 
 import { getPaginatedPosts } from "@/lib/helpers";
 import { filterByTag } from "@/utils/blog";
-import { Pagination } from "@/components/pagination";
+import { Pagination } from "@/components/ui/pagination";
 import { ListLayoutTags } from "@/components/layouts/list-layout-tags";
-import { MotionPostsContainer, PostPreview } from "@/components/post-preview";
+import {
+  MotionPostsContainer,
+  PostPreview,
+} from "@/components/ui/post-preview";
 
 export default async function Page(props: {
   params: { page: string; tag: string };
