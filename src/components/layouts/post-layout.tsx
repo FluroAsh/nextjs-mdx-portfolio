@@ -30,6 +30,7 @@ export default function PostLayout({
             from="from-neutral-600/10"
             via="via-neutral-600"
             to="to-neutral-600/10"
+            className="mt-4"
           />
         </header>
 

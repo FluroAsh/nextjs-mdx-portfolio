@@ -13,7 +13,7 @@ export const ListLayoutTags = ({ heading, children }: ListLayoutTagsProps) => {
   return (
     <div
       className={cn(
-        "grid grid-cols-1 mx-auto px-8 py-8 max-w-screen-lg gap-8 md:gap-16",
+        "grid grid-cols-1 mx-auto px-8 pb-8 sm:pt-8 max-w-screen-lg gap-8 md:gap-16",
         "sm:grid-cols-[240px_minmax(0,auto)]",
       )}
     >
