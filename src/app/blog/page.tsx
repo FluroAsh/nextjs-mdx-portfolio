@@ -14,7 +14,7 @@ export default function Page() {
   const { paginatedPosts, totalPages } = getPaginatedPosts(1, filteredPosts);
 
   return (
-    <ListLayoutTags>
+    <ListLayoutTags heading="All Posts">
       <MotionPostsContainer>
         {paginatedPosts.map((post) => (
           <PostPreview

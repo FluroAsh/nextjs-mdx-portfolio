@@ -19,7 +19,7 @@ export default async function Page(props: { params: { page: string } }) {
   );
 
   return (
-    <ListLayoutTags>
+    <ListLayoutTags heading="All Posts">
       <MotionPostsContainer>
         {paginatedPosts.map((post) => (
           <PostPreview

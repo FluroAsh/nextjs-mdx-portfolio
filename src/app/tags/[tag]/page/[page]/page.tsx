@@ -21,7 +21,7 @@ export default async function Page(props: {
   );
 
   return (
-    <ListLayoutTags>
+    <ListLayoutTags heading={`#${tag}`}>
       <MotionPostsContainer>
         {paginatedPosts.map((post) => (
           <PostPreview

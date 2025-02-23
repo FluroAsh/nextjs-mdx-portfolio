@@ -23,7 +23,7 @@ export default async function TagPage(props: { params: { tag: string } }) {
   const { paginatedPosts, totalPages } = getPaginatedPosts(1, filteredPosts);
 
   return (
-    <ListLayoutTags>
+    <ListLayoutTags heading={`#${tag}`}>
       <MotionPostsContainer>
         {paginatedPosts.map((post) => (
           <PostPreview

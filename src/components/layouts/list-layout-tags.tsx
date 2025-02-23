@@ -1,9 +1,15 @@
 import { cn } from "@/utils/misc";
 import { TagsSidebar } from "@/components/ui/tags-sidebar";
 
-type ListLayoutTagsProps = { children: React.ReactNode };
+const MobileHeading = ({ text }: { text: string }) => {
+  return (
+    <h1 className="block sm:hidden text-3xl font-bold text-center">{text}</h1>
+  );
+};
 
-export const ListLayoutTags = ({ children }: ListLayoutTagsProps) => {
+type ListLayoutTagsProps = { heading: string; children: React.ReactNode };
+
+export const ListLayoutTags = ({ heading, children }: ListLayoutTagsProps) => {
   return (
     <div
       className={cn(
@@ -12,7 +18,10 @@ export const ListLayoutTags = ({ children }: ListLayoutTagsProps) => {
       )}
     >
       <TagsSidebar />
-      <div className="flex flex-col gap-4">{children}</div>
+      <div className="flex flex-col gap-4">
+        <MobileHeading text={heading} />
+        {children}
+      </div>
     </div>
   );
 };
