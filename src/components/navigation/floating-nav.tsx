@@ -1,4 +1,3 @@
-import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { motion as m, useScroll } from "motion/react";
 import {
@@ -12,18 +11,23 @@ import { cn } from "@/utils/misc";
 import { isActiveRoute, paths } from "@/config/paths";
 import { NavLink } from "./nav-link";
 import { SocialLinks } from "./social-links";
+import { useRangeScroll } from "@/hooks/use-range-scroll";
 
 export const FloatingNav = ({
   hideScrollYLimit = 0,
   scrollThreshold = 50,
   isMobile = false,
 }) => {
-  const [visible, setVisible] = useState<boolean>(isMobile ? true : false);
-  const lastScrollY = useRef<number>(0);
-  const accumulatedScrollY = useRef<number>(0);
-
   const pathname = usePathname();
   const { scrollY } = useScroll();
+  const { shouldBeVisible } = useRangeScroll(
+    pathname,
+    isMobile,
+    scrollY,
+    scrollThreshold,
+    hideScrollYLimit,
+  );
+
   const visibleYOffset = isMobile ? 20 : 10;
 
   const navLinkClasses = (paths: string[]) =>
@@ -37,44 +41,12 @@ export const FloatingNav = ({
     console.log("search clicked");
   };
 
-  useEffect(() => {
-    const handleScroll = (current: number) => {
-      const scrollDiff = Math.abs(current - lastScrollY.current);
-      accumulatedScrollY.current += scrollDiff;
-
-      if (accumulatedScrollY.current >= scrollThreshold) {
-        setVisible(current < lastScrollY.current); // Hide when scrolling down, otherwise show
-        accumulatedScrollY.current = 0;
-      }
-
-      // Hide nav on desktop, ALWAYS, when below scrollThreshold
-      if (!isMobile && lastScrollY.current <= hideScrollYLimit) {
-        setVisible(false);
-      }
-
-      lastScrollY.current = current;
-    };
-
-    scrollY.on("change", handleScroll);
-    return () => scrollY.clearListeners();
-  }, [hideScrollYLimit, scrollThreshold, isMobile, scrollY, lastScrollY]);
-
-  useEffect(() => {
-    // Reset visibility and scroll position on route change
-    // Force hide nav on desktop when changing routes
-    setVisible(isMobile ? true : false);
-    lastScrollY.current = 0;
-
-    // Force hide nav on desktop when changing routes
-    if (!isMobile) setVisible(false);
-  }, [pathname, isMobile, hideScrollYLimit]);
-
   return (
     <m.nav
       className="fixed left-1/2 z-20"
       style={{ x: "-50%" }}
       initial={{ y: isMobile ? visibleYOffset : -100 }}
-      animate={{ y: visible ? visibleYOffset : -100 }}
+      animate={{ y: shouldBeVisible ? visibleYOffset : -100 }}
       transition={{
         type: "spring",
         stiffness: 100,
