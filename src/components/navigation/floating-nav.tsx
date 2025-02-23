@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 
 import { cn } from "@/utils/misc";
-import { isActive, paths } from "@/config/paths";
+import { isActiveRoute, paths } from "@/config/paths";
 import { NavLink } from "./nav-link";
 import { SocialLinks } from "./social-links";
 
@@ -26,10 +26,10 @@ export const FloatingNav = ({
   const { scrollY } = useScroll();
   const visibleYOffset = isMobile ? 20 : 10;
 
-  const navLinkClasses = (path: string) =>
+  const navLinkClasses = (paths: string[]) =>
     cn(
-      isActive(pathname, path) ? "stroke-green-500" : "stroke-white",
       "size-5 hover:stroke-green-500",
+      isActiveRoute(pathname, paths) ? "stroke-green-500" : "stroke-white",
     );
 
   const handleSearchClick = () => {
@@ -98,7 +98,10 @@ export const FloatingNav = ({
             href={paths.blog.pathname}
             label="Blog"
             icon={LucideBookOpen}
-            className={navLinkClasses(paths.blog.pathname)}
+            className={navLinkClasses([
+              paths.tags.pathname,
+              paths.blog.pathname,
+            ])}
           />
         </li>
         <li>
@@ -106,7 +109,7 @@ export const FloatingNav = ({
             href={paths.gallery.pathname}
             label="Gallery"
             icon={LucideCamera}
-            className={navLinkClasses(paths.gallery.pathname)}
+            className={navLinkClasses([paths.gallery.pathname])}
           />
         </li>
         <li className="flex">

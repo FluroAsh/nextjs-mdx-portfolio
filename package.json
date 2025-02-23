@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "next start",
     "test": "vitest",
+    "test:watch": "vitest --watch",
     "lint": "next lint"
   },
   "contributes": {

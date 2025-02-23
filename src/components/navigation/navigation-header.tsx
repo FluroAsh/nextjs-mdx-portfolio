@@ -3,7 +3,7 @@ import { usePathname } from "next/navigation";
 import { LucideBookOpen, LucideCamera, LucideSearch } from "lucide-react";
 
 import { cn } from "@/utils/misc";
-import { isActive, paths } from "@/config/paths";
+import { isActiveRoute, paths } from "@/config/paths";
 import { NavLink } from "./nav-link";
 import { SocialLinks } from "./social-links";
 import { FloatingNav } from "./floating-nav";
@@ -11,10 +11,12 @@ import { FloatingNav } from "./floating-nav";
 export const NavigationHeader = () => {
   const pathname = usePathname();
 
-  const navLinkClasses = (path: string) =>
+  const navLinkClasses = (paths: string[]) =>
     cn(
-      isActive(pathname, path) ? "stroke-green-500" : "stroke-neutral-400",
       "size-5 hover:stroke-green-500",
+      isActiveRoute(pathname, paths)
+        ? "stroke-green-500"
+        : "stroke-neutral-400",
     );
 
   return (
@@ -34,7 +36,10 @@ export const NavigationHeader = () => {
                 href={paths.blog.pathname}
                 label="Blog"
                 icon={LucideBookOpen}
-                className={navLinkClasses(paths.blog.pathname)}
+                className={navLinkClasses([
+                  paths.blog.pathname,
+                  paths.tags.pathname,
+                ])}
               />
             </li>
             <li>
@@ -42,7 +47,7 @@ export const NavigationHeader = () => {
                 href={paths.gallery.pathname}
                 label="Gallery"
                 icon={LucideCamera}
-                className={navLinkClasses(paths.gallery.pathname)}
+                className={navLinkClasses([paths.gallery.pathname])}
               />
             </li>
             <li className="flex">

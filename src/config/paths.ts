@@ -22,8 +22,16 @@ export const paths = {
   },
 };
 
-export const isActive = (pathname: string, targetPath: string) =>
-  targetPath.includes(`${paths.tags.pathname}/`) || isBlogPage(pathname);
+export const isActiveRoute = (pathname: string, targetPaths: string[]) =>
+  targetPaths.some((path) => pathname.startsWith(path));
 
-export const isBlogPage = (pathname: string) =>
-  pathname === paths.blog.pathname || /^\/blog\/page\/\d+$/.test(pathname);
+export const isTagActive = (pathname: string, tag: string) => {
+  if (pathname.startsWith(paths.tag.getPathname(tag))) {
+    const pathSegments = pathname.split("/").filter(Boolean);
+    const activeTag = pathSegments.length >= 2 ? pathSegments[1] : null;
+
+    return activeTag === tag;
+  }
+
+  return false;
+};
