@@ -1,4 +1,4 @@
-import { renderHook, waitFor } from "@testing-library/react";
+import { act, renderHook, waitFor } from "@testing-library/react";
 import { useRangeScroll } from "./use-range-scroll";
 import { MotionValue } from "motion/react";
 
@@ -33,13 +33,12 @@ describe("useRangeScroll", () => {
     );
 
     // Simulate scrolling down
-    onChange(0);
-    onChange(60);
-    expect(result.current.shouldBeVisible).toBe(false);
+    act(() => onChange(100));
+    await waitFor(() => expect(result.current.shouldBeVisible).toBe(false));
 
     // Simulate scrolling up
-    onChange(30);
-    waitFor(() => expect(result.current.shouldBeVisible).toBe(true));
+    act(() => onChange(50));
+    await waitFor(() => expect(result.current.shouldBeVisible).toBe(true));
   });
 
   it("should force hide on desktop when below hideScrollYLimit", () => {
