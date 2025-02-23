@@ -90,7 +90,12 @@ export const FloatingNav = ({
             href={paths.home.pathname}
             label="Home"
             icon={LucideHome}
-            className="size-5 hover:stroke-green-500"
+            className={cn(
+              pathname === paths.home.pathname
+                ? "stroke-green-500"
+                : "stroke-white",
+              "size-5 hover:stroke-green-500",
+            )}
           />
         </li>
         <li>
