@@ -28,8 +28,6 @@ export const FloatingNav = ({
     hideScrollYLimit,
   );
 
-  const visibleYOffset = isMobile ? 20 : 10;
-
   const navLinkClasses = (paths: string[]) =>
     cn(
       "size-5 hover:stroke-green-500",
@@ -45,8 +43,8 @@ export const FloatingNav = ({
     <m.nav
       className="fixed left-1/2 z-20"
       style={{ x: "-50%" }}
-      initial={{ y: isMobile ? visibleYOffset : -100 }}
-      animate={{ y: shouldBeVisible ? visibleYOffset : -100 }}
+      initial={{ y: isMobile ? 10 : -100 }}
+      animate={{ y: shouldBeVisible ? 10 : -100 }}
       transition={{
         type: "spring",
         stiffness: 100,

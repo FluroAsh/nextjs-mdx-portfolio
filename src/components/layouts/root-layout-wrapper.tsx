@@ -35,7 +35,7 @@ export const RootLayoutWrapper = ({
       {isMobile ? <FloatingNav isMobile /> : <NavigationHeader />}
       <main
         className={cn(
-          "flex-1 flex justify-center flex-grow [&>div]:w-full pt-16 sm:pt-0",
+          "flex-1 flex justify-center flex-grow [&>div]:w-full pt-[70px] sm:pt-0",
           isHomepage && "pt-0",
         )}
       >
