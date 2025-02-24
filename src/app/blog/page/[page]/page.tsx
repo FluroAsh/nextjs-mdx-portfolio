@@ -7,7 +7,6 @@ import {
   PostPreview,
 } from "@/components/ui/post-preview";
 import { ListLayoutTags } from "@/components/layouts/list-layout-tags";
-import { Pagination } from "@/components/ui/pagination";
 
 export default async function Page(props: { params: { page: string } }) {
   const { page } = await props.params;
@@ -18,8 +17,14 @@ export default async function Page(props: { params: { page: string } }) {
     filteredPosts,
   );
 
+  const paginationProps = {
+    totalPages,
+    currentPage: parseInt(page),
+    to: "/blog",
+  };
+
   return (
-    <ListLayoutTags heading="All Posts">
+    <ListLayoutTags heading="All Posts" paginationProps={paginationProps}>
       <MotionPostsContainer>
         {paginatedPosts.map((post) => (
           <PostPreview
@@ -32,7 +37,6 @@ export default async function Page(props: { params: { page: string } }) {
           />
         ))}
       </MotionPostsContainer>
-      <Pagination totalPages={totalPages} page={parseInt(page)} to="/blog" />
     </ListLayoutTags>
   );
 }

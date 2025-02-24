@@ -7,14 +7,19 @@ import {
   PostPreview,
 } from "@/components/ui/post-preview";
 import { ListLayoutTags } from "@/components/layouts/list-layout-tags";
-import { Pagination } from "@/components/ui/pagination";
 
 export default function Page() {
   const filteredPosts = allBlogs.filter(filterByDraft);
   const { paginatedPosts, totalPages } = getPaginatedPosts(1, filteredPosts);
 
+  const paginationProps = {
+    totalPages,
+    currentPage: 1,
+    to: "/blog",
+  };
+
   return (
-    <ListLayoutTags heading="All Posts">
+    <ListLayoutTags heading="All Posts" paginationProps={paginationProps}>
       <MotionPostsContainer>
         {paginatedPosts.map((post) => (
           <PostPreview
@@ -27,7 +32,6 @@ export default function Page() {
           />
         ))}
       </MotionPostsContainer>
-      <Pagination totalPages={totalPages} page={1} to="/blog" />
     </ListLayoutTags>
   );
 }

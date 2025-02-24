@@ -6,7 +6,6 @@ import {
   PostPreview,
 } from "@/components/ui/post-preview";
 import { ListLayoutTags } from "@/components/layouts/list-layout-tags";
-import { Pagination } from "@/components/ui/pagination";
 import { filterByTag } from "@/utils/blog";
 import { getPaginatedPosts } from "@/lib/helpers";
 
@@ -22,8 +21,14 @@ export default async function TagPage(props: { params: { tag: string } }) {
   const filteredPosts = allBlogs.filter((post) => filterByTag(post, tag));
   const { paginatedPosts, totalPages } = getPaginatedPosts(1, filteredPosts);
 
+  const paginationProps = {
+    totalPages,
+    currentPage: 1,
+    to: `/tags/${tag}`,
+  };
+
   return (
-    <ListLayoutTags heading={`#${tag}`}>
+    <ListLayoutTags heading={`#${tag}`} paginationProps={paginationProps}>
       <MotionPostsContainer>
         {paginatedPosts.map((post) => (
           <PostPreview
@@ -36,7 +41,6 @@ export default async function TagPage(props: { params: { tag: string } }) {
           />
         ))}
       </MotionPostsContainer>
-      <Pagination totalPages={totalPages} page={1} to={`/tags/${tag}`} />
     </ListLayoutTags>
   );
 }

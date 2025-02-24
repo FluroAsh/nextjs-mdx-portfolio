@@ -5,7 +5,7 @@ import Link from "next/link";
 type PaginationProps = {
   page: number;
   totalPages: number;
-  to: `/tags/${string}` | "/blog";
+  to: string;
 };
 
 const PageNumber = ({
@@ -69,7 +69,7 @@ export const Pagination = ({ page, totalPages, to }: PaginationProps) => {
   const pages = Array.from({ length: totalPages }).map((_, i) => i + 1);
 
   return (
-    <div className="flex justify-center gap-4 py-4">
+    <div className="flex justify-center gap-4 py-4 sm:col-span-2">
       <PaginateButton
         to={to}
         page={page - 1}
