@@ -2,7 +2,7 @@ import { cn } from "@/utils/misc";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 
-type PaginationProps = {
+export type PaginationProps = {
   page: number;
   totalPages: number;
   to: string;

@@ -1,30 +1,24 @@
 import { cn } from "@/utils/misc";
 import { TagsSidebar } from "@/components/ui/tags-sidebar";
-import { Pagination } from "../ui/pagination";
+import { Pagination, type PaginationProps } from "../ui/pagination";
 
-const MobileHeading = ({ text }: { text: string }) => {
+const MobileHeading = ({ title }: { title: string }) => {
   return (
-    <h1 className="block sm:hidden text-3xl font-bold text-center">{text}</h1>
+    <h1 className="block sm:hidden text-3xl font-bold text-center">{title}</h1>
   );
 };
 
 type ListLayoutTagsProps = {
-  heading: string;
+  mobileTitle: string;
   children: React.ReactNode;
-  paginationProps: {
-    totalPages: number;
-    currentPage: number;
-    to: string;
-  };
+  paginationProps: PaginationProps;
 };
 
 export const ListLayoutTags = ({
-  heading,
+  mobileTitle,
   children,
   paginationProps,
 }: ListLayoutTagsProps) => {
-  const { totalPages, currentPage, to } = paginationProps;
-
   return (
     <div
       className={cn(
@@ -34,11 +28,11 @@ export const ListLayoutTags = ({
     >
       <TagsSidebar />
       <div className="flex flex-col gap-4">
-        <MobileHeading text={heading} />
+        <MobileHeading title={mobileTitle} />
         {children}
       </div>
 
-      <Pagination totalPages={totalPages} page={currentPage} to={to} />
+      <Pagination {...paginationProps} />
     </div>
   );
 };

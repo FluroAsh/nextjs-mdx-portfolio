@@ -14,12 +14,12 @@ export default function Page() {
 
   const paginationProps = {
     totalPages,
-    currentPage: 1,
+    page: 1,
     to: "/blog",
   };
 
   return (
-    <ListLayoutTags heading="All Posts" paginationProps={paginationProps}>
+    <ListLayoutTags mobileTitle="All Posts" paginationProps={paginationProps}>
       <MotionPostsContainer>
         {paginatedPosts.map((post) => (
           <PostPreview

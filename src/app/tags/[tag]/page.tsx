@@ -23,12 +23,12 @@ export default async function TagPage(props: { params: { tag: string } }) {
 
   const paginationProps = {
     totalPages,
-    currentPage: 1,
+    page: 1,
     to: `/tags/${tag}`,
   };
 
   return (
-    <ListLayoutTags heading={`#${tag}`} paginationProps={paginationProps}>
+    <ListLayoutTags mobileTitle={`#${tag}`} paginationProps={paginationProps}>
       <MotionPostsContainer>
         {paginatedPosts.map((post) => (
           <PostPreview

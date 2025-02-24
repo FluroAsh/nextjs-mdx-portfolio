@@ -19,12 +19,12 @@ export default async function Page(props: { params: { page: string } }) {
 
   const paginationProps = {
     totalPages,
-    currentPage: parseInt(page),
+    page: parseInt(page),
     to: "/blog",
   };
 
   return (
-    <ListLayoutTags heading="All Posts" paginationProps={paginationProps}>
+    <ListLayoutTags mobileTitle="All Posts" paginationProps={paginationProps}>
       <MotionPostsContainer>
         {paginatedPosts.map((post) => (
           <PostPreview
