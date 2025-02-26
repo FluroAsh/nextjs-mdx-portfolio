@@ -13,7 +13,7 @@ export const TagsSidebar = () => {
   const pathname = usePathname();
 
   return (
-    <div className="hidden sm:inline-block w-full max-h-fit bg-neutral-900/60 border border-neutral-700 rounded-sm px-6 py-8 ">
+    <div className="hidden sm:inline-block w-full max-h-fit bg-neutral-900/60 border border-neutral-700 rounded-xs px-6 py-8 ">
       <Link
         href={paths.blog.pathname}
         className={cn(

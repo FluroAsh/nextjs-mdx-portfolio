@@ -14,7 +14,7 @@ const AnimatedBorder = () => {
       )}
       style={{
         background:
-          "conic-gradient(from 0deg, #00B846, #004219, #006927, #00B846)",
+          "conic-gradient(from 0deg, #00B846, #006927, #006927, #00B846)",
       }}
     />
   );
@@ -47,7 +47,7 @@ export const ScrollToTop = () => {
       transition={{ duration: 0.1 }}
     >
       <button
-        className="shadow-sm rounded-full relative size-11"
+        className="shadow-xs rounded-full relative size-11"
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
         aria-label="Scroll to top"
       >

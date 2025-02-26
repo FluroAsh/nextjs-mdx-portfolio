@@ -6,7 +6,3 @@
     transform: rotate(360deg);
   }
 }
-
-.animate-conic-gradient {
-  animation: conic-gradient 3s linear infinite;
-}

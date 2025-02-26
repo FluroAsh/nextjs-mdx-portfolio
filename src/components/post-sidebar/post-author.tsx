@@ -17,7 +17,7 @@ const SocialLinks = () => {
       key={network}
       href={href}
       className={cn(
-        "group flex text-xs [&>*]:transition-colors",
+        "group flex text-xs *:transition-colors",
         displayVertical && "gap-x-1 max-w-[155px]",
       )}
     >

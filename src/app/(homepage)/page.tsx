@@ -8,11 +8,11 @@ export default function Home() {
     <div className="pt-0">
       <section
         className={cn(
-          "h-screen sm:h-[calc(100vh_-_var(--header-height))] relative",
-          "bg-gradient-to-b from-black via-neutral-900 to-black",
+          "h-screen sm:h-[calc(100vh_-_var(--spacing-header))] relative",
+          "bg-linear-to-b from-black via-neutral-900 to-black",
         )}
       >
-        <div className="grid place-items-center mx-auto p-8 h-full max-w-screen-xl">
+        <div className="grid place-items-center mx-auto p-8 h-full max-w-7xl)">
           <div className="text-center">
             <p className="font-bold text-3xl tracking-wider">Ashley Thompson</p>
             <div className="mt-2">
@@ -22,7 +22,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-linear-to-t from-black to-transparent" />
       </section>
 
       <section className="bg-yellow-600">

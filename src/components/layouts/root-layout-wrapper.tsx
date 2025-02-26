@@ -15,7 +15,7 @@ export const BackgroundOverlay = () => (
     className={cn(
       "before:pointer-events-none after:pointer-events-none before:content-[''] before:bg-[url('/static/images/green-dust-and-scratches.png')] before:bg-repeat",
       "before:absolute before:inset-0 before:opacity-30 before:z-[-1]",
-      "after:content-[''] after:absolute after:inset-0 after:bg-gradient-to-t after:from-transparent after:to-green-800/5 after:z-[-5]",
+      "after:content-[''] after:absolute after:inset-0 after:bg-linear-to-t after:from-transparent after:to-green-800/5 after:z-[-5]",
     )}
   />
 );
@@ -35,7 +35,7 @@ export const RootLayoutWrapper = ({
       {isMobile ? <FloatingNav isMobile /> : <NavigationHeader />}
       <main
         className={cn(
-          "flex-1 flex justify-center flex-grow [&>div]:w-full pt-[70px] sm:pt-0",
+          "flex-1 flex justify-center grow [&>div]:w-full pt-[70px] sm:pt-0",
           isHomepage && "pt-0",
         )}
       >

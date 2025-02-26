@@ -1,13 +1,50 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@import "./animations.css" layer(utilities);
 
-@import "./animations.css";
+@plugin '@tailwindcss/typography';
 
-:root {
-  --foreground: #ffffff;
-  --background: #121212;
-  --header-height: 55px;
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
+
+/* Prose styles override/reset */
+@utility prose {
+  pre {
+    border-radius: 0;
+    padding: 0;
+  }
+}
+
+@theme {
+  --font-firaSans: "FiraSans", sans-serif;
+  --font-catamaran: "Catamaran", sans-serif;
+
+  --color-foreground: #ffffff;
+  --color-background: #121212;
+  --color-primary: #bfe81c;
+  --color-secondary: #b0c84e;
+  --color-white: #fefefe;
+  --color-grey: #afafaf;
+  --color-grey-dark: #454545;
+
+  --spacing-header: 55px;
+
+  --animate-rotate-conic-border: conic-gradient 3s cubic-bezier(0.4, 0, 0.2, 1)
+    infinite;
 }
 
 html {
@@ -15,9 +52,9 @@ html {
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  @apply font-catamaran;
+  color: var(--color-foreground);
+  background: var(--color-background);
+  font-family: var(--font-catamaran);
 }
 
 .markdown-alert-title {

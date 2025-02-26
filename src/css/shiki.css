@@ -1,3 +1,5 @@
+@reference "./globals.css";
+
 /**
  * CSS Styles for code highlighting.
  * [rehype-pretty-code](https://rehype-pretty.pages.dev/) is the plugin used for code formatting.

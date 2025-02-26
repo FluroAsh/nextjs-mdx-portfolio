@@ -20,6 +20,6 @@ export const Separator = ({
   to = "to-transparent",
 }: SeparatorProps) => (
   <div
-    className={cn("my-2 h-[2px] bg-gradient-to-r", to, via, from, className)}
+    className={cn("my-2 h-[2px] bg-linear-to-r", to, via, from, className)}
   />
 );
