@@ -1,6 +1,7 @@
 import { cn } from "@/utils/misc";
 import { TagsSidebar } from "@/components/ui/tags-sidebar";
 import { Pagination, type PaginationProps } from "../ui/pagination";
+import { MotionPostsContainer } from "../ui/post-preview";
 
 const MobileHeading = ({ title }: { title: string }) => {
   return (
@@ -27,9 +28,10 @@ export const ListLayoutTags = ({
       )}
     >
       <TagsSidebar />
+
       <div className="flex flex-col gap-4">
         <MobileHeading title={mobileTitle} />
-        {children}
+        <MotionPostsContainer>{children}</MotionPostsContainer>
       </div>
 
       <Pagination {...paginationProps} />

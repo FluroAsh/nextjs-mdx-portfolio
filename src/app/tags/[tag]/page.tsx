@@ -1,10 +1,7 @@
 import { allBlogs } from "contentlayer/generated";
 
 import tagData from "@/data/tag-data.json";
-import {
-  MotionPostsContainer,
-  PostPreview,
-} from "@/components/ui/post-preview";
+import { PostPreview } from "@/components/ui/post-preview";
 import { ListLayoutTags } from "@/components/layouts/list-layout-tags";
 import { filterByTag } from "@/utils/blog";
 import { getPaginatedPosts } from "@/lib/helpers";
@@ -29,18 +26,16 @@ export default async function TagPage(props: { params: { tag: string } }) {
 
   return (
     <ListLayoutTags mobileTitle={`#${tag}`} paginationProps={paginationProps}>
-      <MotionPostsContainer>
-        {paginatedPosts.map((post) => (
-          <PostPreview
-            key={post._id}
-            title={post.title}
-            slug={post.slug}
-            date={post.date}
-            description={post.description}
-            tags={post.tags}
-          />
-        ))}
-      </MotionPostsContainer>
+      {paginatedPosts.map((post) => (
+        <PostPreview
+          key={post._id}
+          title={post.title}
+          slug={post.slug}
+          date={post.date}
+          description={post.description}
+          tags={post.tags}
+        />
+      ))}
     </ListLayoutTags>
   );
 }

@@ -2,10 +2,7 @@ import { allBlogs } from "contentlayer/generated";
 
 import { getPaginatedPosts } from "@/lib/helpers";
 import { filterByDraft } from "@/utils/blog";
-import {
-  MotionPostsContainer,
-  PostPreview,
-} from "@/components/ui/post-preview";
+import { PostPreview } from "@/components/ui/post-preview";
 import { ListLayoutTags } from "@/components/layouts/list-layout-tags";
 
 export default function Page() {
@@ -20,18 +17,16 @@ export default function Page() {
 
   return (
     <ListLayoutTags mobileTitle="All Posts" paginationProps={paginationProps}>
-      <MotionPostsContainer>
-        {paginatedPosts.map((post) => (
-          <PostPreview
-            key={post._id}
-            date={post.date}
-            title={post.title}
-            description={post.description}
-            tags={post.tags}
-            slug={post.slug}
-          />
-        ))}
-      </MotionPostsContainer>
+      {paginatedPosts.map((post) => (
+        <PostPreview
+          key={post._id}
+          date={post.date}
+          title={post.title}
+          description={post.description}
+          tags={post.tags}
+          slug={post.slug}
+        />
+      ))}
     </ListLayoutTags>
   );
 }
