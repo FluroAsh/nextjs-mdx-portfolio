@@ -2,6 +2,23 @@ import { cn } from "@/utils/misc";
 import { TagsSidebar } from "@/components/ui/tags-sidebar";
 import { Pagination, type PaginationProps } from "../ui/pagination";
 import { MotionPostsContainer } from "../ui/post-preview";
+import { MobileSelectNavigation } from "../ui/select-tags";
+
+import { slug } from "github-slugger";
+import { title } from "radash";
+import tags from "@/data/tag-data.json";
+
+const mobileLinks = [
+  {
+    title: "All Posts",
+    slug: "all-posts",
+  },
+].concat(
+  Object.keys(tags).map((tag) => ({
+    title: tag === "mdx" ? tag.toUpperCase() : title(slug(tag)),
+    slug: slug(tag),
+  })),
+);
 
 const MobileHeading = ({ title }: { title: string }) => {
   return (
@@ -31,6 +48,7 @@ export const ListLayoutTags = ({
 
       <div className="flex flex-col gap-4">
         <MobileHeading title={mobileTitle} />
+        <MobileSelectNavigation items={mobileLinks} />
         <MotionPostsContainer>{children}</MotionPostsContainer>
       </div>
 
