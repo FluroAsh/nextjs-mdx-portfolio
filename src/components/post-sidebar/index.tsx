@@ -6,6 +6,7 @@ import { usePostContext } from "@/lib/contexts/post-context";
 import { TableOfContents } from "./table-of-contents";
 import { PostAuthor } from "./post-author";
 import { Separator } from "../ui/separator";
+import { LucideChevronLeft } from "lucide-react";
 
 const ArticleSeparator = () => (
   <Separator
@@ -41,8 +42,8 @@ const ArticleNavigation = ({
           className="hover:text-green-500 text-sm py-2 transition-colors duration-75"
           href={paths.blog}
         >
-          <span>&larr;&nbsp;</span>
-          <span className="underline">Back to Blog</span>
+          <LucideChevronLeft className="inline-block size-4 mr-[3px]" />
+          <span>Back to Blog</span>
         </Link>
       </div>
     </div>
