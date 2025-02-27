@@ -37,7 +37,7 @@ export const Tags = ({ items }: { items: React.ReactNode }) => (
 export const Title = ({ title, slug }: { title: string; slug: string }) => (
   <Link
     href={`/blog/${slug}`}
-    className="inline-block pb-1 leading-8 hover:text-green-500  text-2xl tracking-tight transition-colors duration-75"
+    className="inline-block pb-1 font-semibold leading-8 hover:text-green-500 text-2xl tracking-tight transition-colors duration-75"
   >
     <h2>{title}</h2>
   </Link>
