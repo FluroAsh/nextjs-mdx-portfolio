@@ -62,13 +62,14 @@ body {
 }
 
 ::selection {
-  @apply bg-green-600 text-white;
+  background-color: var(--color-green-600);
+  color: var(--color-white);
 }
 
 h1,
 h2,
 h3 {
-  @apply font-firaSans;
+  font-family: var(--font-firaSans);
 }
 
 /* ---- Anchor Link Styles ---- */
