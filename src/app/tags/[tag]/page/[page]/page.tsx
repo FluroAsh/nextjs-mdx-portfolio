@@ -7,7 +7,7 @@ import { ListLayoutTags } from "@/components/layouts/list-layout-tags";
 import { PostPreview } from "@/features/blog/components/post-preview";
 
 export default async function Page(props: {
-  params: { page: string; tag: string };
+  params: Promise<{ page: string; tag: string }>;
 }) {
   const { page, tag } = await props.params;
 

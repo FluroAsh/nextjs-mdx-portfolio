@@ -55,7 +55,7 @@ export const Footer = () => (
             </a>
           </ul>
           <p className="text-neutral-400 text-sm pt-2">
-            Questions or ideas? Let's talk!
+            Questions or ideas? Let&apos;s talk!
           </p>
         </div>
       </div>

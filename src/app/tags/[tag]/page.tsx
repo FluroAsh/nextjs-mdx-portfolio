@@ -14,7 +14,9 @@ export const generateStaticParams = async () => {
   }));
 };
 
-export default async function TagPage(props: { params: { tag: string } }) {
+export default async function TagPage(props: {
+  params: Promise<{ tag: string }>;
+}) {
   const { tag } = await props.params;
 
   const filteredPosts = allBlogs

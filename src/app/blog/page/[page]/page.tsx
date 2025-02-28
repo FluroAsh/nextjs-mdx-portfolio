@@ -6,7 +6,9 @@ import { ListLayoutTags } from "@/components/layouts/list-layout-tags";
 import { filterByDraft, sortByDate } from "@/features/blog/utils";
 import { PostPreview } from "@/features/blog/components/post-preview";
 
-export default async function Page(props: { params: { page: string } }) {
+export default async function Page(props: {
+  params: Promise<{ page: string }>;
+}) {
   const { page } = await props.params;
 
   const filteredPosts = allBlogs.filter(filterByDraft).sort(sortByDate);

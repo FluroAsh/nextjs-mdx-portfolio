@@ -8,7 +8,7 @@ import { PostProvider } from "@/lib/contexts/post-context";
 import { components as mdxComponents } from "@/features/blog/components/mdx/mdx-components";
 
 type PostPageProps = {
-  params: { slug: string[] };
+  params: Promise<{ slug: string[] }>;
 };
 
 export function generateStaticParams() {
