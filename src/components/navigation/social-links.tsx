@@ -19,6 +19,7 @@ export const SocialLinks = ({
         href={href}
         label={network}
         icon={SocialIcon}
+        target="_blank"
         className={cn(
           network === "X"
             ? `${colors.fill} hover:fill-green-500`
