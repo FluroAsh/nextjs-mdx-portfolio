@@ -8,6 +8,7 @@ import { slug } from "github-slugger";
 import { title } from "radash";
 import tags from "@/data/tag-data.json";
 
+// TODO: Move this to a utility function
 const mobileLinks = [
   {
     title: "All Posts",
