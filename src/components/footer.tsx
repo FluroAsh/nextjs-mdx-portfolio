@@ -63,7 +63,7 @@ export const Footer = () => (
       <div className="pt-4 border-t border-neutral-700">
         <p className="text-sm text-neutral-500 italic text-center">
           Made with <LucideCoffee className="inline mx-0.5 size-4" /> in the
-          evenings by Ashley Thompson, AI and a little bit of magic
+          evenings by Ashley Thompson&#44; AI and a little bit of magic
         </p>
       </div>
     </footer>
