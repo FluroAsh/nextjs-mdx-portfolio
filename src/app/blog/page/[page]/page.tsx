@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation";
 import { allBlogs } from "contentlayer/generated";
 
 import { getPaginatedPosts } from "@/lib/helpers";
@@ -9,6 +10,11 @@ export default async function Page(props: { params: { page: string } }) {
   const { page } = await props.params;
 
   const filteredPosts = allBlogs.filter(filterByDraft).sort(sortByDate);
+
+  if (filteredPosts.length === 0) {
+    return notFound();
+  }
+
   const { paginatedPosts, totalPages } = getPaginatedPosts(
     parseInt(page),
     filteredPosts,

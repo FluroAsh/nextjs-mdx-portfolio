@@ -1,10 +1,12 @@
+import { notFound } from "next/navigation";
 import { allBlogs } from "contentlayer/generated";
 
 import tagData from "@/data/tag-data.json";
+
+import { getPaginatedPosts } from "@/lib/helpers";
+import { filterByTag, sortByDate } from "@/features/blog/utils";
 import { PostPreview } from "@/features/blog/components/post-preview";
 import { ListLayoutTags } from "@/components/layouts/list-layout-tags";
-import { filterByTag, sortByDate } from "@/features/blog/utils";
-import { getPaginatedPosts } from "@/lib/helpers";
 
 export const generateStaticParams = async () => {
   return Object.keys(tagData).map((tag) => ({
@@ -18,6 +20,10 @@ export default async function TagPage(props: { params: { tag: string } }) {
   const filteredPosts = allBlogs
     .filter((post) => filterByTag(post, tag))
     .sort(sortByDate);
+
+  if (filteredPosts.length === 0) {
+    return notFound();
+  }
 
   const { paginatedPosts, totalPages } = getPaginatedPosts(1, filteredPosts);
 
