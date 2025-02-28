@@ -3,7 +3,7 @@ import { allBlogs } from "contentlayer/generated";
 import tagData from "@/data/tag-data.json";
 import { PostPreview } from "@/components/ui/post-preview";
 import { ListLayoutTags } from "@/components/layouts/list-layout-tags";
-import { filterByTag } from "@/utils/blog";
+import { filterByTag, sortByDate } from "@/utils/blog";
 import { getPaginatedPosts } from "@/lib/helpers";
 
 export const generateStaticParams = async () => {
@@ -15,7 +15,10 @@ export const generateStaticParams = async () => {
 export default async function TagPage(props: { params: { tag: string } }) {
   const { tag } = await props.params;
 
-  const filteredPosts = allBlogs.filter((post) => filterByTag(post, tag));
+  const filteredPosts = allBlogs
+    .filter((post) => filterByTag(post, tag))
+    .sort(sortByDate);
+
   const { paginatedPosts, totalPages } = getPaginatedPosts(1, filteredPosts);
 
   const paginationProps = {

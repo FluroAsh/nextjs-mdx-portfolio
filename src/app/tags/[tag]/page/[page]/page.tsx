@@ -1,7 +1,7 @@
 import { allBlogs } from "contentlayer/generated";
 
 import { getPaginatedPosts } from "@/lib/helpers";
-import { filterByTag } from "@/utils/blog";
+import { filterByTag, sortByDate } from "@/utils/blog";
 import { ListLayoutTags } from "@/components/layouts/list-layout-tags";
 import { PostPreview } from "@/components/ui/post-preview";
 
@@ -10,7 +10,10 @@ export default async function Page(props: {
 }) {
   const { page, tag } = await props.params;
 
-  const filteredPosts = allBlogs.filter((post) => filterByTag(post, tag));
+  const filteredPosts = allBlogs
+    .filter((post) => filterByTag(post, tag))
+    .sort(sortByDate);
+
   const { paginatedPosts, totalPages } = getPaginatedPosts(
     parseInt(page),
     filteredPosts,
