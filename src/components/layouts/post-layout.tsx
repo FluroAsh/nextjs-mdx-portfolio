@@ -5,6 +5,7 @@
  * 1. Add a progress bar to the blog layout that shows how far the user has scrolled through the post
  *    - Should be smoothly animated
  */
+
 import "@/css/shiki.css";
 import "remark-github-blockquote-alert/alert.css";
 

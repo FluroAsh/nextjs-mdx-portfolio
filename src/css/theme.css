@@ -1,0 +1,25 @@
+@theme {
+  --font-firaSans: "FiraSans", sans-serif;
+  --font-catamaran: "Catamaran", sans-serif;
+
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --color-primary-green: #bfe81c;
+  --color-secondary-green: #b0c84e;
+  --color-white: #fefefe;
+  --color-grey: #afafaf;
+  --color-grey-dark: #454545;
+
+  --spacing-header: 55px;
+
+  --animate-rotate-conic-border: conic-gradient 1.5s
+    cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* Prose styles override/reset */
+@utility prose {
+  pre {
+    border-radius: 0;
+    padding: 0;
+  }
+}

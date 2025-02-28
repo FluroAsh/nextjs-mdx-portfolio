@@ -15,7 +15,7 @@
 
 /* Highlighted Indicator */
 [data-highlighted-line]::after {
-  @apply absolute top-0 left-0 w-1 h-full bg-secondary;
+  @apply absolute top-0 left-0 w-1 h-full bg-secondary-green;
   content: "";
 }
 
@@ -43,7 +43,9 @@ code[data-line-numbers-max-digits="4"] > [data-line]::before {
 }
 
 [data-rehype-pretty-code-title] {
-  @apply bg-green-800 relative p-2 px-4 rounded-tl-md rounded-tr-md text-white text-sm font-mono font-bold;
+  @apply bg-green-800 relative p-2 px-4 text-white text-sm font-mono font-bold;
+  /* rounded-md is using var(--radius) which is undefined */
+  border-radius: 0.5rem 0.5rem 0 0;
 }
 
 [data-rehype-pretty-code-figure] pre {
@@ -52,7 +54,7 @@ code[data-line-numbers-max-digits="4"] > [data-line]::before {
 
 /* Code block without a title */
 [data-rehype-pretty-code-figure]:not(:has(figcaption)) > pre {
-  @apply rounded-lg;
+  border-radius: 0.5rem;
 }
 
 [data-rehype-pretty-code-figure] code {
