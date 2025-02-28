@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion as m } from "framer-motion";
 import { useWindowScroll } from "react-use";
 import { ArrowUp } from "lucide-react";
 
@@ -8,10 +8,7 @@ import { useHasMounted } from "@/hooks/use-has-mounted";
 const AnimatedBorder = () => {
   return (
     <div
-      className={cn(
-        "absolute inset-0 rounded-full -z-10 transform transition duration-300",
-        "animate-rotate-conic-border",
-      )}
+      className="absolute inset-0 rounded-full -z-10 transform-gpu animate-rotate-conic-border"
       style={{
         background:
           "conic-gradient(from 0deg, #00B846, #006927, #006927, #00B846)",
@@ -38,7 +35,7 @@ export const ScrollToTop = () => {
   const isToggledOn = scrollY > MIN_HEIGHT;
 
   return (
-    <motion.div
+    <m.div
       className={cn(
         isToggledOn ? "opacity-100" : "opacity-0 pointer-events-none",
         "fixed bottom-4 right-4 overflow-visible transition-opacity duration-300",
@@ -54,6 +51,6 @@ export const ScrollToTop = () => {
         <InnerContent />
         <AnimatedBorder />
       </button>
-    </motion.div>
+    </m.div>
   );
 };

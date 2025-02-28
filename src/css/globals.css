@@ -1,10 +1,10 @@
 @import "tailwindcss";
 
 @custom-variant dark (&:is(.dark *));
-@import "./animations.css" layer(utilities);
 
 @plugin '@tailwindcss/typography';
 @plugin "tailwindcss-animate";
+@import "./animations.css" layer(utilities);
 
 /*
   The default border color has changed to `currentColor` in Tailwind CSS v4,
@@ -46,8 +46,8 @@
 
   --spacing-header: 55px;
 
-  --animate-rotate-conic-border: conic-gradient 3s cubic-bezier(0.4, 0, 0.2, 1)
-    infinite;
+  --animate-rotate-conic-border: conic-gradient 1.5s
+    cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
 html {
