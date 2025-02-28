@@ -21,7 +21,7 @@ export const NavigationHeader = () => {
 
   return (
     <>
-      <nav className="hidden sm:grid place-items-center bg-linear-to-t from-black/60 to-neutral-900/60 h-header border-b border-neutral-800 shadow-md">
+      <nav className="hidden sm:grid place-items-center bg-linear-to-t from-black/80 to-neutral-900/60 h-header border-b border-neutral-800 shadow-md">
         <div className="flex items-center justify-between w-full max-w-5xl px-4">
           <Link href="/" className="flex items-center gap-2">
             <span className="font-bold text-lg">

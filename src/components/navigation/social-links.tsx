@@ -4,9 +4,11 @@ import { cn } from "@/utils/misc";
 
 export const SocialLinks = ({
   toggleNeutral = false,
+  className,
 }: {
   /** Switches default color for fill/stroke to neutral, instead of white. */
   toggleNeutral?: boolean;
+  className?: string;
 }) => {
   const colors = {
     fill: toggleNeutral ? "fill-neutral-400" : "fill-white",
@@ -21,10 +23,11 @@ export const SocialLinks = ({
         icon={SocialIcon}
         target="_blank"
         className={cn(
+          "size-5",
           network === "X"
             ? `${colors.fill} hover:fill-green-500`
             : `${colors.stroke} hover:stroke-green-500`,
-          "size-5",
+          className,
         )}
       />
     </li>
