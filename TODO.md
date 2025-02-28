@@ -1,5 +1,15 @@
 ### Todo
 
+- [ ] Add a specific "Travel" layout for blog posts － [inspiration](https://photos.paulstamatiou.com/new-zealand/wellington/)
+  - [ ] Prefix headings with a "location" icon
+  - [ ] Allow sidebar to be toggled on/off for better photo viewing
+  - [ ] Add a travel intro card with location, short description, days, photos taken
+  - [ ] Add a map to the travel layout
+  - [ ] Create components for travel content
+    - [ ] "Accomodation" card (Hotel name, location, \$\$\$ per night, nights, rating, review, optional photo, etc.)
+    - [ ] "Food" card (Restaurant name, location, rating, review, etc.)
+  - [ ] Autoplaying video component (for video content, auto loop, no sound, etc.)
+  - [ ] "Other Spots" for other places visited in the same location (will require some additional frontmatter for location(s))
 - [ ] Setup unit tests
   - [ ] Add Vitest
   - [ ] Write initial tests
