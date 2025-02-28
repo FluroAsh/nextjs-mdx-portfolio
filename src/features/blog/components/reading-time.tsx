@@ -20,17 +20,17 @@ export const PublicationDate = ({
   </time>
 );
 
-export default function ArticleDateTime({
+export const ArticleDateTime = ({
   stats,
   date,
 }: {
   stats: ReadTimeResults;
   date: string;
-}) {
+}) => {
   return (
     <div className="flex justify-center">
       <PublicationDate date={date} />
       <ReadingTimeIndicator minutes={stats.minutes} />
     </div>
   );
-}
+};

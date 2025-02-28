@@ -1,9 +1,9 @@
 import { allBlogs } from "contentlayer/generated";
 
 import tagData from "@/data/tag-data.json";
-import { PostPreview } from "@/components/ui/post-preview";
+import { PostPreview } from "@/features/blog/components/post-preview";
 import { ListLayoutTags } from "@/components/layouts/list-layout-tags";
-import { filterByTag, sortByDate } from "@/utils/blog";
+import { filterByTag, sortByDate } from "@/features/blog/utils";
 import { getPaginatedPosts } from "@/lib/helpers";
 
 export const generateStaticParams = async () => {

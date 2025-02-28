@@ -2,9 +2,10 @@ import { getMDXComponent } from "next-contentlayer2/hooks";
 import { notFound } from "next/navigation";
 
 import { allBlogs } from "contentlayer/generated";
-import { components as mdxComponents } from "@/components/mdx/mdx-components";
+
 import PostLayout from "@/components/layouts/post-layout";
 import { PostProvider } from "@/lib/contexts/post-context";
+import { components as mdxComponents } from "@/features/blog/components/mdx/mdx-components";
 
 type PostPageProps = {
   params: { slug: string[] };

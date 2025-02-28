@@ -1,9 +1,9 @@
 import { allBlogs } from "contentlayer/generated";
 
 import { getPaginatedPosts } from "@/lib/helpers";
-import { filterByTag, sortByDate } from "@/utils/blog";
+import { filterByTag, sortByDate } from "@/features/blog/utils";
 import { ListLayoutTags } from "@/components/layouts/list-layout-tags";
-import { PostPreview } from "@/components/ui/post-preview";
+import { PostPreview } from "@/features/blog/components/post-preview";
 
 export default async function Page(props: {
   params: { page: string; tag: string };

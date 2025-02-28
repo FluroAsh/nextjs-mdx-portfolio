@@ -1,4 +1,4 @@
-import * as SocialIcons from "@/components/ui/social-icons";
+import * as SocialIcons from "@/components/social-icons";
 
 export const author = {
   name: "Ashley Thompson",

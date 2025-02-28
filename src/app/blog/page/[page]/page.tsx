@@ -1,9 +1,9 @@
 import { allBlogs } from "contentlayer/generated";
 
 import { getPaginatedPosts } from "@/lib/helpers";
-import { filterByDraft, sortByDate } from "@/utils/blog";
-import { PostPreview } from "@/components/ui/post-preview";
 import { ListLayoutTags } from "@/components/layouts/list-layout-tags";
+import { filterByDraft, sortByDate } from "@/features/blog/utils";
+import { PostPreview } from "@/features/blog/components/post-preview";
 
 export default async function Page(props: { params: { page: string } }) {
   const { page } = await props.params;

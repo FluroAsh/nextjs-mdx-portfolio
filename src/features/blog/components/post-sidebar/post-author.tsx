@@ -2,7 +2,7 @@ import Image from "next/image";
 
 import { cn } from "@/utils/misc";
 import { author } from "@/data/author";
-import { Link } from "@/components/ui/link";
+import { Link } from "@/components/link";
 
 const filteredSocials = author.socials.filter(
   ({ network }) => network !== "Instagram",

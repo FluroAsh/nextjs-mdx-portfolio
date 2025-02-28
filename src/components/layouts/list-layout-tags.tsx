@@ -1,8 +1,9 @@
 import { cn } from "@/utils/misc";
-import { TagsSidebar } from "@/components/ui/tags-sidebar";
-import { Pagination, type PaginationProps } from "../ui/pagination";
-import { MotionPostsContainer } from "../ui/post-preview";
-import { MobileSelectNavigation } from "../ui/select-tags";
+
+import { Pagination, type PaginationProps } from "@/components/pagination";
+import { TagsSidebar } from "@/features/blog/components/tags-sidebar";
+import { MotionPostsContainer } from "@/features/blog/components/post-preview";
+import { MobileSelectNavigation } from "../select-tags";
 
 import { slug } from "github-slugger";
 import { title } from "radash";
