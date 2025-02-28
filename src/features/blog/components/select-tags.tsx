@@ -6,7 +6,7 @@ import {
   SelectValue,
   SelectContent,
   SelectItem,
-} from "./select";
+} from "@/components/select";
 
 import { usePathname, useRouter } from "next/navigation";
 
@@ -32,7 +32,7 @@ export const MobileSelectNavigation = ({ items }: SelectComponentProps) => {
       defaultValue={firstSegment === "blog" ? "all-posts" : secondSegment}
       onValueChange={(value) => handleSelection(value)}
     >
-      <SelectTrigger className="sm:hidden w-full h-[55px] rounded-md bg-gray-800 text-white">
+      <SelectTrigger className="sm:hidden h-[55px]">
         <SelectValue placeholder="Select something" />
       </SelectTrigger>
 

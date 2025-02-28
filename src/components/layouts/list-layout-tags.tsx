@@ -2,8 +2,8 @@ import { cn } from "@/utils/misc";
 
 import { Pagination, type PaginationProps } from "@/components/pagination";
 import { TagsSidebar } from "@/features/blog/components/tags-sidebar";
+import { MobileSelectNavigation } from "@/features/blog/components/select-tags";
 import { MotionPostsContainer } from "@/features/blog/components/post-preview";
-import { MobileSelectNavigation } from "../select-tags";
 
 import { slug } from "github-slugger";
 import { title } from "radash";
