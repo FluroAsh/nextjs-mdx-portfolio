@@ -29,7 +29,9 @@ const ArticleNavigation = ({
     <ArticleSeparator />
 
     <div className="my-4 px-2">
-      <h3 className="font-bold uppercase">{heading}</h3>
+      <h3 className="font-bold uppercase text-sm tracking-wider mb-0.5">
+        {heading}
+      </h3>
       <Link
         className="text-sm text-neutral-400 hover:text-green-500 transition-colors duration-75 font-semibold"
         href={link}
@@ -52,7 +54,7 @@ const ArticleNavigation = ({
 
 const PostTags = ({ items }: { items: string[] }) => (
   <div className="my-4 px-2">
-    <h3 className="font-bold uppercase">Tags</h3>
+    <h3 className="font-bold text-sm uppercase tracking-wider mb-0.5">Tags</h3>
     <ul className="list-inside flex flex-wrap gap-x-2">
       {items.map((item, idx) => (
         <Link

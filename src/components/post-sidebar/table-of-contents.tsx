@@ -107,7 +107,9 @@ export const TableOfContents = () => {
 
   return (
     <nav className="sticky top-4 my-4 px-2 ">
-      <h3 className="font-bold mb-2 uppercase">Contents</h3>
+      <h3 className="font-bold text-sm uppercase tracking-wider mb-2">
+        Contents
+      </h3>
       <div className="relative">
         <div
           className="opacity-0 absolute left-0 w-[3px] bg-green-500 transition duration-300"
