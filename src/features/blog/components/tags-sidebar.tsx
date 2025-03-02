@@ -66,9 +66,11 @@ export const TagsSidebar = () => {
                     : "hover:bg-neutral-800/50 text-neutral-400 hover:text-green-400 hover:translate-x-1",
                 )}
               >
-                <LucideHash className="size-3.5 opacity-70" />
-                <span>{tag === "mdx" ? tag.toUpperCase() : title(tag)}</span>
-                <span className="ml-auto text-xs font-mono bg-neutral-800/80 group-hover:bg-neutral-700/80 px-1.5 py-0.5 rounded">
+                <LucideHash className="flex-none size-3.5 opacity-70" />
+                <span className="truncate">
+                  {tag === "mdx" ? tag.toUpperCase() : title(tag)}
+                </span>
+                <span className="ml-auto text-xs font-mono bg-neutral-800/80 group-hover:bg-neutral-700/80 px-1.5 py-0.5 rounded-sm">
                   {count}
                 </span>
               </Link>
