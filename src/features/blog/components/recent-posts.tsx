@@ -61,7 +61,7 @@ const Recentpost = ({
           ))}
         </div>
 
-        <p className="">{post.description}</p>
+        <p className="opacity-80">{post.description}</p>
       </div>
     </Link>
   );
