@@ -4,10 +4,10 @@ import { usePathname } from "next/navigation";
 import { useMedia } from "react-use";
 
 import { cn } from "@/utils/misc";
-import { FloatingNav } from "@/components/navigation/floating-nav";
 import { ScrollToTop } from "@/components/scroll-to-top";
 import { Footer } from "@/components/footer";
 import { NavigationHeader } from "../navigation/navigation-header";
+import { MobileNav } from "../navigation/mobile-nav";
 
 export const BackgroundOverlay = () => (
   <div
@@ -32,16 +32,16 @@ export const RootLayoutWrapper = ({
   return (
     <div className="page-inner min-h-screen flex flex-col">
       <BackgroundOverlay />
-      {isMobile ? <FloatingNav isMobile /> : <NavigationHeader />}
+      {isMobile ? <MobileNav /> : <NavigationHeader />}
       <main
         className={cn(
-          "flex-1 flex justify-center grow [&>div]:w-full pt-[70px] sm:pt-0",
+          "flex-1 flex justify-center grow [&>div]:w-full pt-8 sm:pt-0",
           isHomepage && "pt-0",
         )}
       >
         {children}
       </main>
-      <ScrollToTop />
+      <ScrollToTop isMobile={isMobile} />
       <Footer />
     </div>
   );

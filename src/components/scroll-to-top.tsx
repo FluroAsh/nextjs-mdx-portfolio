@@ -25,7 +25,7 @@ const InnerContent = () => {
   );
 };
 
-export const ScrollToTop = () => {
+export const ScrollToTop = ({ isMobile }: { isMobile: boolean }) => {
   const { y: scrollY } = useWindowScroll();
   const hasMounted = useHasMounted();
 
@@ -38,7 +38,8 @@ export const ScrollToTop = () => {
     <m.div
       className={cn(
         isToggledOn ? "opacity-100" : "opacity-0 pointer-events-none",
-        "h-[44px] fixed bottom-4 right-4 overflow-visible transition-opacity duration-300",
+        isMobile ? "bottom-20 right-4" : "bottom-4 right-4",
+        "h-[44px] fixed overflow-visible transition-opacity duration-300",
       )}
       whileTap={{ scale: 0.9 }}
       transition={{ duration: 0.1 }}
