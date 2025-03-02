@@ -1,7 +1,6 @@
-import Link from "next/link";
-
-import { paths } from "@/config/paths";
 import { cn } from "@/utils/misc";
+
+import { RecentPosts } from "@/features/blog/components/recent-posts";
 
 export default function Home() {
   return (
@@ -25,28 +24,21 @@ export default function Home() {
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-linear-to-t from-black to-transparent" />
       </section>
 
-      <section className="bg-yellow-600">
-        <div className="p-8 sm:p-20 max-w-xl">Tech Stack</div>
+      <section className="mx-auto bg-yellow-600">
+        <div className="p-8 sm:p-20 max-w-5xl">Tech Stack</div>
       </section>
 
-      <section className="bg-purple-600">
-        <div className="p-8 sm:p-20 max-w-xl">Timeline</div>
+      <section className="mx-auto bg-purple-600">
+        <div className="p-8 sm:p-20 max-w-5xl">Timeline</div>
       </section>
 
-      <section className="bg-sky-600">
-        <div className="p-8 sm:p-20 max-w-xl">Projects</div>
-      </section>
+      {/* TODO: Create some more meaningful full-stack projects */}
+      {/* <section className="mx-auto bg-sky-600">
+        <div className="p-8 sm:p-20 max-w-5xl">Projects</div>
+      </section> */}
 
-      <section className="bg-green-600">
-        <div className="p-8 sm:p-20 max-w-xl">Recent Posts</div>
-      </section>
-
-      <section className="p-8 pb-20 sm:p-20 max-w-xl">
-        <h1 className="text-xl font-bold">Section 1</h1>
-        <div className="flex flex-col gap-2">
-          <Link href={paths.blog}>Blog</Link>
-          <Link href={paths.post.getPathname("test")}>Test Post</Link>
-        </div>
+      <section className="mx-auto p-8 pb-0 sm:p-12 max-w-5xl">
+        <RecentPosts />
       </section>
     </div>
   );

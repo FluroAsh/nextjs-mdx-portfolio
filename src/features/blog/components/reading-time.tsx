@@ -1,6 +1,7 @@
-import { cn } from "@/utils/misc";
-import { format, parseISO } from "date-fns";
 import { type ReadTimeResults } from "reading-time";
+
+import { formatDate } from "@/utils/dates";
+import { cn } from "@/utils/misc";
 
 const ReadingTimeIndicator = ({ minutes }: { minutes: number }) => (
   <p className="text-sm text-neutral-400">
@@ -16,7 +17,7 @@ export const PublicationDate = ({
   className?: string;
 }) => (
   <time dateTime={date} className={cn("text-sm text-neutral-400 ", className)}>
-    {format(parseISO(date), "LLLL d, yyyy")}&nbsp;
+    {formatDate(date)}&nbsp;
   </time>
 );
 

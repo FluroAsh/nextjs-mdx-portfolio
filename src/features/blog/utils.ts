@@ -12,5 +12,6 @@ export const filterByTag = (post: Blog, tag: string) => {
 /** Returns true if post is not marked `draft`. */
 export const filterByDraft = (post: Blog) => !post.draft;
 
+/** Returns true if post is marked `draft`. */
 export const sortByDate = (a: Blog, b: Blog) =>
   new Date(b.date).getTime() - new Date(a.date).getTime();

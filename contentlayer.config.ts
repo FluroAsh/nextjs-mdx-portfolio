@@ -70,10 +70,6 @@ const Blog = defineDocumentType(() => ({
       description: "The date of the post",
       required: true,
     },
-    featuredImage: {
-      type: "string",
-      description: "The featured image of the post",
-    },
     tags: {
       type: "list",
       of: { type: "string" },
@@ -93,6 +89,7 @@ const Blog = defineDocumentType(() => ({
     image: {
       type: "string",
       description: "The featured image associated with the blog post",
+      required: true,
     },
   },
   computedFields: {
