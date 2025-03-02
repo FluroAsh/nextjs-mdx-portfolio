@@ -60,7 +60,7 @@ export const Footer = () => (
         </div>
       </div>
 
-      <div className="pt-4 border-t border-neutral-700">
+      <div className="pt-4 border-t border-neutral-700 px-8">
         <p className="text-sm text-neutral-500 italic text-center">
           Made with <LucideCoffee className="inline mx-0.5 size-4" /> in the
           evenings by yours truly, AI and a little bit of magic
