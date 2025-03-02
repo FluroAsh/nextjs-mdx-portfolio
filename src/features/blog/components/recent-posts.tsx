@@ -6,6 +6,7 @@ import { allBlogs, type Blog } from "contentlayer/generated";
 import { paths } from "@/config/paths";
 import { filterByDraft, sortByDate } from "../utils";
 import { formatDate } from "@/utils/dates";
+import { SectionGradientHeading } from "@/components/section-gradient-heading";
 
 const postStyle = (idx: number) => [
   "col-span-1",
@@ -82,13 +83,7 @@ export const RecentPosts = () => {
 
   return (
     <div className={`${recentPosts.length > 0 ? "" : "hidden"}`}>
-      <h3 className="text-2xl font-bold mb-6 text-center">
-        <span className="relative">
-          Fresh Off the Press!
-          <span className="absolute -left-3 -top-2 w-4 h-4 border-t-2 border-l-2 border-green-700"></span>
-          <span className="absolute -right-3 -bottom-2 w-4 h-4 border-r-2 border-b-2 border-green-700"></span>
-        </span>
-      </h3>
+      <SectionGradientHeading title="Recent Posts" />
 
       <div className={`grid gap-4 ${containerStyles[recentPosts.length - 1]}`}>
         {recentPosts.map((post, idx) => (
