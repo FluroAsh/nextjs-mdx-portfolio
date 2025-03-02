@@ -1,12 +1,12 @@
-import { cn } from "@/utils/misc";
+import { slug } from "github-slugger";
+import { title } from "radash";
 
+import { cn } from "@/utils/misc";
 import { Pagination, type PaginationProps } from "@/components/pagination";
 import { TagsSidebar } from "@/features/blog/components/tags-sidebar";
 import { MobileSelectNavigation } from "@/features/blog/components/select-tags";
 import { MotionPostsContainer } from "@/features/blog/components/post-preview";
 
-import { slug } from "github-slugger";
-import { title } from "radash";
 import tags from "@/data/tag-data.json";
 
 // TODO: Move this to a utility function
@@ -22,11 +22,9 @@ const mobileLinks = [
   })),
 );
 
-const MobileHeading = ({ title }: { title: string }) => {
-  return (
-    <h1 className="block sm:hidden text-3xl font-bold text-center">{title}</h1>
-  );
-};
+const MobileHeading = ({ title }: { title: string }) => (
+  <h1 className="block sm:hidden text-3xl font-bold text-center">{title}</h1>
+);
 
 type ListLayoutTagsProps = {
   mobileTitle: string;
