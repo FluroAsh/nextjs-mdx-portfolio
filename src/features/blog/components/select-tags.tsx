@@ -30,10 +30,10 @@ export const MobileSelectNavigation = ({ items }: SelectComponentProps) => {
   return (
     <Select
       defaultValue={firstSegment === "blog" ? "all-posts" : secondSegment}
-      onValueChange={(value) => handleSelection(value)}
+      onValueChange={handleSelection}
     >
       <SelectTrigger className="sm:hidden h-[55px]">
-        <SelectValue placeholder="Select something" />
+        <SelectValue />
       </SelectTrigger>
 
       <SelectContent>

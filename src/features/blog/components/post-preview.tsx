@@ -3,8 +3,11 @@
 import Link from "next/link";
 import { slug } from "github-slugger";
 import { motion as m } from "motion/react";
+import { LucideCalendar, LucideHash } from "lucide-react";
 
+import { paths } from "@/config/paths";
 import { PublicationDate } from "./reading-time";
+import { cn } from "@/utils/misc";
 
 export const Description = ({
   text,
@@ -14,7 +17,7 @@ export const Description = ({
   characterLimit: number;
 }) => {
   return (
-    <p className="prose prose-invert">
+    <p className="text-neutral-300 line-clamp-3">
       {text.length > characterLimit
         ? `${text.slice(0, characterLimit)}...`
         : text}
@@ -23,24 +26,26 @@ export const Description = ({
 };
 
 export const Tag = ({ tag }: { tag: string }) => (
-  <li className="inline-block text-green-500 hover:text-green-300">
-    <Link href={`/tags/${slug(tag)}`}>{tag}</Link>
+  <li>
+    <Link
+      href={paths.tag.getPathname(slug(tag))}
+      className={cn(
+        "flex items-center justify-center gap-1 px-2 py-1 rounded-md text-sm text-neutral-300 bg-neutral-800/50 hover:bg-green-900/30",
+        "hover:text-green-400 transition-colors duration-200",
+      )}
+    >
+      <LucideHash className="size-3 [&_path]:fill-neutral-800" />
+      <span className="mt-0.5">{tag}</span>
+    </Link>
   </li>
 );
 
 export const Tags = ({ items }: { items: React.ReactNode }) => (
-  <ul className="flex gap-2 whitespace-nowrap flex-wrap gap-y-0 pb-2">
-    {items}
-  </ul>
+  <ul className="flex flex-wrap gap-2 py-3">{items}</ul>
 );
 
-export const Title = ({ title, slug }: { title: string; slug: string }) => (
-  <Link
-    href={`/blog/${slug}`}
-    className="inline-block pb-1 font-semibold leading-8 hover:text-green-500 text-2xl tracking-tight transition-colors duration-75"
-  >
-    <h2>{title}</h2>
-  </Link>
+export const Heading = ({ title }: { title: string }) => (
+  <h3 className="text-2xl font-bold tracking-tight text-white mb-2">{title}</h3>
 );
 
 const container = {
@@ -94,20 +99,29 @@ export const PostPreview = ({
   tags,
 }: PostPreviewProps) => {
   return (
-    <m.div className="w-full" variants={item}>
-      <PublicationDate date={date} className="inline-block text-md pb-1" />
+    <Link href={paths.post.getPathname(slug)}>
+      <m.div
+        className="w-full border-b border-neutral-800/50 p-4 group relative cursor-pointer"
+        variants={item}
+      >
+        <div className="absolute left-0 top-0 bottom-0 w-1 mb-4 bg-green-500 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
 
-      <div className="overflow-hidden">
-        <Title title={title} slug={slug} />
+        <div className="p-2 pl-4 group-hover:pl-6 transition-all duration-200">
+          <div className="flex items-center gap-2 text-neutral-400 mb-2">
+            <LucideCalendar className="size-4" />
+            <PublicationDate date={date} className="text-sm" />
+          </div>
 
-        <Tags
-          items={tags.map((tag) => (
-            <Tag key={tag} tag={tag} />
-          ))}
-        />
+          <Heading title={title} />
+          <Description text={description} characterLimit={180} />
 
-        <Description text={description} characterLimit={280} />
-      </div>
-    </m.div>
+          <Tags
+            items={tags.map((tag) => (
+              <Tag key={tag} tag={tag} />
+            ))}
+          />
+        </div>
+      </m.div>
+    </Link>
   );
 };
