@@ -91,6 +91,8 @@ type PostPreviewProps = {
   tags: string[];
 };
 
+// TODO: Find a better way to handle navigation to post, along with tag links
+// so we can avoid "In HTML, <a> cannot be a descendant of <a>." error(s)
 export const PostPreview = ({
   title,
   slug,
