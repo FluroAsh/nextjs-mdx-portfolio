@@ -20,11 +20,13 @@ export const useRangeScroll = (
     const handleScroll = (current: number) => {
       if (!isMobile && current <= hideScrollYLimit) {
         setVisible(false);
+        return;
       }
 
       const delta = current - lastScrollY.current;
 
       if (Math.abs(delta) >= scrollThreshold) {
+        // setVisible(delta <= 0 || current <= hideScrollYLimit);
         setVisible(delta <= 0);
         lastScrollY.current = current;
       }
