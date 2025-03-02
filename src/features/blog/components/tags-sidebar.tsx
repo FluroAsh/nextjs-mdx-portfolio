@@ -19,7 +19,7 @@ export const TagsSidebar = () => {
         href={paths.blog.pathname}
         className={cn(
           isActiveRoute(pathname, [paths.blog.pathname]) && "text-green-500",
-          "text-lg font-bold pb-2 uppercase hover:text-green-500 transition-colors duration-75",
+          "text-lg font-bold pb-2 hover:text-green-500 transition-colors duration-75",
         )}
       >
         All Posts
@@ -27,16 +27,16 @@ export const TagsSidebar = () => {
 
       <ul className="pl-2 leading-7">
         {tags.map(([tag, count]) => (
-          <li key={tag}>
-            <a
-              href={paths.tag.getPathname(slug(tag))}
-              className={cn(
-                "py-0.5 text-sm text-neutral-500 transition-colors duration-75",
-                isTagActive(pathname, tag)
-                  ? "text-green-500 font-bold"
-                  : "hover:text-green-500",
-              )}
-            >
+          <li
+            key={tag}
+            className={cn(
+              "py-0.5 text-sm text-neutral-500 truncate transition-colors duration-75",
+              isTagActive(pathname, tag)
+                ? "text-green-500 font-bold"
+                : "hover:text-green-500",
+            )}
+          >
+            <a href={paths.tag.getPathname(slug(tag))}>
               <span className="mr-1 text-xs font-mono">({count})</span>
               {tag === "mdx" ? tag.toUpperCase() : title(tag)}{" "}
             </a>

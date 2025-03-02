@@ -40,8 +40,8 @@ export const ListLayoutTags = ({
   return (
     <div
       className={cn(
-        "grid grid-cols-1 grid-rows-[1fr_auto] mx-auto px-8 pb-8 sm:pt-8 max-w-5xl gap-x-8 md:gap-x-16 gap-y-8",
-        "sm:grid-cols-[240px_minmax(0,auto)]",
+        "grid grid-cols-1 grid-rows-[1fr_auto] mx-auto px-8 pb-8 sm:pt-8 max-w-5xl gap-x-8 lg:gap-x-16 gap-y-8",
+        "sm:grid-cols-[200px_minmax(0,auto)]",
       )}
     >
       <TagsSidebar />
