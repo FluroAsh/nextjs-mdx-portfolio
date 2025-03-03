@@ -9,6 +9,7 @@ import { LucideCalendar, LucideHash } from "lucide-react";
 import { paths } from "@/config/paths";
 import { PublicationDate } from "./reading-time";
 import { cn } from "@/utils/misc";
+import { useRef } from "react";
 
 const Description = ({
   text,
@@ -99,6 +100,7 @@ export const PostPreview = ({
   description,
   tags,
 }: PostPreviewProps) => {
+  const articleRef = useRef<HTMLElement>(null);
   const router = useRouter();
 
   const handleContainerClick = (e: React.MouseEvent) => {
@@ -108,8 +110,19 @@ export const PostPreview = ({
     }
   };
 
+  const toggleLinkFocus = (type: "focus" | "blur") => {
+    if (articleRef.current) {
+      articleRef.current.classList[type === "focus" ? "add" : "remove"](
+        "ring-2",
+        "ring-green-500",
+        "rounded-md",
+      );
+    }
+  };
+
   return (
     <m.article
+      ref={articleRef}
       className="w-full border-b border-neutral-800/50 p-4 group relative cursor-pointer"
       variants={item}
       onClick={handleContainerClick}
@@ -132,10 +145,13 @@ export const PostPreview = ({
         />
       </div>
 
-      <Link href={paths.post.getPathname(slug)}>
-        <span className="sr-only" aria-hidden="true">
-          {title}
-        </span>
+      <Link
+        href={paths.post.getPathname(slug)}
+        className="after:absolute after:inset-0 focus:outline-none"
+        onFocus={() => toggleLinkFocus("focus")}
+        onBlur={() => toggleLinkFocus("blur")}
+      >
+        <span className="sr-only">{title}</span>
       </Link>
     </m.article>
   );
