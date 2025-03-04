@@ -24,7 +24,8 @@ const ScrollDownIndicator = () => {
   return (
     <m.div
       className={cn(
-        "absolute bottom-18 sm:bottom-12 left-1/2 -translate-x-1/2 z-20 transition-opacity duration-300",
+        "absolute left-1/2 -translate-x-1/2 z-20 transition-opacity duration-300",
+        "bottom-[8.5vh] sm:bottom-12",
         isScrolled ? "opacity-0 pointer-events-none" : "opacity-100",
       )}
       initial={{ opacity: 0, y: 10 }}
