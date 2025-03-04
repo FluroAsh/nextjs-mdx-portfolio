@@ -110,16 +110,6 @@ export const PostPreview = ({
     }
   };
 
-  const toggleLinkFocus = (type: "focus" | "blur") => {
-    if (articleRef.current) {
-      articleRef.current.classList[type === "focus" ? "add" : "remove"](
-        "ring-2",
-        "ring-green-500",
-        "rounded-md",
-      );
-    }
-  };
-
   return (
     <m.article
       ref={articleRef}
@@ -145,12 +135,7 @@ export const PostPreview = ({
         />
       </div>
 
-      <Link
-        href={paths.post.getPathname(slug)}
-        className="after:absolute after:inset-0 focus:outline-none"
-        onFocus={() => toggleLinkFocus("focus")}
-        onBlur={() => toggleLinkFocus("blur")}
-      >
+      <Link href={paths.post.getPathname(slug)}>
         <span className="sr-only">{title}</span>
       </Link>
     </m.article>
