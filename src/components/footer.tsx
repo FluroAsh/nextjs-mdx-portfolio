@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { LucideCoffee, LucideMail } from "lucide-react";
 
+import { author } from "@/data/author";
 import { getFullYear } from "@/utils/dates";
 import { SocialLinks } from "./navigation/social-links";
 
@@ -18,7 +19,7 @@ export const Footer = () => (
         <div className="space-y-2">
           <Heading text="About" />
           <p className="text-sm text-neutral-400">
-            © {getFullYear()} Ashley Thompson · All rights reserved
+            © {getFullYear()} {author.name} · All rights reserved
           </p>
           <p className="text-sm text-neutral-400">
             Inserting myself into the great big world wide web.

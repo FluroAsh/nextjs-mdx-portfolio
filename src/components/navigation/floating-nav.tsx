@@ -43,7 +43,7 @@ export const FloatingNav = ({
     <m.nav
       className="fixed left-1/2 z-20"
       style={{ x: "-50%" }}
-      initial={{ y: isMobile ? 10 : -100 }}
+      charProps={{ y: isMobile ? 10 : -100 }}
       animate={{ y: shouldBeVisible ? 10 : -100 }}
       transition={{
         type: "spring",

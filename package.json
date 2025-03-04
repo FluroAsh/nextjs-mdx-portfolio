@@ -21,7 +21,7 @@
     "github-slugger": "^2.0.0",
     "hast-util-from-html-isomorphic": "^2.0.0",
     "lucide-react": "^0.472.0",
-    "motion": "^12.4.1",
+    "motion": "^12.4.10",
     "next": "15.1.7",
     "next-contentlayer2": "^0.5.4",
     "probe-image-size": "^7.2.3",
