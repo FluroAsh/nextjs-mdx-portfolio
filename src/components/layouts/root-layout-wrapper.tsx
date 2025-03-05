@@ -30,7 +30,7 @@ export const RootLayoutWrapper = ({
   const isHomepage = pathname === "/";
 
   return (
-    <div className="page-inner min-h-screen flex flex-col">
+    <div className="page-inner flex flex-col min-h-dvh">
       <BackgroundOverlay />
       {isMobile ? <MobileNav /> : <NavigationHeader />}
       <main

@@ -33,6 +33,7 @@
   --color-grey-dark: #454545;
 
   --spacing-header: 55px;
+  --spacing-mobile-nav: 68px;
 
   --animate-rotate-conic-border: conic-gradient 1.5s
     cubic-bezier(0.4, 0, 0.2, 1) infinite;

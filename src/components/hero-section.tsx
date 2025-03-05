@@ -2,7 +2,6 @@
 
 import { motion as m } from "motion/react";
 import { useState, useEffect } from "react";
-import { throttle } from "radash";
 
 import { cn } from "@/utils/misc";
 import { author } from "@/data/author";
@@ -17,24 +16,26 @@ const ScrollDownIndicator = () => {
       setIsScrolled(window.scrollY > 55);
     };
 
-    window.addEventListener("scroll", throttle({ interval: 50 }, handleScroll));
+    window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
     <m.div
       className={cn(
-        "absolute left-1/2 -translate-x-1/2 z-20 transition-opacity duration-300",
-        "bottom-[8.5vh] sm:bottom-12",
+        "absolute bottom-18 sm:bottom-4 left-1/2 -translate-x-1/2 z-10 transition-opacity duration-300 cursor-pointer",
         isScrolled ? "opacity-0 pointer-events-none" : "opacity-100",
       )}
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: isScrolled ? 0 : 1, y: 0 }}
     >
       <button
-        onClick={() =>
-          window.scrollTo({ top: window.innerHeight, behavior: "smooth" })
-        }
+        onClick={() => {
+          window.scrollTo({
+            top: window.innerHeight,
+            behavior: "smooth",
+          });
+        }}
         className="flex flex-col items-center gap-2 group"
         aria-label="Scroll down"
       >
@@ -167,7 +168,7 @@ export const HeroSection = () => {
   return (
     <section
       className={cn(
-        "h-screen sm:h-[calc(100vh_-_var(--spacing-header))] relative overflow-hidden",
+        "relative h-dvh sm:h-[calc(100vh_-_var(--spacing-header))] overflow-hidden",
         "from-green-900/5 via-neutral-900 to-black",
       )}
     >
