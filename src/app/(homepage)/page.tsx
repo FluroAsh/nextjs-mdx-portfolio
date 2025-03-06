@@ -7,11 +7,11 @@ export default function Home() {
       <HeroSection />
 
       <section className="mx-auto bg-yellow-600">
-        <div className="p-8 sm:p-20 max-w-5xl">Tech Stack</div>
+        <div className="max-w-5xl p-8 sm:p-20">Tech Stack</div>
       </section>
 
       <section className="mx-auto bg-purple-600">
-        <div className="p-8 sm:p-20 max-w-5xl">
+        <div className="max-w-5xl p-8 sm:p-20">
           <h3>Timeline</h3>
           <ul>
             <li>
@@ -35,7 +35,7 @@ export default function Home() {
         <div className="p-8 sm:p-20 max-w-5xl">Projects</div>
       </section> */}
 
-      <section className="mx-auto p-8 pb-0 sm:p-12 max-w-5xl">
+      <section className="mx-auto max-w-5xl p-8 pb-0 sm:p-12">
         <RecentPosts />
       </section>
     </div>

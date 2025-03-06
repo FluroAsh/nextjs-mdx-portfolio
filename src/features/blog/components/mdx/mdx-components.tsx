@@ -6,7 +6,7 @@ import { CustomLink } from "./link";
 export const components: MDXComponents = {
   pre: (props: React.ComponentProps<"pre">) => (
     <pre
-      className="text-sm font-mono relative border-green-600/80"
+      className="relative border-green-600/80 font-mono text-sm"
       {...props}
     />
   ),

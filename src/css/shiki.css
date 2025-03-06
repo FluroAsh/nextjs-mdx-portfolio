@@ -6,7 +6,7 @@
  */
 
 [data-line] {
-  @apply relative px-2 min-w-full flex-1;
+  @apply relative min-w-full flex-1 px-2;
 }
 /* Highlight lines/words */
 [data-highlighted-line] {
@@ -15,7 +15,7 @@
 
 /* Highlighted Indicator */
 [data-highlighted-line]::after {
-  @apply absolute top-0 left-0 w-1 h-full bg-secondary-green;
+  @apply bg-secondary-green absolute top-0 left-0 h-full w-1;
   content: "";
 }
 
@@ -27,7 +27,7 @@ code[data-line-numbers] {
 [data-line]::before {
   counter-increment: line;
   content: counter(line);
-  @apply inline-block mr-8 text-right w-3 text-green-600;
+  @apply mr-8 inline-block w-3 text-right text-green-600;
 }
 
 code[data-line-numbers-max-digits="2"] > [data-line]::before {
@@ -43,13 +43,13 @@ code[data-line-numbers-max-digits="4"] > [data-line]::before {
 }
 
 [data-rehype-pretty-code-title] {
-  @apply bg-green-800 relative p-2 px-4 text-white text-sm font-mono font-bold;
+  @apply relative bg-green-800 p-2 px-4 font-mono text-sm font-bold text-white;
   /* rounded-md is using var(--radius) which is undefined */
   border-radius: 0.5rem 0.5rem 0 0;
 }
 
 [data-rehype-pretty-code-figure] pre {
-  @apply flex overflow-x-auto py-4 border-2 border-green-800 rounded-b-lg;
+  @apply flex overflow-x-auto rounded-b-lg border-2 border-green-800 py-4;
 }
 
 /* Code block without a title */
@@ -58,5 +58,5 @@ code[data-line-numbers-max-digits="4"] > [data-line]::before {
 }
 
 [data-rehype-pretty-code-figure] code {
-  @apply flex flex-col flex-1;
+  @apply flex flex-1 flex-col;
 }

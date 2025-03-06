@@ -18,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${catamaran.variable} ${firaSans.variable} antialiased text-white`}
+        className={`${catamaran.variable} ${firaSans.variable} text-white antialiased`}
       >
         <div className="page-outer relative">
           <RootLayoutWrapper>{children}</RootLayoutWrapper>

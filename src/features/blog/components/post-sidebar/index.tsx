@@ -29,22 +29,22 @@ const ArticleNavigation = ({
     <ArticleSeparator />
 
     <div className="my-4 px-2">
-      <h3 className="font-bold uppercase text-sm tracking-wider mb-0.5">
+      <h3 className="mb-0.5 text-sm font-bold tracking-wider uppercase">
         {heading}
       </h3>
       <Link
-        className="text-sm text-neutral-400 hover:text-green-500 transition-colors duration-75 font-semibold"
+        className="text-sm font-semibold text-neutral-400 transition-colors duration-75 hover:text-green-500"
         href={link}
       >
         <p className="truncate">{title}</p>
       </Link>
 
-      <div className="mt-2 w-fit ">
+      <div className="mt-2 w-fit">
         <Link
-          className="hover:text-green-500 text-sm py-2 transition-colors duration-75"
+          className="py-2 text-sm transition-colors duration-75 hover:text-green-500"
           href={paths.blog}
         >
-          <LucideChevronLeft className="inline-block size-4 mr-[3px]" />
+          <LucideChevronLeft className="mr-[3px] inline-block size-4" />
           <span>Back to Blog</span>
         </Link>
       </div>
@@ -54,13 +54,13 @@ const ArticleNavigation = ({
 
 const PostTags = ({ items }: { items: string[] }) => (
   <div className="my-4 px-2">
-    <h3 className="font-bold text-sm uppercase tracking-wider mb-0.5">Tags</h3>
-    <ul className="list-inside flex flex-wrap gap-x-2">
+    <h3 className="mb-0.5 text-sm font-bold tracking-wider uppercase">Tags</h3>
+    <ul className="flex list-inside flex-wrap gap-x-2">
       {items.map((item, idx) => (
         <Link
           key={`tag-${idx}`}
           href={paths.tag.getPathname(slug(item))}
-          className="text-green-500 font-semibold text-sm hover:text-green-300 transition-colors duration-75"
+          className="text-sm font-semibold text-green-500 transition-colors duration-75 hover:text-green-300"
         >
           <li>{item}</li>
         </Link>
@@ -80,7 +80,7 @@ export const PostSidebar = () => {
   const showNext = !hasPrevious && !!next;
 
   return (
-    <aside className="pr-10 min-w-[250px] max-w-[250px] hidden lg:block pt-2">
+    <aside className="hidden max-w-[250px] min-w-[250px] pt-2 pr-10 lg:block">
       <PostAuthor />
       <ArticleSeparator />
 

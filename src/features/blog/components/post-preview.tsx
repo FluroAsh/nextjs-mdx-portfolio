@@ -19,7 +19,7 @@ const Description = ({
   characterLimit: number;
 }) => {
   return (
-    <p className="text-neutral-300 line-clamp-3">
+    <p className="line-clamp-3 text-neutral-300">
       {text.length > characterLimit
         ? `${text.slice(0, characterLimit)}...`
         : text}
@@ -32,8 +32,8 @@ const Tag = ({ tag }: { tag: string }) => (
     <Link
       href={paths.tag.getPathname(slug(tag))}
       className={cn(
-        "z-10 flex items-center justify-center gap-1 px-2 py-1 rounded-md text-sm text-neutral-300 bg-neutral-800/50 hover:bg-green-900/30",
-        "hover:text-green-400 transition-colors duration-200",
+        "z-10 flex items-center justify-center gap-1 rounded-md bg-neutral-800/50 px-2 py-1 text-sm text-neutral-300 hover:bg-green-900/30",
+        "transition-colors duration-200 hover:text-green-400",
       )}
     >
       <LucideHash className="size-3 [&_path]:fill-neutral-800" />
@@ -47,7 +47,7 @@ const Tags = ({ items }: { items: React.ReactNode }) => (
 );
 
 const Heading = ({ title }: { title: string }) => (
-  <h3 className="text-2xl font-bold tracking-tight text-white mb-2">{title}</h3>
+  <h3 className="mb-2 text-2xl font-bold tracking-tight text-white">{title}</h3>
 );
 
 const container = {
@@ -75,7 +75,7 @@ export const MotionPostsContainer = ({
 }) => {
   return (
     <m.div
-      className="flex flex-col justify-between h-full"
+      className="flex h-full flex-col justify-between"
       variants={container}
       initial="hidden"
       animate="show"
@@ -113,14 +113,14 @@ export const PostPreview = ({
   return (
     <m.article
       ref={articleRef}
-      className="w-full border-b border-neutral-800/50 p-4 group relative cursor-pointer"
+      className="group relative w-full cursor-pointer border-b border-neutral-800/50 p-4"
       variants={item}
       onClick={handleContainerClick}
     >
-      <div className="absolute left-0 top-0 bottom-0 w-1 mb-4 bg-green-500 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-l-full" />
+      <div className="absolute top-0 bottom-0 left-0 mb-4 w-1 rounded-l-full bg-green-500 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
 
-      <div className="p-2 pl-0 sm:pl-4 group-hover:pl-2 sm:group-hover:pl-6 transition-all duration-200">
-        <div className="flex items-center gap-1.5 text-neutral-400 text-sm mb-1">
+      <div className="p-2 pl-0 transition-all duration-200 group-hover:pl-2 sm:pl-4 sm:group-hover:pl-6">
+        <div className="mb-1 flex items-center gap-1.5 text-sm text-neutral-400">
           <LucideCalendar className="size-3.5" />
           <PublicationDate date={date} />
         </div>

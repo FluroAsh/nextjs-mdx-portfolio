@@ -16,7 +16,7 @@ export const PublicationDate = ({
   date: string;
   className?: string;
 }) => (
-  <time dateTime={date} className={cn("text-sm text-neutral-400 ", className)}>
+  <time dateTime={date} className={cn("text-sm text-neutral-400", className)}>
     {formatDate(date)}&nbsp;
   </time>
 );

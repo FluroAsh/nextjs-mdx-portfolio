@@ -28,8 +28,8 @@ const Recentpost = ({
       className={`flex ${postStyle(idx)[postCount]} group`}
       href={paths.post.getPathname(post.slug)}
     >
-      <div className="relative w-full p-4 border border-input  rounded-md overflow-hidden">
-        <div className="flex items-center gap-4 mb-2">
+      <div className="border-input relative w-full overflow-hidden rounded-md border p-4">
+        <div className="mb-2 flex items-center gap-4">
           <Image
             className="size-14 rounded-full border border-neutral-600"
             src="/static/images/ash-avatar.png"
@@ -39,12 +39,12 @@ const Recentpost = ({
           />
 
           <div>
-            <p className="text-neutral-300 text-xs">{formatDate(post.date)}</p>
+            <p className="text-xs text-neutral-300">{formatDate(post.date)}</p>
             <h2 className="text-lg text-balance">{post.title}</h2>
           </div>
 
           <Image
-            className="z-[-1] absolute inset-0 size-full object-cover shadow-lg brightness-[30%] group-hover:brightness-50 transition duration-300"
+            className="absolute inset-0 z-[-1] size-full object-cover shadow-lg brightness-[30%] transition duration-300 group-hover:brightness-50"
             src={post.image as string}
             alt={post.title}
             width={400}
@@ -53,9 +53,9 @@ const Recentpost = ({
         </div>
 
         <div className="mb-2">
-          <LucideTags size={16} className="inline mr-2" />
+          <LucideTags size={16} className="mr-2 inline" />
           {post.tags.map((tag) => (
-            <span key={tag} className="mr-2 text-sm text-neutral-100 font-bold">
+            <span key={tag} className="mr-2 text-sm font-bold text-neutral-100">
               {tag}
             </span>
           ))}

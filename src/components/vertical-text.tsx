@@ -38,7 +38,7 @@ export const VerticalText = ({
         return (
           <m.span
             key={idx}
-            className="text-green-500/70 font-bold"
+            className="font-bold text-green-500/70"
             {...charProps}
           >
             {char}

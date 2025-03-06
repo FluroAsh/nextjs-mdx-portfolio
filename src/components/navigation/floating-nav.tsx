@@ -53,7 +53,7 @@ export const FloatingNav = ({
     >
       <ul
         aria-label="navigation links"
-        className="flex items-center gap-4 py-3 px-4 sm:py-3 sm:px-6 bg-black/80 rounded-full backdrop-blur-xs border border-neutral-800"
+        className="flex items-center gap-4 rounded-full border border-neutral-800 bg-black/80 px-4 py-3 backdrop-blur-xs sm:px-6 sm:py-3"
       >
         <li>
           <NavLink

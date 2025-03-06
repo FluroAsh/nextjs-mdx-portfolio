@@ -21,10 +21,10 @@ export const NavigationHeader = () => {
 
   return (
     <>
-      <nav className="hidden sm:grid place-items-center bg-linear-to-t from-black/80 to-neutral-900/60 h-header border-b border-neutral-800 shadow-md">
-        <div className="flex items-center justify-between w-full max-w-5xl px-4">
+      <nav className="h-header hidden place-items-center border-b border-neutral-800 bg-linear-to-t from-black/80 to-neutral-900/60 shadow-md sm:grid">
+        <div className="flex w-full max-w-5xl items-center justify-between px-4">
           <Link href="/" className="flex items-center gap-2">
-            <span className="font-bold text-lg">
+            <span className="text-lg font-bold">
               <span className="text-green-500">A</span>
               Thompson
             </span>
@@ -57,7 +57,7 @@ export const NavigationHeader = () => {
               </button>
             </li>
 
-            <div className="border-r border-neutral-700 h-6" />
+            <div className="h-6 border-r border-neutral-700" />
             <SocialLinks toggleNeutral />
           </ul>
         </div>

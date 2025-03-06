@@ -21,10 +21,10 @@ export const TagsSidebar = () => {
   const pathname = usePathname();
 
   return (
-    <div className="hidden sm:block w-full max-h-fit backdrop-blur-sm bg-black/50 border border-input/50 rounded-lg shadow-lg overflow-hidden">
-      <div className="bg-gradient-to-b from-neutral-900/90 to-neutral-800/70 px-4 py-3 border-b border-neutral-700/40">
+    <div className="border-input/50 hidden max-h-fit w-full overflow-hidden rounded-lg border bg-black/50 shadow-lg backdrop-blur-sm sm:block">
+      <div className="border-b border-neutral-700/40 bg-gradient-to-b from-neutral-900/90 to-neutral-800/70 px-4 py-3">
         <div className="flex items-center gap-2">
-          <FileSearch className="text-green-400 size-5" />
+          <FileSearch className="size-5 text-green-400" />
           <h2 className="font-bold text-white/90">Content Explorer</h2>
         </div>
       </div>
@@ -33,23 +33,23 @@ export const TagsSidebar = () => {
         <Link
           href={paths.blog.pathname}
           className={cn(
-            "flex items-center gap-2 pl-2 pr-3 py-2 rounded-md transition-all duration-300",
+            "flex items-center gap-2 rounded-md py-2 pr-3 pl-2 transition-all duration-300",
             isActiveRoute(pathname, [paths.blog.pathname])
-              ? "bg-green-500/10 text-green-400 border-l-2 border-green-500"
-              : "hover:bg-neutral-800/50 text-white/80 hover:text-green-400 hover:translate-x-1",
+              ? "border-l-2 border-green-500 bg-green-500/10 text-green-400"
+              : "text-white/80 hover:translate-x-1 hover:bg-neutral-800/50 hover:text-green-400",
           )}
         >
           <LucideLayers className="size-4" />
           <span className="font-bold">All Posts</span>
 
           {isActiveRoute(pathname, [paths.blog.pathname]) && (
-            <LucideChevronRight className="size-4 ml-auto" />
+            <LucideChevronRight className="ml-auto size-4" />
           )}
         </Link>
       </div>
 
       <div className="px-3 py-3">
-        <div className="flex items-center gap-2 px-2 mb-2 text-xs text-neutral-400 uppercase tracking-wider">
+        <div className="mb-2 flex items-center gap-2 px-2 text-xs tracking-wider text-neutral-400 uppercase">
           <LucideTag className="size-3" />
           <span>Tags</span>
         </div>
@@ -60,17 +60,17 @@ export const TagsSidebar = () => {
               <Link
                 href={paths.tag.getPathname(slug(tag))}
                 className={cn(
-                  "flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-md transition-all duration-200 group",
+                  "group flex items-center gap-2 rounded-md py-1.5 pr-3 pl-2 transition-all duration-200",
                   isTagActive(pathname, tag)
-                    ? "bg-green-500/10 text-green-400 border-l-2 border-green-500"
-                    : "hover:bg-neutral-800/50 text-neutral-400 hover:text-green-400 hover:translate-x-1",
+                    ? "border-l-2 border-green-500 bg-green-500/10 text-green-400"
+                    : "text-neutral-400 hover:translate-x-1 hover:bg-neutral-800/50 hover:text-green-400",
                 )}
               >
-                <LucideHash className="flex-none size-3.5 opacity-70" />
+                <LucideHash className="size-3.5 flex-none opacity-70" />
                 <span className="truncate">
                   {tag === "mdx" ? tag.toUpperCase() : title(tag)}
                 </span>
-                <span className="ml-auto text-xs font-mono bg-neutral-800/80 group-hover:bg-neutral-700/80 px-1.5 py-0.5 rounded-sm">
+                <span className="ml-auto rounded-sm bg-neutral-800/80 px-1.5 py-0.5 font-mono text-xs group-hover:bg-neutral-700/80">
                   {count}
                 </span>
               </Link>

@@ -18,7 +18,7 @@ const SocialLinks = () => {
       href={href}
       className={cn(
         "group flex text-xs *:transition-colors",
-        displayVertical && "gap-x-1 max-w-[155px]",
+        displayVertical && "max-w-[155px] gap-x-1",
       )}
     >
       <Icon
@@ -30,7 +30,7 @@ const SocialLinks = () => {
         )}
       />
       {displayVertical && (
-        <span className="group-hover:text-green-400 tracking-wide truncate">
+        <span className="truncate tracking-wide group-hover:text-green-400">
           {handle}
         </span>
       )}
@@ -42,18 +42,18 @@ export const PostAuthor = () => {
   return (
     <div className="flex pb-2">
       <Image
-        className="size-16 rounded-full mr-2 aspect-square shadow-md drdop-shadow-sm shadow-neutral-200/30 self-center"
+        className="mr-2 aspect-square size-16 self-center rounded-full shadow-md shadow-neutral-200/30 drop-shadow-sm"
         src="/static/images/ash-avatar.png"
         width={84}
         height={84}
         alt="Ashley Thompson Avatar"
       />
-      <div className="leading-6 flex flex-col justify-center">
+      <div className="flex flex-col justify-center leading-6">
         <p className="font-bold">{author.name}</p>
 
         <div
           className={cn(
-            "flex gap-y-[4px] w-full",
+            "flex w-full gap-y-[4px]",
             displayHorizontal ? "gap-x-1.5" : "flex-col",
           )}
         >

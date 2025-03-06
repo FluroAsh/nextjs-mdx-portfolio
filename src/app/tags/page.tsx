@@ -7,15 +7,15 @@ export default function Page() {
   const tags = Object.entries(tagData);
 
   return (
-    <div className="grid grid-cols-2 place-items-center mx-auto max-w-5xl py-8 px-6">
-      <h1 className="text-4xl pb-4">Tags</h1>
+    <div className="mx-auto grid max-w-5xl grid-cols-2 place-items-center px-6 py-8">
+      <h1 className="pb-4 text-4xl">Tags</h1>
 
-      <div className="flex gap-4 flex-wrap">
+      <div className="flex flex-wrap gap-4">
         {tags.map(([tag, count]) => (
           <div key={tag}>
             <Link
               href={paths.tag.getPathname(tag)}
-              className="text-lg font-semibold uppercase hover:text-green-500 transition-colors duration-75 leading-none"
+              className="text-lg leading-none font-semibold uppercase transition-colors duration-75 hover:text-green-500"
             >
               {tag} <span className="font-mono text-sm">({count})</span>
             </Link>

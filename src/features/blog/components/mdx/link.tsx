@@ -39,7 +39,7 @@ export const CustomLink = ({
       {...props}
     >
       {children}
-      <ExternalLink className="inline-block ml-[3px] mb-[12px]" size={12} />
+      <ExternalLink className="mb-[12px] ml-[3px] inline-block" size={12} />
     </a>
   );
 };

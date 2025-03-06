@@ -27,9 +27,9 @@ export const MobileNav = () => {
   };
 
   return (
-    <nav className="z-50 fixed bottom-0 w-full bg-black/80 backdrop-blur-xs border-t border-neutral-800">
+    <nav className="fixed bottom-0 z-50 w-full border-t border-neutral-800 bg-black/80 backdrop-blur-xs">
       <ul
-        className="flex items-center justify-between max-w-[250px] gap-4 py-3 px-4 sm:py-3 sm:px-6 mx-auto"
+        className="mx-auto flex max-w-[250px] items-center justify-between gap-4 px-4 py-3 sm:px-6 sm:py-3"
         aria-label="navigation links"
       >
         <li className="flex flex-col items-center">
@@ -39,7 +39,7 @@ export const MobileNav = () => {
           >
             <LucideHome
               className={cn(
-                "size-6 group-hover:stroke-green-500 transition-colors duration-200",
+                "size-6 transition-colors duration-200 group-hover:stroke-green-500",
                 pathname === paths.home.pathname
                   ? "stroke-green-500"
                   : "stroke-white",
@@ -47,7 +47,7 @@ export const MobileNav = () => {
             />
             <span
               className={cn(
-                "text-[10px] mt-1 transition-colors duration-200",
+                "mt-1 text-[10px] transition-colors duration-200",
                 pathname === paths.home.pathname
                   ? "text-green-500"
                   : "text-white/70",
@@ -66,7 +66,7 @@ export const MobileNav = () => {
           >
             <LucideBookOpen
               className={cn(
-                "size-6 group-hover:stroke-green-500 transition-colors duration-200",
+                "size-6 transition-colors duration-200 group-hover:stroke-green-500",
                 isActiveRoute(pathname, [
                   paths.tags.pathname,
                   paths.blog.pathname,
@@ -77,7 +77,7 @@ export const MobileNav = () => {
             />
             <span
               className={cn(
-                "text-[10px] mt-1 transition-colors duration-200",
+                "mt-1 text-[10px] transition-colors duration-200",
                 isActiveRoute(pathname, [
                   paths.tags.pathname,
                   paths.blog.pathname,
@@ -99,7 +99,7 @@ export const MobileNav = () => {
           >
             <LucideCamera
               className={cn(
-                "size-6 group-hover:stroke-green-500 transition-colors duration-200",
+                "size-6 transition-colors duration-200 group-hover:stroke-green-500",
                 isActiveRoute(pathname, [paths.gallery.pathname])
                   ? "stroke-green-500"
                   : "stroke-white",
@@ -107,7 +107,7 @@ export const MobileNav = () => {
             />
             <span
               className={cn(
-                "text-[10px] mt-1 transition-colors duration-200",
+                "mt-1 text-[10px] transition-colors duration-200",
                 isActiveRoute(pathname, [paths.gallery.pathname])
                   ? "text-green-500"
                   : "text-white/70",
@@ -124,8 +124,8 @@ export const MobileNav = () => {
             onClick={handleSearchClick}
             className="group flex flex-col items-center"
           >
-            <LucideSearch className="size-6 stroke-white group-hover:stroke-green-500 transition-colors duration-200" />
-            <span className="text-[10px] mt-1 text-white/70 group-hover:text-green-500 transition-colors duration-200">
+            <LucideSearch className="size-6 stroke-white transition-colors duration-200 group-hover:stroke-green-500" />
+            <span className="mt-1 text-[10px] text-white/70 transition-colors duration-200 group-hover:text-green-500">
               Search
             </span>
           </button>

@@ -18,11 +18,11 @@ const PageNumber = ({
     <Link
       href={`${to}/page/${page}`}
       className={cn(
-        "p-3 min-w-[36px] text-center rounded-md font-semibold select-none",
-        "hover:text-green-500 hover:border-green-500 transition-colors duration-75",
+        "min-w-[36px] rounded-md p-3 text-center font-semibold select-none",
+        "transition-colors duration-75 hover:border-green-500 hover:text-green-500",
         isActive
-          ? "text-green-500 pointer-events-none bg-green-500/10"
-          : "hover:text-green-500 hover:bg-neutral-600/20",
+          ? "pointer-events-none bg-green-500/10 text-green-500"
+          : "hover:bg-neutral-600/20 hover:text-green-500",
       )}
       aria-label={`Go to page ${page}`}
       aria-disabled={isActive}
@@ -51,10 +51,10 @@ const PaginateButton = ({
       href={disabled ? "#" : `${to}/page/${page}`}
       aria-disabled={disabled}
       className={cn(
-        "flex items-center p-2 hover:text-green-500 rounded-md transition-colors duration-75",
+        "flex items-center rounded-md p-2 transition-colors duration-75 hover:text-green-500",
         disabled
-          ? "text-neutral-700 pointer-events-none"
-          : "hover:text-green-500 hover:bg-neutral-600/10",
+          ? "pointer-events-none text-neutral-700"
+          : "hover:bg-neutral-600/10 hover:text-green-500",
       )}
     >
       <ChevronIcon className="size-5" />
@@ -73,7 +73,7 @@ export const Pagination = ({ page, totalPages, to }: PaginationProps) => {
   const pages = Array.from({ length: totalPages }).map((_, i) => i + 1);
 
   return (
-    <nav className="flex justify-center gap-1 md:gap-1.5 py-4 sm:col-span-2">
+    <nav className="flex justify-center gap-1 py-4 sm:col-span-2 md:gap-1.5">
       <PaginateButton
         to={to}
         page={page - 1}

@@ -24,7 +24,7 @@ const TOCHeading = ({
       getPaddingClass(heading.depth),
       activeId === id ? "text-green-500 brightness-125" : "text-neutral-400",
       activeId !== id && "hover:text-neutral-200",
-      "list-none text-sm leading-6 transition-colors duration-75 font-semibold",
+      "list-none text-sm leading-6 font-semibold transition-colors duration-75",
     )}
   >
     <a className="block truncate whitespace-nowrap" href={heading.url}>
@@ -106,17 +106,17 @@ export const TableOfContents = () => {
   }, [tocHeadings]);
 
   return (
-    <nav className="sticky top-4 my-4 px-2 ">
-      <h3 className="font-bold text-sm uppercase tracking-wider mb-2">
+    <nav className="sticky top-4 my-4 px-2">
+      <h3 className="mb-2 text-sm font-bold tracking-wider uppercase">
         Contents
       </h3>
       <div className="relative">
         <div
-          className="opacity-0 absolute left-0 w-[3px] bg-green-500 transition duration-300"
+          className="absolute left-0 w-[3px] bg-green-500 opacity-0 transition duration-300"
           style={indicatorStyle}
         />
         <ul
-          className="list-inside list-decimal tracking-wide border-l border-neutral-500 pl-4"
+          className="list-inside list-decimal border-l border-neutral-500 pl-4 tracking-wide"
           ref={listRef}
         >
           {tocHeadings.map((heading) => (
