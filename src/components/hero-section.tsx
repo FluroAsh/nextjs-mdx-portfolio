@@ -24,7 +24,7 @@ const ScrollDownIndicator = () => {
     <m.div
       className={cn(
         "absolute bottom-18 left-1/2 z-10 -translate-x-1/2 cursor-pointer transition-opacity duration-300 sm:bottom-4",
-        isScrolled ? "pointer-events-none opacity-0" : "opacity-100",
+        isScrolled ? "opacity-0" : "opacity-100",
       )}
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: isScrolled ? 0 : 1, y: 0 }}
@@ -82,7 +82,7 @@ const AuthorHeroTitle = () => {
 
   return (
     <m.div
-      className="text-center"
+      className="text-center select-none"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, delay: 0.5 }}
@@ -113,7 +113,7 @@ const AuthorHeroTitle = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8, delay: 1.1 }}
       >
-        <div className="inline-flex flex-wrap items-center justify-center gap-3 md:gap-4">
+        <div className="flex flex-wrap items-center justify-center gap-3 text-balance md:gap-4">
           <m.span
             className="text-lg text-neutral-300 md:text-xl"
             initial={{ y: 10, opacity: 0 }}
@@ -176,8 +176,8 @@ export const HeroSection = () => {
       <BlurredCircle size={400} blur={120} bottom={-80} right={-80} />
 
       {/* Content */}
-      <div className="relative z-10 mx-auto grid h-full max-w-7xl place-items-center p-8">
-        <div className="pointer-events-none absolute bottom-0 left-8 flex translate-y-[35px] select-none sm:left-16">
+      <div className="relative mx-auto grid h-full max-w-7xl place-items-center p-8">
+        <div className="absolute bottom-0 left-4 flex translate-y-[35px] select-none sm:left-16">
           <VerticalText
             // "Art blends with code"
             text="藝術與代碼融合"
@@ -203,18 +203,22 @@ export const HeroSection = () => {
 
         {/* Top-right corner characters */}
         <m.div
-          className="pointer-events-none absolute top-12 right-12 z-0 flex items-center justify-center gap-4 opacity-5 select-none md:right-24"
+          className="absolute top-12 right-12 z-0 flex items-center justify-center gap-4 opacity-5 select-none md:right-24"
           style={{ writingMode: "vertical-rl" }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.05 }}
           transition={{ duration: 2, delay: 3.2 }}
         >
-          <span className="text-8xl font-bold text-green-500">網</span>
-          <span className="text-6xl font-bold text-green-500">絡</span>
+          <span className="text-7xl font-bold text-green-500 sm:text-8xl">
+            網
+          </span>
+          <span className="text-5xl font-bold text-green-500 sm:text-6xl">
+            絡
+          </span>
         </m.div>
 
         <m.div
-          className="pointer-events-none absolute top-1/3 right-8 z-0 hidden select-none md:right-16 md:block"
+          className="absolute top-1/3 right-8 z-0 hidden select-none md:right-16 md:block"
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.08 }}
           transition={{ duration: 1.5, delay: 3.5 }}
@@ -229,31 +233,51 @@ export const HeroSection = () => {
           </div>
         </m.div>
 
-        {/* Mid-left binary-inspired pattern */}
         <m.div
-          className="pointer-events-none absolute top-1/3 left-8 z-0 select-none sm:top-1/4"
+          className="absolute top-[200px] right-10 z-0 flex select-none sm:top-[27.5%] sm:right-12"
+          style={{ writingMode: "vertical-rl", textOrientation: "upright" }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.08 }}
+          transition={{ duration: 1.5, delay: 3.5 }}
+        >
+          <div className="flex flex-col items-center gap-2">
+            {/* Fusion of art and code */}
+            {"藝術與代碼融合".split("").map((char, index) => (
+              <span
+                key={index}
+                className="text-2xl font-bold text-green-500/80"
+              >
+                {char}
+              </span>
+            ))}
+          </div>
+        </m.div>
+
+        {/* Top-left corner characters */}
+        <m.div
+          className="absolute top-27 left-8 z-0 select-none sm:top-1/4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.15 }}
           transition={{ duration: 1.5, delay: 3.8 }}
         >
-          <div className="flex flex-col items-start">
-            <div className="flex gap-3">
+          <div className="flex flex-col">
+            <div className="flex gap-4">
               {/* Innovation */}
-              <span className="font-mono text-4xl text-green-500/70">創</span>
-              <span className="font-mono text-4xl text-green-500/70">新</span>
+              <span className="text-3xl text-green-500/70 sm:text-4xl">創</span>
+              <span className="text-3xl text-green-500/70 sm:text-4xl">新</span>
             </div>
-            <div className="mt-2 ml-6 flex gap-3">
+            <div className="mt-2 ml-6 flex gap-3 sm:mt-4">
               {/* Thinking */}
-              <span className="font-mono text-2xl text-green-500/70">思</span>
-              <span className="font-mono text-2xl text-green-500/70">維</span>
+              <span className="text-xl text-green-500/70 sm:text-2xl">思</span>
+              <span className="text-xl text-green-500/70 sm:text-2xl">維</span>
             </div>
           </div>
         </m.div>
 
         {/* Subtle dots pattern with characters */}
-        <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 select-none">
           <m.div
-            className="absolute top-[20%] left-[25%] opacity-8"
+            className="absolute top-16 left-[25%] opacity-8 sm:top-[20%]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.15 }}
             transition={{ duration: 1, delay: 4 }}
@@ -280,7 +304,8 @@ export const HeroSection = () => {
             <span className="text-xl text-green-500/70">藝</span>
           </m.div>
           <m.div
-            className="absolute top-[67.5%] right-[15%] sm:top-[70%]"
+            // className="absolute top-[67.5%] right-[15%] sm:top-[70%]"
+            className="absolute right-[15%] bottom-[40%] sm:top-[70%]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.15 }}
             transition={{ duration: 1, delay: 4.6 }}
@@ -289,26 +314,6 @@ export const HeroSection = () => {
             <span className="text-xl text-green-500/70">術</span>
           </m.div>
         </div>
-
-        <m.div
-          className="pointer-events-none absolute top-1/4 right-12 z-0 flex select-none"
-          style={{ writingMode: "vertical-rl", textOrientation: "upright" }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.08 }}
-          transition={{ duration: 1.5, delay: 3.5 }}
-        >
-          <div className="flex flex-col items-center gap-2">
-            {/* Fusion of art and code */}
-            {"藝術與代碼融合".split("").map((char, index) => (
-              <span
-                key={index}
-                className="text-2xl font-bold text-green-500/80"
-              >
-                {char}
-              </span>
-            ))}
-          </div>
-        </m.div>
 
         {/* Learning knows no bounds */}
         <VerticalText
