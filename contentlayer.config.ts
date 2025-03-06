@@ -16,8 +16,9 @@ import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeSlug from "rehype-slug";
 import readingTime from "reading-time";
 
-import type { Blog } from "contentlayer/generated";
+import { type Blog } from "contentlayer/generated";
 import { extractTocHeadings } from "@/lib/plugins/extract-headings";
+import { getCoreContent } from "@/lib/helpers";
 
 // heroicon mini link
 const icon = fromHtmlIsomorphic(
@@ -53,7 +54,21 @@ function createTagCount(allBlogs: Blog[]) {
     path.resolve("./src/data/tag-data.json"),
     JSON.stringify(tagCount),
   );
+
+  console.log("✅ Tag count generated!");
 }
+
+/**
+ * Generate a search index for the blog posts.
+ * This index is used to power the *global* search functionality on the site.
+ */
+const createSearchIndex = (allBlogs: Blog[]) => {
+  fs.writeFileSync(
+    path.resolve("public/search.json"),
+    JSON.stringify(getCoreContent(allBlogs)),
+  );
+  console.log("✅ Local search index generated!");
+};
 
 const Blog = defineDocumentType(() => ({
   name: "Blog",
@@ -143,5 +158,6 @@ export default makeSource({
   onSuccess: async (importData) => {
     const { allBlogs } = await importData();
     createTagCount(allBlogs);
+    createSearchIndex(allBlogs);
   },
 });

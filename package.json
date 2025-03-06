@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "next dev --turbo",
     "build": "next build",
+    "build:content": "contentlayer2 build",
     "start": "next start",
     "test": "vitest",
     "test:watch": "vitest --watch",
