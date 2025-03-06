@@ -8,6 +8,7 @@ import { ScrollToTop } from "@/components/scroll-to-top";
 import { Footer } from "@/components/footer";
 import { NavigationHeader } from "../navigation/navigation-header";
 import { MobileNav } from "../navigation/mobile-nav";
+import { CommandBar } from "../kbar";
 
 export const BackgroundOverlay = () => (
   <div
@@ -30,19 +31,21 @@ export const RootLayoutWrapper = ({
   const isHomepage = pathname === "/";
 
   return (
-    <div className="page-inner flex min-h-dvh flex-col">
-      <BackgroundOverlay />
-      {isMobile ? <MobileNav /> : <NavigationHeader />}
-      <main
-        className={cn(
-          "flex flex-1 grow justify-center pt-8 sm:pt-0 [&>div]:w-full",
-          isHomepage && "pt-0",
-        )}
-      >
-        {children}
-      </main>
-      <ScrollToTop isMobile={isMobile} />
-      <Footer />
-    </div>
+    <CommandBar>
+      <div className="page-inner flex min-h-dvh flex-col">
+        <BackgroundOverlay />
+        {isMobile ? <MobileNav /> : <NavigationHeader />}
+        <main
+          className={cn(
+            "flex flex-1 grow justify-center pt-8 sm:pt-0 [&>div]:w-full",
+            isHomepage && "pt-0",
+          )}
+        >
+          {children}
+        </main>
+        <ScrollToTop isMobile={isMobile} />
+        <Footer />
+      </div>
+    </CommandBar>
   );
 };
