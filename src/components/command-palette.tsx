@@ -88,7 +88,7 @@ const actions = (router: ReturnType<typeof useRouter>) =>
     ...blogPostActions(router),
   ] satisfies Action[];
 
-export const CommandBar = ({ children }: { children: React.ReactNode }) => {
+export const ComanndPalette = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
 
   return (

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { slug } from "github-slugger";
 import { motion as m } from "motion/react";
-import { LucideCalendar, LucideHash } from "lucide-react";
+import { LucideHash } from "lucide-react";
 
 import { paths } from "@/config/paths";
 import { PublicationDate } from "./reading-time";
