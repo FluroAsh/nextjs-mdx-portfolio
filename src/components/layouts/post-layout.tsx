@@ -26,7 +26,11 @@ export default function PostLayout({
       <div className="mx-auto px-8">
         <header className="text-center sm:pt-4">
           <h1 className="text-3xl font-bold text-balance">{post.title}</h1>
-          <ArticleDateTime date={post.date} stats={post.readingTime} />
+          <ArticleDateTime
+            date={post.date}
+            stats={post.readingTime}
+            className="pt-2"
+          />
           <Separator
             from="from-neutral-600/10"
             via="via-neutral-600"

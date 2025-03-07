@@ -120,8 +120,7 @@ export const PostPreview = ({
       <div className="absolute top-0 bottom-0 left-0 mb-4 w-1 rounded-l-full bg-green-500 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
 
       <div className="p-2 pl-0 transition-all duration-200 group-hover:pl-2 sm:pl-4 sm:group-hover:pl-6">
-        <div className="mb-1 flex items-center gap-1.5 text-sm text-neutral-400">
-          <LucideCalendar className="size-3.5" />
+        <div className="flex items-center pb-2 text-sm text-neutral-400">
           <PublicationDate date={date} />
         </div>
 
