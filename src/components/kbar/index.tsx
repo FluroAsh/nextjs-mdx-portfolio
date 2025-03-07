@@ -23,7 +23,7 @@ const blogPostActions = (router: ReturnType<typeof useRouter>): Action[] =>
       ({
         id: post.slug,
         name: post.title,
-        keywords: post.description,
+        keywords: `${post.description} ${post.tags.join(" ")}`,
         icon: <LucideBookOpen />,
         perform: () => router.push(paths.post.getPathname(slug(post.slug))),
       }) satisfies Action,
