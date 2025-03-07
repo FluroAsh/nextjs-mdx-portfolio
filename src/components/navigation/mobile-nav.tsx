@@ -11,9 +11,11 @@ import {
 
 import { cn } from "@/utils/misc";
 import { isActiveRoute, paths } from "@/config/paths";
+import { useKBar } from "kbar";
 
 export const MobileNav = () => {
   const pathname = usePathname();
+  const { query } = useKBar();
 
   // TODO: Add these to our link styles
   // const navLinkClasses = (paths: string[]) =>
@@ -21,10 +23,6 @@ export const MobileNav = () => {
   //     "size-6 transition-colors duration-200",
   //     isActiveRoute(pathname, paths) ? "stroke-green-500" : "stroke-white",
   //   );
-
-  const handleSearchClick = () => {
-    console.log("Search clicked");
-  };
 
   return (
     <nav className="fixed bottom-0 z-50 w-full border-t border-neutral-800 bg-black/80 backdrop-blur-xs">
@@ -121,7 +119,7 @@ export const MobileNav = () => {
 
         <li className="flex flex-col items-center">
           <button
-            onClick={handleSearchClick}
+            onClick={() => query.toggle()}
             className="group flex flex-col items-center"
           >
             <LucideSearch className="size-6 stroke-white transition-colors duration-200 group-hover:stroke-green-500" />

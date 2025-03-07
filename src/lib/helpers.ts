@@ -35,5 +35,8 @@ export const getCoreContent = (posts: Blog[]) =>
       delete newPost.toc;
       delete newPost.draft;
 
-      return newPost;
+      return newPost as Exclude<
+        Blog,
+        "_id" | "_raw" | "body" | "toc" | "draft"
+      >;
     });

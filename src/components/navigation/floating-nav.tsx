@@ -12,6 +12,7 @@ import { isActiveRoute, paths } from "@/config/paths";
 import { NavLink } from "./nav-link";
 import { SocialLinks } from "./social-links";
 import { useRangeScroll } from "@/hooks/use-range-scroll";
+import { useKBar } from "kbar";
 
 export const FloatingNav = ({
   hideScrollYLimit = 0,
@@ -19,6 +20,7 @@ export const FloatingNav = ({
   isMobile = false,
 }) => {
   const pathname = usePathname();
+  const { query } = useKBar();
   const { scrollY } = useScroll();
   const { shouldBeVisible } = useRangeScroll(
     pathname,
@@ -33,11 +35,6 @@ export const FloatingNav = ({
       "size-5 hover:stroke-green-500",
       isActiveRoute(pathname, paths) ? "stroke-green-500" : "stroke-white",
     );
-
-  const handleSearchClick = () => {
-    // Implement search
-    console.log("search clicked");
-  };
 
   return (
     <m.nav
@@ -88,7 +85,7 @@ export const FloatingNav = ({
           />
         </li>
         <li className="flex">
-          <button onClick={handleSearchClick}>
+          <button onClick={() => query.toggle()}>
             <span className="sr-only">Search</span>
             <LucideSearch className="size-5 hover:stroke-green-500" />
           </button>
