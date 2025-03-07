@@ -1,4 +1,9 @@
-import { LucideBookOpen, LucideCamera, LucideHome } from "lucide-react";
+import {
+  LucideBookOpen,
+  LucideCamera,
+  LucideHome,
+  LucideSearch,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import { slug } from "github-slugger";
 import {
@@ -9,6 +14,7 @@ import {
   KBarProvider,
   KBarResults,
   KBarSearch,
+  Priority,
   useMatches,
 } from "kbar";
 
@@ -16,12 +22,16 @@ import { allBlogs } from "contentlayer/generated";
 
 import { paths } from "@/config/paths";
 import { getCoreContent } from "@/lib/helpers";
+import { cn } from "@/utils/misc";
 
 const blogPostActions = (router: ReturnType<typeof useRouter>): Action[] =>
   getCoreContent(allBlogs).map(
     (post) =>
       ({
         id: post.slug,
+        section: "Blog Posts",
+        parent: "search-posts",
+        subtitle: post.description,
         name: post.title,
         keywords: `${post.description} ${post.tags.join(" ")}`,
         icon: <LucideBookOpen />,
@@ -35,7 +45,11 @@ const actions = (router: ReturnType<typeof useRouter>) =>
       id: "home",
       name: "Home",
       shortcut: ["h"],
-      keywords: "root",
+      keywords: "home root",
+      section: {
+        name: "Page",
+        priority: Priority.HIGH,
+      },
       icon: <LucideHome />,
       perform: () => router.push("/"),
     },
@@ -43,7 +57,11 @@ const actions = (router: ReturnType<typeof useRouter>) =>
       id: "blog",
       name: "Blog",
       shortcut: ["b"],
-      keywords: "writing words",
+      keywords: "blog",
+      section: {
+        name: "Page",
+        priority: Priority.HIGH,
+      },
       icon: <LucideBookOpen />,
       perform: () => router.push("/blog"),
     },
@@ -51,9 +69,21 @@ const actions = (router: ReturnType<typeof useRouter>) =>
       id: "gallery",
       name: "Gallery",
       shortcut: ["g"],
-      keywords: "photos pictures",
+      keywords: "photos pictures gallery",
+      section: {
+        name: "Page",
+        priority: Priority.HIGH,
+      },
       icon: <LucideCamera />,
       perform: () => router.push("/gallery"),
+    },
+    {
+      id: "search-posts",
+      name: "Blog posts",
+      shortcut: ["s", "p"],
+      keywords: "search find posts writing words blog articles",
+      icon: <LucideSearch />,
+      section: "Search",
     },
     ...blogPostActions(router),
   ] satisfies Action[];
@@ -64,12 +94,12 @@ export const CommandBar = ({ children }: { children: React.ReactNode }) => {
   return (
     <KBarProvider actions={actions(router)}>
       <KBarPortal>
-        <KBarPositioner className="z-50 overflow-hidden rounded-md bg-black/50 p-4 backdrop-blur backdrop-filter">
-          <KBarAnimator className="w-full max-w-xl">
-            <div className="overflow-hidden rounded-2xl border border-gray-800 bg-gray-900">
-              <div className="flex items-center space-x-4 p-4">
+        <KBarPositioner className="z-10 rounded bg-black/50 p-4 backdrop-blur backdrop-filter">
+          <KBarAnimator className="min-h-fit w-full max-w-xl rounded-md bg-black/60 p-4">
+            <div className="pb-4">
+              <div className="flex items-center space-x-4 rounded-2xl border border-gray-800 bg-gray-900 p-4">
                 <KBarSearch className="h-8 w-full bg-transparent text-gray-200 placeholder-gray-500 focus:outline-none" />
-                <kbd className="inline-block rounded border border-gray-400 px-1.5 align-middle text-xs leading-4 font-medium tracking-wide whitespace-nowrap text-gray-400">
+                <kbd className="inline-block rounded border border-gray-400 px-1.5 py-0.5 text-xs tracking-wide text-gray-400">
                   ESC
                 </kbd>
               </div>
@@ -91,32 +121,37 @@ function RenderResults() {
       items={results}
       onRender={({ item, active }) =>
         typeof item === "string" ? (
-          <div className="text-primary-600 block border-t border-gray-800 px-4 pt-6 pb-2 text-xs font-semibold uppercase">
+          <div className="block border-t border-gray-800 px-4 pt-6 pb-2 text-xs font-semibold text-neutral-500 uppercase">
             {item}
           </div>
         ) : (
           <div
-            className={`flex cursor-pointer justify-between px-4 py-2 ${
+            className={cn(
+              "flex cursor-pointer items-center justify-between rounded-md px-4 py-2",
               active
-                ? "bg-primary-600 text-gray-100"
-                : "bg-transparent text-gray-700 dark:text-gray-100"
-            }`}
+                ? "bg-gray-800 text-gray-100"
+                : "bg-transparent text-gray-300",
+            )}
           >
-            <div className={"flex space-x-2"}>
-              <div className="flex items-center gap-4">
-                {item.icon && (
-                  <div className="self-center [&_svg]:size-5">{item.icon}</div>
-                )}
+            <div className="flex items-center gap-3">
+              {item.icon && (
+                <div className="flex items-center justify-center text-gray-400 [&_svg]:size-5">
+                  {item.icon}
+                </div>
+              )}
+
+              <div>
+                <span>{item.name}</span>
                 {item.subtitle && (
                   <div
-                    className={`${active ? "text-gray-200" : "text-gray-400"} flex`}
+                    className={`text-sm ${active ? "text-gray-300" : "text-gray-500"}`}
                   >
                     {item.subtitle}
                   </div>
                 )}
-                <div>{item.name}</div>
               </div>
             </div>
+
             {item.shortcut?.length ? (
               <div
                 aria-hidden
@@ -125,10 +160,10 @@ function RenderResults() {
                 {item.shortcut.map((sc) => (
                   <kbd
                     key={sc}
-                    className={`flex h-7 w-6 items-center justify-center rounded border text-xs font-medium ${
+                    className={`flex size-7 items-center justify-center rounded-md border text-xs ${
                       active
-                        ? "border-gray-200 text-gray-200"
-                        : "border-gray-400 text-gray-400"
+                        ? "border-gray-600 text-gray-300"
+                        : "border-gray-700 text-gray-400"
                     }`}
                   >
                     {sc}
@@ -140,7 +175,5 @@ function RenderResults() {
         )
       }
     />
-  ) : (
-    <div className="bg-slate-600 p-8">No results found</div>
-  );
+  ) : null;
 }
