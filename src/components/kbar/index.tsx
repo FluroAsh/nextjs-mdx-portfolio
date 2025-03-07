@@ -94,12 +94,12 @@ export const CommandBar = ({ children }: { children: React.ReactNode }) => {
   return (
     <KBarProvider actions={actions(router)}>
       <KBarPortal>
-        <KBarPositioner className="z-10 rounded bg-black/50 p-4 backdrop-blur backdrop-filter">
-          <KBarAnimator className="min-h-fit w-full max-w-xl rounded-md bg-black/60 p-4">
+        <KBarPositioner className="z-50 rounded p-4 backdrop-blur-xl backdrop-filter">
+          <KBarAnimator className="min-h-fit w-full max-w-xl overflow-hidden rounded-xl border border-green-900/30 bg-black/80 p-4 shadow-lg shadow-black/30">
             <div className="pb-4">
-              <div className="flex items-center space-x-4 rounded-2xl border border-gray-800 bg-gray-900 p-4">
-                <KBarSearch className="h-8 w-full bg-transparent text-gray-200 placeholder-gray-500 focus:outline-none" />
-                <kbd className="inline-block rounded border border-gray-400 px-1.5 py-0.5 text-xs tracking-wide text-gray-400">
+              <div className="flex items-center space-x-4 rounded-lg border border-green-800/20 bg-neutral-900/70 p-3">
+                <KBarSearch className="h-8 w-full bg-transparent text-neutral-100 placeholder-neutral-500 focus:outline-none" />
+                <kbd className="inline-flex items-center justify-center rounded border border-green-800/30 bg-neutral-800/80 px-1.5 py-0.5 text-xs font-medium tracking-wide text-green-400/80">
                   ESC
                 </kbd>
               </div>
@@ -121,21 +121,26 @@ function RenderResults() {
       items={results}
       onRender={({ item, active }) =>
         typeof item === "string" ? (
-          <div className="block border-t border-gray-800 px-4 pt-6 pb-2 text-xs font-semibold text-neutral-500 uppercase">
+          <div className="block border-t border-green-900/30 px-4 pt-6 pb-2 text-xs font-semibold text-green-500/70 uppercase">
             {item}
           </div>
         ) : (
           <div
             className={cn(
-              "flex cursor-pointer items-center justify-between rounded-md px-4 py-2",
+              "flex cursor-pointer items-center justify-between rounded-md px-4 py-2.5 transition-colors",
               active
-                ? "bg-gray-800 text-gray-100"
-                : "bg-transparent text-gray-300",
+                ? "bg-neutral-800/80 text-neutral-100"
+                : "bg-transparent text-neutral-400 hover:bg-neutral-900/80",
             )}
           >
             <div className="flex items-center gap-3">
               {item.icon && (
-                <div className="flex items-center justify-center text-gray-400 [&_svg]:size-5">
+                <div
+                  className={cn(
+                    "flex items-center justify-center [&_svg]:size-5",
+                    active ? "text-green-400" : "text-neutral-500",
+                  )}
+                >
                   {item.icon}
                 </div>
               )}
@@ -144,7 +149,7 @@ function RenderResults() {
                 <span>{item.name}</span>
                 {item.subtitle && (
                   <div
-                    className={`text-sm ${active ? "text-gray-300" : "text-gray-500"}`}
+                    className={`text-sm ${active ? "text-neutral-400" : "text-neutral-600"}`}
                   >
                     {item.subtitle}
                   </div>
@@ -160,11 +165,12 @@ function RenderResults() {
                 {item.shortcut.map((sc) => (
                   <kbd
                     key={sc}
-                    className={`flex size-7 items-center justify-center rounded-md border text-xs ${
+                    className={cn(
+                      "flex size-6 items-center justify-center rounded border text-xs font-medium transition-colors",
                       active
-                        ? "border-gray-600 text-gray-300"
-                        : "border-gray-700 text-gray-400"
-                    }`}
+                        ? "border-green-700/50 bg-green-900/20 text-green-400"
+                        : "border-neutral-800 bg-neutral-900 text-neutral-500",
+                    )}
                   >
                     {sc}
                   </kbd>
