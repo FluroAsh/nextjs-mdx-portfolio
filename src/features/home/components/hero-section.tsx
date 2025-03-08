@@ -5,8 +5,8 @@ import { useState, useEffect } from "react";
 
 import { cn } from "@/utils/misc";
 import { author } from "@/data/author";
-import { VerticalText } from "./vertical-text";
-import { BlurredCircle } from "./blurred-circle";
+import { VerticalText } from "../../../components/vertical-text";
+import { BlurredCircle } from "../../../components/blurred-circle";
 
 const ScrollDownIndicator = () => {
   const [isScrolled, setIsScrolled] = useState(false);

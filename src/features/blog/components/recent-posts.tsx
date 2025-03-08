@@ -3,11 +3,11 @@ import Image from "next/image";
 import { LucideTags } from "lucide-react";
 import { allBlogs, type Blog } from "contentlayer/generated";
 
+import { cn } from "@/utils/misc";
 import { paths } from "@/config/paths";
 import { filterByDraft, sortByDate } from "../utils";
 import { formatDate } from "@/utils/dates";
 import { SectionGradientHeading } from "@/components/section-gradient-heading";
-import { cn } from "@/utils/misc";
 
 const Recentpost = ({ idx, post }: { idx: number; post: Blog }) => {
   return (
@@ -15,23 +15,25 @@ const Recentpost = ({ idx, post }: { idx: number; post: Blog }) => {
       className={cn("group flex", idx === 2 && "md:col-span-2 lg:col-span-1")}
       href={paths.post.getPathname(post.slug)}
     >
-      <div className="border-input relative isolate w-full overflow-hidden rounded-md border p-4 transition-colors hover:border-green-500">
-        <div className="mb-2 flex items-center gap-4">
+      <div className="border-input relative isolate w-full overflow-hidden rounded-md border p-4 ring-2 ring-transparent transition group-hover:ring-green-500">
+        <div className="mb-2 flex items-center gap-3">
           <Image
-            className="size-14 rounded-full border border-neutral-600"
+            className="size-14 rounded-full border border-neutral-600 transition-colors"
             src="/static/images/ash-avatar.png"
             alt="Picture of the author"
             width={56}
             height={56}
           />
 
-          <div>
-            <p className="text-xs text-neutral-300">{formatDate(post.date)}</p>
-            <h2 className="text-lg text-balance">{post.title}</h2>
+          <div className="min-w-0">
+            <p className="text-xs font-bold text-neutral-300">
+              {formatDate(post.date)}
+            </p>
+            <h2 className="truncate text-lg">{post.title}</h2>
           </div>
 
           <Image
-            className="absolute inset-0 -z-[10] size-full object-cover shadow-lg brightness-[30%] transition duration-300 group-hover:brightness-50"
+            className="absolute inset-0 -z-[10] size-full object-cover shadow-lg brightness-[30%] transition duration-300 group-hover:brightness-40"
             src={post.image as string}
             alt={post.title}
             width={400}
@@ -39,16 +41,25 @@ const Recentpost = ({ idx, post }: { idx: number; post: Blog }) => {
           />
         </div>
 
-        <div className="mb-2">
-          <LucideTags size={16} className="mr-2 inline" />
+        <div className="mb-3 flex flex-wrap items-center gap-2">
+          <LucideTags
+            size={16}
+            className="text-neutral-100 transition-colors group-hover:text-green-500"
+          />
           {post.tags.map((tag) => (
-            <span key={tag} className="mr-2 text-sm font-bold text-neutral-100">
+            <span
+              key={tag}
+              className={cn(
+                "inline-flex items-center rounded-sm border bg-black/50 px-2 py-0.5 text-xs tracking-wide backdrop-blur transition",
+                "group-hover:border-green-700/40 group-hover:bg-green-900/20 group-hover:text-green-400",
+              )}
+            >
               {tag}
             </span>
           ))}
         </div>
 
-        <p className="opacity-80">{post.description}</p>
+        <p className="text-neutral-300">{post.description}</p>
       </div>
     </Link>
   );
