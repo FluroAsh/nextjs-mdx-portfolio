@@ -14,19 +14,19 @@ const navLinkClasses =
 
 export const Footer = () => (
   <div className="mt-8 border-t border-neutral-800 bg-linear-to-t from-black/80 to-neutral-900/60">
-    <footer className="mx-auto max-w-5xl px-8 py-6 pb-22 sm:pb-6">
+    <footer className="mx-auto max-w-5xl px-8 py-6 sm:pb-6">
       <div className="grid grid-cols-1 gap-4 pt-2 pb-6 sm:grid-cols-[1fr_150px_1fr]">
         <div className="space-y-2">
           <Heading text="About" />
           <p className="text-sm text-neutral-400">
-            © {getFullYear()} {author.name} · All rights reserved
+            © {getFullYear()} {author.name}
           </p>
           <p className="text-sm text-neutral-400">
             Inserting myself into the great big world wide web.
           </p>
         </div>
 
-        <div className="space-y-2">
+        <nav className="space-y-2">
           <Heading text="Navigation" />
           <ul>
             <li>
@@ -45,7 +45,7 @@ export const Footer = () => (
               </Link>
             </li>
           </ul>
-        </div>
+        </nav>
 
         <div className="space-y-2 sm:justify-self-end">
           <Heading text="Connect" />
