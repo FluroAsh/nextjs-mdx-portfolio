@@ -19,7 +19,7 @@ export const AboutSection = () => {
       <div className="max-w-3xl text-neutral-300">
         <div className="pb-6 text-center">
           <m.h2
-            className="font-catamaran text-4xl tracking-tight text-neutral-100"
+            className="text-4xl tracking-tight text-neutral-100"
             initial={{ opacity: 0, y: -10 }}
             animate={{
               opacity: isInView ? 1 : 0,

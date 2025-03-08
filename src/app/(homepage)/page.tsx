@@ -1,6 +1,6 @@
 import { HeroSection } from "@/features/home/components/hero-section";
+import { AboutSection } from "@/features/home/components/about-section";
 import { RecentPosts } from "@/features/blog/components/recent-posts";
-import { AboutSection } from "@/features/home/components/about-me";
 
 export default function Home() {
   return (
