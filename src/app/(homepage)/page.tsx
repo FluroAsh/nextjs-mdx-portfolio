@@ -1,10 +1,12 @@
-import { HeroSection } from "@/components/hero-section";
+import { HeroSection } from "@/features/home/components/hero-section";
 import { RecentPosts } from "@/features/blog/components/recent-posts";
+import { AboutSection } from "@/features/home/components/about-me";
 
 export default function Home() {
   return (
     <div className="pt-0">
       <HeroSection />
+      <AboutSection />
 
       <section className="mx-auto bg-yellow-600">
         <div className="max-w-5xl p-8 sm:p-20">Tech Stack</div>
