@@ -8,7 +8,7 @@ import { ScrollToTop } from "@/components/scroll-to-top";
 import { Footer } from "@/components/footer";
 import { NavigationHeader } from "../navigation/navigation-header";
 import { MobileNav } from "../navigation/mobile-nav";
-import { ComanndPalette } from "../command-palette";
+import { CommandPalette } from "../command-palette";
 
 export const BackgroundOverlay = () => (
   <div
@@ -31,7 +31,7 @@ export const RootLayoutWrapper = ({
   const isHomepage = pathname === "/";
 
   return (
-    <ComanndPalette>
+    <CommandPalette>
       <div className="page-inner flex min-h-dvh flex-col">
         <BackgroundOverlay />
         {isMobile ? <MobileNav /> : <NavigationHeader />}
@@ -46,6 +46,6 @@ export const RootLayoutWrapper = ({
         <ScrollToTop isMobile={isMobile} />
         <Footer />
       </div>
-    </ComanndPalette>
+    </CommandPalette>
   );
 };

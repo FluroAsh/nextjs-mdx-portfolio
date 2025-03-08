@@ -58,6 +58,7 @@ const actions = (router: ReturnType<typeof useRouter>) =>
       name: "Blog",
       shortcut: ["b"],
       keywords: "blog",
+      subtitle: "Read my latest blog posts",
       section: {
         name: "Page",
         priority: Priority.HIGH,
@@ -70,6 +71,7 @@ const actions = (router: ReturnType<typeof useRouter>) =>
       name: "Gallery",
       shortcut: ["g"],
       keywords: "photos pictures gallery",
+      subtitle: "View photos from my latest adventures!",
       section: {
         name: "Page",
         priority: Priority.HIGH,
@@ -79,16 +81,17 @@ const actions = (router: ReturnType<typeof useRouter>) =>
     },
     {
       id: "search-posts",
-      name: "Blog posts",
+      name: "Find Posts",
       shortcut: ["s", "p"],
       keywords: "search find posts writing words blog articles",
+      subtitle: "Search for specific blog posts by title, tag or description",
       icon: <LucideSearch />,
       section: "Search",
     },
     ...blogPostActions(router),
   ] satisfies Action[];
 
-export const ComanndPalette = ({ children }: { children: React.ReactNode }) => {
+export const CommandPalette = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
 
   return (
@@ -96,7 +99,7 @@ export const ComanndPalette = ({ children }: { children: React.ReactNode }) => {
       <KBarPortal>
         <KBarPositioner className="z-50 rounded p-4 backdrop-blur-xl backdrop-filter">
           <KBarAnimator className="min-h-fit w-full max-w-xl overflow-hidden rounded-xl border border-green-900/30 bg-black/80 p-4 shadow-lg shadow-black/30">
-            <div className="pb-4">
+            <div className="[&:has(+div)]:pb-4">
               <div className="flex items-center space-x-4 rounded-lg border border-green-800/20 bg-neutral-900/70 p-3">
                 <KBarSearch className="h-8 w-full bg-transparent text-neutral-100 placeholder-neutral-500 focus:outline-none" />
                 <kbd className="inline-flex items-center justify-center rounded border border-green-800/30 bg-neutral-800/80 px-1.5 py-0.5 text-xs font-medium tracking-wide text-green-400/80">
