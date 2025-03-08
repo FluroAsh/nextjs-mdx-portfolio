@@ -7,28 +7,15 @@ import { paths } from "@/config/paths";
 import { filterByDraft, sortByDate } from "../utils";
 import { formatDate } from "@/utils/dates";
 import { SectionGradientHeading } from "@/components/section-gradient-heading";
+import { cn } from "@/utils/misc";
 
-const postStyle = (idx: number) => [
-  "col-span-1",
-  "col-span-1",
-  `col-span-1 ${idx === 2 ? "md:col-span-2 lg:col-span-1" : ""}`,
-];
-
-const Recentpost = ({
-  idx,
-  post,
-  postCount,
-}: {
-  idx: number;
-  post: Blog;
-  postCount: number;
-}) => {
+const Recentpost = ({ idx, post }: { idx: number; post: Blog }) => {
   return (
     <Link
-      className={`flex ${postStyle(idx)[postCount]} group`}
+      className={cn("group flex", idx === 2 && "md:col-span-2 lg:col-span-1")}
       href={paths.post.getPathname(post.slug)}
     >
-      <div className="border-input relative w-full overflow-hidden rounded-md border p-4">
+      <div className="border-input relative isolate w-full overflow-hidden rounded-md border p-4 transition-colors hover:border-green-500">
         <div className="mb-2 flex items-center gap-4">
           <Image
             className="size-14 rounded-full border border-neutral-600"
@@ -44,7 +31,7 @@ const Recentpost = ({
           </div>
 
           <Image
-            className="absolute inset-0 z-[-1] size-full object-cover shadow-lg brightness-[30%] transition duration-300 group-hover:brightness-50"
+            className="absolute inset-0 -z-[10] size-full object-cover shadow-lg brightness-[30%] transition duration-300 group-hover:brightness-50"
             src={post.image as string}
             alt={post.title}
             width={400}
@@ -68,9 +55,9 @@ const Recentpost = ({
 };
 
 const containerStyles = [
-  "auto-rows-max grid-cols-1",
-  "auto-rows-max grid-rows-2 md:grid-rows-1 grid-cols-1",
-  "auto-rows-max grid-rows-2 md:grid-rows-1 grid-cols-1 md:grid-cols-2 lg:grid-cols-3",
+  "grid-cols-1",
+  "grid-rows-2 md:grid-rows-1 grid-cols-1",
+  "grid-rows-2 md:grid-rows-1 grid-cols-1 md:grid-cols-2 lg:grid-cols-3",
 ];
 
 // TODO: Add a cooler hover glow effect all posts
@@ -85,14 +72,11 @@ export const RecentPosts = () => {
     <div className={`${recentPosts.length > 0 ? "" : "hidden"}`}>
       <SectionGradientHeading title="Recent Posts" />
 
-      <div className={`grid gap-4 ${containerStyles[recentPosts.length - 1]}`}>
+      <div
+        className={`grid auto-rows-max gap-4 ${containerStyles[recentPosts.length - 1]}`}
+      >
         {recentPosts.map((post, idx) => (
-          <Recentpost
-            key={post._id}
-            idx={idx}
-            post={post}
-            postCount={recentPosts.length - 1}
-          />
+          <Recentpost key={post._id} idx={idx} post={post} />
         ))}
       </div>
     </div>
