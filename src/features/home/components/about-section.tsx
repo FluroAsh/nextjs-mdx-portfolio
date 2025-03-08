@@ -27,7 +27,7 @@ export const AboutSection = () => {
             }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            G'day. I'm Ash
+            G&apos;day. I&apos;m Ash
           </m.h2>
           <m.span
             className="text-sm tracking-wider text-green-500 italic"
@@ -56,13 +56,13 @@ export const AboutSection = () => {
             business needs and outcomes with technical solutions.
           </p>
           <p>
-            For the past 3 years, I've been working primarily as a{" "}
+            For the past 3 years, I&apos;ve been working primarily as a{" "}
             <span className="font-bold text-green-500">Frontend Engineer</span>{" "}
             in Melbourne, Australia, focusing my efforts on developing my skills
             within the JavaScript ecosystem, building user interfaces that are
             both functional and beautiful. The core of my work is in{" "}
-            <span className="font-bold text-green-500">React</span>, but I'm
-            always playing around with new technologies and frameworks.
+            <span className="font-bold text-green-500">React</span>, but
+            I&apos;m always playing around with new technologies and frameworks.
           </p>
         </m.div>
       </div>

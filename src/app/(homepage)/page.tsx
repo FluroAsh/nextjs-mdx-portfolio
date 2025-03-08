@@ -1,5 +1,6 @@
 import { HeroSection } from "@/features/home/components/hero-section";
 import { AboutSection } from "@/features/home/components/about-section";
+import { SkillsSection } from "@/features/home/components/skills-section";
 import { RecentPosts } from "@/features/blog/components/recent-posts";
 
 export default function Home() {
@@ -7,10 +8,7 @@ export default function Home() {
     <div className="pt-0">
       <HeroSection />
       <AboutSection />
-
-      <section className="mx-auto bg-yellow-600">
-        <div className="max-w-5xl p-8 sm:p-20">Tech Stack</div>
-      </section>
+      <SkillsSection />
 
       <section className="mx-auto bg-purple-600">
         <div className="max-w-5xl p-8 sm:p-20">
