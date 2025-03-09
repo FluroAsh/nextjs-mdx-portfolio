@@ -90,7 +90,7 @@ export const SkillsSection = () => {
 
       <div className="mt-6 text-center">
         <p className="text-xs text-neutral-500 italic">
-          Hover to pause scrolling
+          Hover/tap to pause scrolling
         </p>
       </div>
     </section>
