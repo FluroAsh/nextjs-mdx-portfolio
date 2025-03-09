@@ -3,7 +3,7 @@
 import { useInView } from "motion/react";
 import { useRef } from "react";
 
-import { type Skill, skillsList } from "@/data/author";
+import { type Skill, skillsList } from "@/data/skills";
 
 import { cn } from "@/utils/misc";
 import { defaultViewMargin } from "@/lib/constants";
