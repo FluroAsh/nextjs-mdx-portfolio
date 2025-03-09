@@ -53,7 +53,7 @@ export const SkillsSection = () => {
       <div className="mb-6 px-8 text-center">
         <SectionTag text="Technologies" />
 
-        <h2 className="mt-4 bg-gradient-to-r from-green-400 to-green-600 bg-clip-text pb-1 text-4xl font-bold tracking-tight tracking-wide text-transparent">
+        <h2 className="mt-4 bg-gradient-to-r from-green-400 to-green-600 bg-clip-text pb-1 text-4xl font-bold tracking-wide text-transparent">
           My Digital Arsenal
         </h2>
 
