@@ -37,6 +37,10 @@
 
   --animate-rotate-conic-border: conic-gradient 1.5s
     cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  --animate-scroll-right: scroll-right 15s linear infinite;
+  --animate-scroll-left: scroll-left 15s linear infinite;
+  --animate-scroll-right-pause: scroll-right 15s linear infinite paused;
+  --animate-scroll-left-pause: scroll-left 15s linear infinite paused;
 }
 
 /* https://tailwindcss.com/docs/theme#referencing-other-variables */
