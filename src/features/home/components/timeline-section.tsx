@@ -32,7 +32,7 @@ const experiences = [
   {
     title: "Overwatch: Semi-Pro Player",
     subtitle: "2018 - 2020",
-    cardTitle: "Player (Fluro)",
+    cardTitle: "Player & Coach (Fluro)",
     content: (
       <>
         <p className="mb-2">
@@ -57,7 +57,7 @@ const experiences = [
     subtitle: "2014 - 2017",
     cardTitle: "Bachelors of Information Systems",
     content: [
-      "Studied database design, programming fundamentals, and system analysis. Specialized in business information systems.",
+      "Studied database analysis & design, data visualisation, project management, and business analysis.",
       "Developed strong foundations in SQL and business analysis.",
     ],
     location: "Hawthorn, Australia",

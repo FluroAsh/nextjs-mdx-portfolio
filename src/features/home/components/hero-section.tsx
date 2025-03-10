@@ -351,8 +351,7 @@ export const HeroSection = () => {
       </div>
 
       <ScrollDownIndicator />
-
-      <div className="absolute right-0 bottom-0 left-0 h-32 bg-gradient-to-t from-black to-transparent" />
+      <div className="absolute right-0 bottom-0 left-0 h-18 bg-gradient-to-t from-black to-transparent" />
     </section>
   );
 };
