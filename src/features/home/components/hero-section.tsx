@@ -198,7 +198,6 @@ export const HeroSection = () => {
       <BlurredCircle size={350} blur={100} top={0} left={0} />
       <BlurredCircle size={400} blur={120} bottom={-80} right={-80} />
 
-      {/* Content */}
       <div className="relative mx-auto grid h-full max-w-7xl place-items-center p-8">
         <div className="absolute bottom-0 left-4 flex translate-y-[35px] select-none sm:left-16">
           <VerticalText
@@ -327,7 +326,6 @@ export const HeroSection = () => {
             <span className="text-xl text-green-500/70">藝</span>
           </m.div>
           <m.div
-            // className="absolute top-[67.5%] right-[15%] sm:top-[70%]"
             className="absolute right-[15%] bottom-[40%] sm:top-[70%]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.15 }}
