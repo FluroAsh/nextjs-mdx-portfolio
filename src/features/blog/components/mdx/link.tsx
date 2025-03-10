@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { ExternalLink } from "lucide-react";
 
 import { cn } from "@/utils/misc";
 
-const className = cn("text-green-500 hover:text-green-300 transition-colors");
+const className =
+  "text-green-500 hover:text-green-600 transition-colors no-underline transition-75";
 
 export const CustomLink = ({
   href,
@@ -32,14 +32,13 @@ export const CustomLink = ({
   }
 
   return (
-    <a
+    <Link
       href={href}
       className={cn("relative", className)}
       target="_blank"
       {...props}
     >
       {children}
-      <ExternalLink className="mb-[12px] ml-[3px] inline-block" size={12} />
-    </a>
+    </Link>
   );
 };
