@@ -36,10 +36,10 @@ const experiences = [
     content: (
       <>
         <p className="mb-2">
-          Competed semi-professionally in the Overwatch esports scene while
+          Competed semi-professionally in the AU Overwatch esports scene while
           working part-time. Developed team communication, strategic thinking,
-          and performance under pressure. Competed in various tournaments online
-          and in-person, including IEM 2023.
+          and performance under pressure. Participated in various tournaments
+          mostly online, as-well as in-person, including IEM Sydney 2023.
         </p>
         <CustomLink
           href="https://liquipedia.net/overwatch/Fluro"
