@@ -14,8 +14,9 @@ const experiences = [
     subtitle: "2022 - Current",
     cardTitle: "Frontend Engineer",
     content: [
-      "Working on the core e-commerce platform for one of Australia's largest retailers. Implementing responsive designs, optimizing web performance, and creating seamless shopping experiences.",
-      "Key technologies include NX, React, TypeScript, Jest, and Jenkins.",
+      "Contributed to the frontend development of Australia's premier department store e-commerce platform, serving millions of customers. Implementing responsive designs, optimizing web performance, and creating seamless shopping experiences.",
+      "Contributed to various different iniatives including a revamp of our MYER One linking experience, improving our experimentation program by being the first internal frontend developer to join, introducing new developer tooling and processes to significantly boost productivity for future frontend developers.",
+      "Expertise in React, TypeScript, Next.js, test driven developement practices using Jest and monorepo architectures using NX.",
     ],
     location: "Melbourne, Australia",
     type: "work",
@@ -65,7 +66,7 @@ const experiences = [
 
 export function TimelineSection() {
   return (
-    <div>
+    <section className="relative py-24">
       <div className="px-8 pb-4 text-center">
         <SectionTag text="Timeline" className="self-center" />
         <h2 className="mt-4 bg-gradient-to-r from-green-400 to-green-600 bg-clip-text text-center text-4xl font-bold text-transparent">
@@ -89,7 +90,7 @@ export function TimelineSection() {
           ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 }
 
