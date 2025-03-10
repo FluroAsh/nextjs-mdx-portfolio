@@ -27,10 +27,10 @@ export const AboutSection = () => {
           }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          G&apos;day. I&apos;m Ash
+          Hey. I&apos;m Ash
         </m.h2>
         <m.span
-          className="text-xs text-neutral-300 italic"
+          className="text-sm text-neutral-300 italic"
           initial={{ opacity: 0, x: 10 }}
           animate={{
             opacity: isInView ? 1 : 0,
@@ -48,14 +48,14 @@ export const AboutSection = () => {
         animate={{ opacity: isInView ? 1 : 0 }}
         transition={{ duration: 0.5, delay: 0.6 }}
       >
-        <p className="text-sm">
+        <p className="text-sm sm:text-base">
           I use my passion and skills to build digital products and tooling on
           the web. With my formal education in Business Information Systems and
           experience with retail and experimentation, I have developed a keen
           eye for detail and a strong understanding of connecting business needs
           and outcomes with technical solutions.
         </p>
-        <p className="text-sm">
+        <p className="text-sm sm:text-base">
           For the past 3 years, I&apos;ve been working primarily as a{" "}
           <span className="font-bold text-green-500">Frontend Engineer</span> in
           Melbourne, Australia, focusing my efforts on developing my skills

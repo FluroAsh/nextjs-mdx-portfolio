@@ -32,14 +32,14 @@ const experiences = [
   {
     title: "Overwatch: Semi-Pro Player",
     subtitle: "2018 - 2020",
-    cardTitle: "Fluro",
+    cardTitle: "Player (Fluro)",
     content: (
       <>
         <p className="mb-2">
           Competed semi-professionally in the AU Overwatch esports scene while
           working part-time. Developed team communication, strategic thinking,
           and performance under pressure. Participated in various tournaments
-          mostly online, as-well as in-person, including IEM Sydney 2023.
+          mostly online, as-well as in-person, most notably IEM Sydney 2019.
         </p>
         <CustomLink
           href="https://liquipedia.net/overwatch/Fluro"
@@ -56,8 +56,10 @@ const experiences = [
     title: "Swinburne University",
     subtitle: "2014 - 2017",
     cardTitle: "Bachelors of Information Systems",
-    content:
-      "Studied database design, programming fundamentals, and system analysis. Specialized in web technologies and business information systems. Developed strong foundations in SQL, Java, and web development.",
+    content: [
+      "Studied database design, programming fundamentals, and system analysis. Specialized in business information systems.",
+      "Developed strong foundations in SQL and business analysis.",
+    ],
     location: "Hawthorn, Australia",
     type: "education",
   },
@@ -71,7 +73,7 @@ export function TimelineSection() {
         <h2 className="mt-4 bg-gradient-to-r from-green-400 to-green-600 bg-clip-text text-center text-4xl font-bold text-transparent">
           The Journey So Far...
         </h2>
-        <p className="mx-auto mt-4 max-w-2xl text-sm text-neutral-300">
+        <p className="mx-auto mt-4 max-w-2xl text-sm text-neutral-300 sm:text-base">
           Here&apos;s a brief overview of my professional and educational
           journey through the years.
         </p>
@@ -96,7 +98,7 @@ export function TimelineSection() {
 const formatContent = (content: string | string[] | React.ReactNode) => {
   if (!isValidElement(content) && Array.isArray(content)) {
     return content.map((paragraph, i) => (
-      <p key={i} className={i > 0 ? "mt-2" : ""}>
+      <p key={i} className={cn(i > 0 ? "mt-2" : "")}>
         {paragraph}
       </p>
     ));
@@ -126,15 +128,17 @@ function TimelineItem({ experience, index }: ItemProps) {
       </div>
 
       <Card className="ml-16 w-full border-l-4 border-neutral-800 border-l-green-500 bg-neutral-900 pt-4 pb-3 md:ml-0 md:max-w-md">
-        <CardHeader className="pb-2">
+        <CardHeader>
           <div>
             <p className="text-sm text-neutral-400">{experience.subtitle}</p>
-            <h3 className="text-xl font-bold">{experience.title}</h3>
+            <h3 className="text-xl font-bold text-neutral-100">
+              {experience.title}
+            </h3>
           </div>
         </CardHeader>
 
         <CardContent>
-          <h4 className="mb-2 text-lg font-semibold">{experience.cardTitle}</h4>
+          <h4 className="mb-2 text-lg">{experience.cardTitle}</h4>
           <div className="text-sm text-neutral-400">
             {formatContent(experience.content)}
           </div>

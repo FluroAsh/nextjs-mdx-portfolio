@@ -30,7 +30,7 @@ const SkillRow = ({
                 key={`${name}-${i}-${x}`}
                 className={cn(
                   "mx-2 flex h-24 items-center justify-center gap-2 rounded-md border border-neutral-800 bg-black/30 px-6",
-                  "backdrop-blur-lg transition-colors select-none hover:border-green-500 hover:bg-green-500/10 hover:text-green-500",
+                  "transition-colors select-none hover:border-green-500 hover:bg-green-500/10 hover:text-green-500",
                   containerStyles,
                 )}
               >
@@ -57,7 +57,7 @@ export const SkillsSection = () => {
           My Digital Arsenal
         </h2>
 
-        <p className="mx-auto max-w-2xl pt-4 text-sm text-neutral-300">
+        <p className="mx-auto max-w-2xl pt-4 text-sm text-neutral-300 sm:text-base">
           Tools and technologies I&apos;ve worked with throughout my journey as
           a developer. I&apos;m adding new tools to my belt every day!
         </p>
