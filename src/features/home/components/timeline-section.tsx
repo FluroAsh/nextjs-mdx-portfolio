@@ -66,7 +66,7 @@ const experiences = [
 
 export function TimelineSection() {
   return (
-    <section className="relative py-24">
+    <section className="relative py-8">
       <div className="px-8 pb-4 text-center">
         <SectionTag text="Timeline" className="self-center" />
         <h2 className="mt-4 bg-gradient-to-r from-green-400 to-green-600 bg-clip-text text-center text-4xl font-bold text-transparent">
