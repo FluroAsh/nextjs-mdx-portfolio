@@ -49,7 +49,7 @@ export const SkillsSection = () => {
   const isInView = useInView(ref, { margin: defaultViewMargin });
 
   return (
-    <section ref={ref} className="mx-auto pt-18 pb-8">
+    <section ref={ref} className="mx-auto pt-20 pb-8">
       <div className="mb-6 px-8 text-center">
         <SectionTag text="Technologies" />
 
