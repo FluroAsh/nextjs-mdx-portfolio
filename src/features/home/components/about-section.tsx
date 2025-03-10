@@ -14,7 +14,7 @@ export const AboutSection = () => {
   return (
     <section
       ref={ref}
-      className="relative mx-auto justify-center bg-black px-8 py-12"
+      className="relative mx-auto justify-center bg-black px-8 pt-10 pb-12"
     >
       <div className="absolute -bottom-4 left-0 h-32 w-full translate-y-1/2 bg-gradient-to-b from-black via-black to-transparent" />
       <div className="pb-6 text-center">
