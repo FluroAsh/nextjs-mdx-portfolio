@@ -80,7 +80,7 @@ export function TimelineSection() {
       <div className="px-6">
         <div
           className={cn(
-            "relative mt-4 space-y-8 before:absolute before:inset-0 before:ml-5 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-green-600",
+            "relative mt-4 space-y-8 before:absolute before:inset-0 before:ml-5 before:h-full before:w-0.5 before:rounded-full before:bg-green-500",
             "before:via-green-400 before:to-green-200 md:before:right-0 md:before:left-0 md:before:mx-auto",
           )}
         >
