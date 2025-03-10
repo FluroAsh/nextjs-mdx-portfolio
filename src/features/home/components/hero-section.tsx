@@ -79,6 +79,11 @@ const ScrollDownIndicator = () => {
 
 const AuthorHeroTitle = () => {
   const [firstName, lastName] = author.name.split(" ");
+  const roles = [
+    { title: "Full Stack Developer", icon: "📚" },
+    { title: "Designer", icon: "🎨" },
+    { title: "Photographer", icon: "📸" },
+  ];
 
   return (
     <m.div
@@ -97,7 +102,7 @@ const AuthorHeroTitle = () => {
           {firstName}
         </m.span>
         <m.span
-          className="ml-2 inline-block font-extrabold tracking-wide text-transparent"
+          className="ml-2 font-bold tracking-wide text-transparent"
           style={{ WebkitTextStroke: "1px rgba(16, 185, 129, 0.6)" }}
           initial={{ x: 20, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
@@ -113,51 +118,69 @@ const AuthorHeroTitle = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8, delay: 1.1 }}
       >
-        <div className="flex flex-wrap items-center justify-center gap-3 text-balance md:gap-4">
-          <m.span
-            className="text-lg text-neutral-300 md:text-xl"
-            initial={{ y: 10, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 1.2 }}
-          >
-            Full Stack Developer
-          </m.span>
+        {/* Mobile Layout (stacked) */}
+        <div className="flex flex-col items-center gap-2 sm:hidden">
+          {roles.map(({ title, icon }, i) => (
+            <m.div
+              key={title}
+              className="relative mb-1 flex items-center backdrop-blur-sm"
+              initial={{ y: 10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 1.2 + i * 0.2 }}
+            >
+              {i < roles.length - 1 && (
+                <m.div
+                  className="absolute -bottom-3 left-1/2 h-3 w-px bg-green-500/40"
+                  initial={{ scaleY: 0 }}
+                  animate={{ scaleY: 1 }}
+                  transition={{ delay: 1.8 + i * 0.2, duration: 0.5 }}
+                />
+              )}
 
-          <m.span
-            className="text-3xl text-green-500/70"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.3 }}
-          >
-            •
-          </m.span>
+              <span
+                className={cn(
+                  "relative px-3 py-0.5 text-lg",
+                  "rounded-md border border-green-500/30 bg-gradient-to-r from-green-500/10 to-green-600/5 text-green-400",
+                )}
+              >
+                <span className="mr-2 text-sm opacity-80">{icon}</span>
+                <span className="text-sm">{title}</span>
+              </span>
+            </m.div>
+          ))}
+        </div>
 
-          <m.span
-            className="text-lg text-neutral-300 md:text-xl"
-            initial={{ y: 10, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 1.4 }}
-          >
-            Designer
-          </m.span>
+        {/* Desktop Layout (Horizontal) */}
+        <div className="hidden items-center justify-center sm:flex">
+          {roles.map(({ title, icon }, i) => (
+            <m.div
+              key={`desktop-${title}`}
+              className="relative flex items-center"
+              initial={{ y: 10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 1.2 + i * 0.2 }}
+            >
+              <span
+                className={cn(
+                  "relative px-3 py-0.5 backdrop-blur-sm",
+                  "rounded-md border border-green-500/30 bg-gradient-to-r from-green-500/10 to-green-600/5 text-green-400",
+                )}
+              >
+                <span className="mr-1.5 text-sm opacity-60">{icon}</span>
+                <span className="text-sm">{title}</span>
+              </span>
 
-          <m.span
-            className="text-3xl text-green-500/70"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.5 }}
-          >
-            •
-          </m.span>
-
-          <m.span
-            className="text-lg text-neutral-300 md:text-xl"
-            initial={{ y: 10, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 1.6 }}
-          >
-            Photographer
-          </m.span>
+              {i < roles.length - 1 && (
+                <m.div
+                  className="h-px w-8 bg-green-500/40"
+                  initial={{ scaleX: 0, opacity: 0 }}
+                  animate={{ scaleX: 1, opacity: 1 }}
+                  transition={{ delay: 1.8 + i * 0.2, duration: 0.5 }}
+                  style={{ transformOrigin: "left center" }}
+                />
+              )}
+            </m.div>
+          ))}
         </div>
       </m.div>
     </m.div>
