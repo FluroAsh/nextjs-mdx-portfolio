@@ -14,9 +14,8 @@ const experiences = [
     subtitle: "2022 - Current",
     cardTitle: "Frontend Engineer",
     content: [
-      "Contributed to the frontend development of Australia's premier department store e-commerce platform, serving millions of customers. Implementing responsive designs, optimizing web performance, and creating seamless shopping experiences.",
-      "Contributed to various different iniatives including a revamp of our MYER One linking experience, improving our experimentation program by being the first internal frontend developer to join, introducing new developer tooling and processes to significantly boost productivity for future frontend developers.",
-      "Expertise in React, TypeScript, Next.js, test driven developement practices using Jest and monorepo architectures using NX.",
+      "Contributed to the frontend development of Australia's leading department store e-commerce platform, enhancing responsiveness, performance, and user experience for hundreds of thousands of customers.",
+      "Played a key role in revamping the MYER One linking experience, pioneering frontend involvement in experimentation, and introducing developer tools and processes to improve productivity.",
     ],
     location: "Melbourne, Australia",
     type: "work",
