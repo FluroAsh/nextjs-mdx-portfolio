@@ -32,7 +32,7 @@ export const MarkdownImage = async ({
       src={src}
       className={cn(
         /portrait|square/.test(orientation ?? "") && "w-[400px]",
-        "mx-auto max-w-full rounded-xs transition-opacity",
+        "mx-auto max-w-full rounded-sm transition-opacity",
       )}
       alt={alt}
       width={probedWidth}
