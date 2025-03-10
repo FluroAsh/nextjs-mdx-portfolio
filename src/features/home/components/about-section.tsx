@@ -48,14 +48,14 @@ export const AboutSection = () => {
         animate={{ opacity: isInView ? 1 : 0 }}
         transition={{ duration: 0.5, delay: 0.6 }}
       >
-        <p>
+        <p className="text-sm">
           I use my passion and skills to build digital products and tooling on
           the web. With my formal education in Business Information Systems and
           experience with retail and experimentation, I have developed a keen
           eye for detail and a strong understanding of connecting business needs
           and outcomes with technical solutions.
         </p>
-        <p>
+        <p className="text-sm">
           For the past 3 years, I&apos;ve been working primarily as a{" "}
           <span className="font-bold text-green-500">Frontend Engineer</span> in
           Melbourne, Australia, focusing my efforts on developing my skills
