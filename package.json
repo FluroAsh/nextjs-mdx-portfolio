@@ -30,6 +30,7 @@
     "probe-image-size": "^7.2.3",
     "radash": "^12.1.0",
     "react": "19.0.0",
+    "react-chrono": "^2.6.1",
     "react-dom": "19.0.0",
     "react-icons": "^5.5.0",
     "react-use": "^17.6.0",

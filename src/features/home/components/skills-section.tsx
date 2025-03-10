@@ -50,14 +50,14 @@ export const SkillsSection = () => {
 
   return (
     <section ref={ref} className="mx-auto pt-20 pb-8">
-      <div className="mb-6 px-8 text-center">
+      <div className="px-8 pb-4 text-center">
         <SectionTag text="Technologies" />
 
-        <h2 className="mt-4 bg-gradient-to-r from-green-400 to-green-600 bg-clip-text pb-1 text-4xl font-bold tracking-wide text-transparent">
+        <h2 className="bg-gradient-to-r from-green-400 to-green-600 bg-clip-text pt-4 pb-1 text-4xl font-bold tracking-wide text-transparent">
           My Digital Arsenal
         </h2>
 
-        <p className="mx-auto mt-4 max-w-2xl text-sm text-neutral-300">
+        <p className="mx-auto max-w-2xl pt-4 text-sm text-neutral-300">
           Tools and technologies I&apos;ve worked with throughout my journey as
           a developer. I&apos;m adding new tools to my belt every day!
         </p>
