@@ -37,7 +37,6 @@ export default async function Post(props: PostPageProps) {
     >
       <PostLayout>
         <MDXContent components={mdxComponents} />
-        {/* TODO: Footnotes */}
       </PostLayout>
     </PostProvider>
   );
