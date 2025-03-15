@@ -13,7 +13,7 @@ const navLinkClasses =
   "text-sm text-neutral-400 hover:text-green-500 transition-colors duration-75";
 
 export const Footer = () => (
-  <div className="mt-8 border-t border-neutral-800 bg-linear-to-t from-black/80 to-neutral-900/60">
+  <div className="mt-8 border-t border-neutral-800 bg-linear-to-t from-black/80 to-neutral-900/80">
     <footer className="mx-auto max-w-5xl px-8 py-6 pb-20 sm:pb-6">
       <div className="grid grid-cols-1 gap-4 pt-2 pb-6 sm:grid-cols-[1fr_150px_1fr]">
         <div className="space-y-2">

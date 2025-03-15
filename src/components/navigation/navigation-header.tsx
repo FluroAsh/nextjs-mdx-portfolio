@@ -23,7 +23,7 @@ export const NavigationHeader = () => {
 
   return (
     <>
-      <nav className="h-header hidden place-items-center border-b border-neutral-800 bg-linear-to-t from-black/80 to-neutral-900/60 shadow-md sm:grid">
+      <nav className="h-header hidden place-items-center border-b border-neutral-800 bg-linear-to-t from-black/80 to-neutral-900/80 shadow-md sm:grid">
         <div className="flex w-full max-w-5xl items-center justify-between px-4">
           <Link href="/" className="flex items-center gap-2">
             <span className="text-lg font-bold">
