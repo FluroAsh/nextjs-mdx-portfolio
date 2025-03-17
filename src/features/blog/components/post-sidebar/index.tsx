@@ -5,7 +5,7 @@ import { paths } from "@/config/paths";
 import { usePostContext } from "@/lib/contexts/post-context";
 import { TableOfContents } from "./table-of-contents";
 import { PostAuthor } from "./post-author";
-import { Separator } from "@/components/separator";
+import { Separator } from "@/components/ui/separator";
 import { LucideChevronLeft } from "lucide-react";
 
 const ArticleSeparator = () => (

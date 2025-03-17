@@ -12,7 +12,7 @@ import "remark-github-blockquote-alert/alert.css";
 import { usePostContext } from "@/lib/contexts/post-context";
 import { PostSidebar } from "@/features/blog/components/post-sidebar";
 import { ArticleDateTime } from "@/features/blog/components/reading-time";
-import { Separator } from "../separator";
+import { Separator } from "../ui/separator";
 
 export default function PostLayout({
   children,

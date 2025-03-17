@@ -5,7 +5,12 @@ import { BriefcaseIcon, GraduationCapIcon, MapPinIcon } from "lucide-react";
 
 import { cn } from "@/utils/misc";
 import { CustomLink } from "@/features/blog/components/mdx/link";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
 import { SectionTag } from "./section-tag";
 
 const experiences = [
