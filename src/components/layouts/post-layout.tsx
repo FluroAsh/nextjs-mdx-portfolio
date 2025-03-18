@@ -42,7 +42,7 @@ export default function PostLayout({
 
         <MobileTableOfContents
           headingContent={post.toc}
-          className="md:hidden"
+          className="lg:hidden"
         />
 
         <div className="block sm:flex">

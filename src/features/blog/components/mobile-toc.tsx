@@ -12,14 +12,23 @@ import { type TocItem } from "@/lib/plugins/extract-headings";
 import { cn } from "@/utils/misc";
 import { useRangeScroll } from "@/hooks/use-range-scroll";
 import { useScroll } from "motion/react";
+import { useMedia } from "react-use";
 
 type Props = {
   headingContent: TocItem[];
   className?: string;
 };
 
-export const MobileTableOfContents = ({ headingContent, className }: Props) => {
+export const MobileTableOfContents = ({
+  headingContent,
+
+  className,
+}: Props) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const isTablet = useMedia(
+    "(min-width: 768px) and (max-width: 1024px)",
+    false,
+  );
 
   const { scrollY } = useScroll();
   const { shouldBeVisible, lastScrollY } = useRangeScroll(
@@ -37,7 +46,8 @@ export const MobileTableOfContents = ({ headingContent, className }: Props) => {
             lastScrollY >= 200 && shouldBeVisible
               ? "opacity-100"
               : "pointer-events-none opacity-0",
-            "fixed right-4 bottom-19 z-10 mr-2 size-12 -translate-x-full transition-opacity duration-300",
+            "fixed z-10 mr-2 size-12 -translate-x-full transition-opacity duration-300",
+            isTablet ? "right-4 bottom-3" : "right-4 bottom-19",
             className,
           )}
           aria-label="Open Table of Contents"
@@ -74,7 +84,7 @@ export const MobileTableOfContents = ({ headingContent, className }: Props) => {
                 <a
                   href={heading.url}
                   onClick={() => setIsOpen(false)}
-                  className="ml-2 block truncate rounded-md px-2 py-1 transition-colors duration-75 hover:bg-neutral-300/10 hover:text-green-500"
+                  className="ml-2 block max-w-fit truncate rounded-md px-2 py-1 transition-colors duration-75 hover:bg-neutral-300/10 hover:text-green-500"
                 >
                   {heading.value}
                 </a>
