@@ -1,9 +1,8 @@
-import { motion as m } from "framer-motion";
-import { useWindowScroll } from "react-use";
+import { motion as m, useScroll } from "framer-motion";
 import { ArrowUp } from "lucide-react";
 
 import { cn } from "@/utils/misc";
-import { useHasMounted } from "@/hooks/use-has-mounted";
+import { useRangeScroll } from "@/hooks/use-range-scroll";
 
 const AnimatedBorder = () => {
   return (
@@ -26,18 +25,21 @@ const InnerContent = () => {
 };
 
 export const ScrollToTop = ({ isMobile }: { isMobile: boolean }) => {
-  const { y: scrollY } = useWindowScroll();
-  const hasMounted = useHasMounted();
-
-  if (!hasMounted) return null;
-
-  const MIN_HEIGHT = 200;
-  const isToggledOn = scrollY > MIN_HEIGHT;
+  const { scrollY } = useScroll();
+  const { shouldBeVisible, lastScrollY } = useRangeScroll(
+    isMobile,
+    scrollY,
+    50,
+    200,
+  );
 
   return (
     <m.div
       className={cn(
-        isToggledOn ? "opacity-100" : "pointer-events-none opacity-0",
+        // TODO: Refactor lastScrollY >= check into useRangeScroll
+        lastScrollY >= 200 && shouldBeVisible
+          ? "opacity-100"
+          : "pointer-events-none opacity-0",
         isMobile ? "right-4 bottom-20" : "right-4 bottom-4",
         "fixed h-[44px] overflow-visible transition-opacity duration-300",
       )}
@@ -45,7 +47,7 @@ export const ScrollToTop = ({ isMobile }: { isMobile: boolean }) => {
       transition={{ duration: 0.1 }}
     >
       <button
-        className="relative size-11 rounded-full shadow-xs"
+        className="relative size-12 rounded-full"
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
         aria-label="Scroll to top"
       >

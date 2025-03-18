@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useKBar } from "kbar";
+import { useScroll } from "motion/react";
 import {
   LucideBookOpen,
   LucideCamera,
@@ -11,11 +13,14 @@ import {
 
 import { cn } from "@/utils/misc";
 import { isActiveRoute, paths } from "@/config/paths";
-import { useKBar } from "kbar";
+import { useRangeScroll } from "@/hooks/use-range-scroll";
 
 export const MobileNav = () => {
   const pathname = usePathname();
   const { query } = useKBar();
+
+  const { scrollY } = useScroll();
+  const { shouldBeVisible } = useRangeScroll(true, scrollY, 50, 0);
 
   // TODO: Add these to our link styles
   // const navLinkClasses = (paths: string[]) =>
@@ -25,7 +30,12 @@ export const MobileNav = () => {
   //   );
 
   return (
-    <nav className="fixed bottom-0 z-50 w-full border-t border-neutral-800 bg-black/80 backdrop-blur-xs">
+    <nav
+      className={cn(
+        "fixed bottom-0 z-50 w-full border-t border-neutral-800 bg-black/80 backdrop-blur-xs transition-transform duration-300",
+        shouldBeVisible ? "translate-y-0" : "translate-y-full",
+      )}
+    >
       <ul
         className="mx-auto flex max-w-[250px] items-center justify-between gap-4 px-4 py-3 sm:px-6 sm:py-3"
         aria-label="navigation links"

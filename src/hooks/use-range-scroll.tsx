@@ -1,8 +1,8 @@
 import { MotionValue } from "motion/react";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 export const useRangeScroll = (
-  pathname: string,
   isMobile: boolean,
   scrollY: MotionValue<number>,
   scrollThreshold = 50,
@@ -10,6 +10,7 @@ export const useRangeScroll = (
 ) => {
   const [visible, setVisible] = useState<boolean>(isMobile ? true : false);
   const lastScrollY = useRef<number>(0);
+  const pathname = usePathname();
 
   const resetState = () => {
     setVisible(isMobile ? true : false);
@@ -18,7 +19,7 @@ export const useRangeScroll = (
 
   useEffect(() => {
     const handleScroll = (current: number) => {
-      if (!isMobile && current <= hideScrollYLimit) {
+      if (hideScrollYLimit && current <= hideScrollYLimit) {
         setVisible(false);
         return;
       }
@@ -26,7 +27,6 @@ export const useRangeScroll = (
       const delta = current - lastScrollY.current;
 
       if (Math.abs(delta) >= scrollThreshold) {
-        // setVisible(delta <= 0 || current <= hideScrollYLimit);
         setVisible(delta <= 0);
         lastScrollY.current = current;
       }
@@ -42,5 +42,5 @@ export const useRangeScroll = (
     resetState();
   }, [pathname, isMobile, hideScrollYLimit]);
 
-  return { shouldBeVisible: visible };
+  return { shouldBeVisible: visible, lastScrollY: lastScrollY.current };
 };

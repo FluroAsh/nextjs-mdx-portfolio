@@ -1,5 +1,6 @@
 import { usePathname } from "next/navigation";
 import { motion as m, useScroll } from "motion/react";
+import { useKBar } from "kbar";
 import {
   LucideBookOpen,
   LucideCamera,
@@ -12,7 +13,6 @@ import { isActiveRoute, paths } from "@/config/paths";
 import { NavLink } from "./nav-link";
 import { SocialLinks } from "./social-links";
 import { useRangeScroll } from "@/hooks/use-range-scroll";
-import { useKBar } from "kbar";
 
 export const FloatingNav = ({
   hideScrollYLimit = 0,
@@ -23,8 +23,7 @@ export const FloatingNav = ({
   const { query } = useKBar();
   const { scrollY } = useScroll();
   const { shouldBeVisible } = useRangeScroll(
-    pathname,
-    isMobile,
+    false,
     scrollY,
     scrollThreshold,
     hideScrollYLimit,

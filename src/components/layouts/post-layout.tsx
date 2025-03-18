@@ -13,6 +13,7 @@ import { usePostContext } from "@/lib/contexts/post-context";
 import { PostSidebar } from "@/features/blog/components/post-sidebar";
 import { ArticleDateTime } from "@/features/blog/components/reading-time";
 import { Separator } from "../ui/separator";
+import { MobileTableOfContents } from "@/features/blog/components/mobile-toc";
 
 export default function PostLayout({
   children,
@@ -38,6 +39,11 @@ export default function PostLayout({
             className="mt-4"
           />
         </header>
+
+        <MobileTableOfContents
+          headingContent={post.toc}
+          className="md:hidden"
+        />
 
         <div className="block sm:flex">
           <PostSidebar />
