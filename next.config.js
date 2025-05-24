@@ -9,7 +9,7 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: process.env.S3_HOSTNAME,
+        hostname: process.env.NEXT_PUBLIC_S3_HOSTNAME,
       },
     ],
   },
