@@ -43,7 +43,7 @@
   --animate-scroll-left-pause: scroll-left 15s linear infinite paused;
 }
 
-/* https://tailwindcss.com/docs/theme#referencing-other-variables */
+/* https://tailwindcss.com/docs/theme#referening-other-variables */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -71,5 +71,15 @@
   pre {
     border-radius: 0;
     padding: 0;
+  }
+
+  /* handle margin on the container */
+  [data-type="collection"] img,
+  [data-type="collection"] figcaption {
+    margin: 0;
+  }
+
+  video {
+    margin: 0;
   }
 }

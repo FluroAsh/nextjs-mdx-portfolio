@@ -1,8 +1,9 @@
 import { type MDXComponents } from "mdx/types";
 
+import { Video } from "@/components/video";
 import { MarkdownImage } from "./markdown-image";
 import { CustomLink } from "./link";
-import { Video } from "@/components/video";
+import { TwoUp } from "./collection/two-up";
 
 export const components: MDXComponents = {
   pre: (props: React.ComponentProps<"pre">) => (
@@ -17,5 +18,6 @@ export const components: MDXComponents = {
   // ),
   img: MarkdownImage,
   a: CustomLink,
+  TwoUp,
   Video,
 };

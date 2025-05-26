@@ -11,7 +11,7 @@ const PlayPauseIcon = ({ isPlaying }: { isPlaying: boolean }) => {
       <div
         className={cn(
           "absolute top-1/2 left-1/2 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2",
-          "items-center justify-center rounded-full bg-black/50 transition-opacity duration-75",
+          "items-center justify-center rounded-full bg-black/50 transition-opacity",
         )}
       >
         {isPlaying ? (

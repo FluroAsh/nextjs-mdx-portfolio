@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { RootLayoutWrapper } from "@/components/layouts/root-layout-wrapper";
 import { catamaran, firaSans } from "../fonts";
 
+import "yet-another-react-lightbox/styles.css";
 import "@/css/globals.css";
 
 export const metadata: Metadata = {

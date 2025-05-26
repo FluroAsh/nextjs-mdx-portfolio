@@ -6,9 +6,14 @@ import { env } from "@/lib/env";
 
 type MarkDownImageProps = React.ComponentProps<"img">;
 
+/**
+ * This component is server-side rendered and cannot be used in client-components.
+ * If you want to use it in a client component, you must pass it using the children prop.
+ */
 export const MarkdownImage = async ({
   src,
   alt,
+  className,
   ...props
 }: MarkDownImageProps) => {
   if (!src || !alt)
@@ -33,6 +38,7 @@ export const MarkdownImage = async ({
       className={cn(
         /portrait|square/.test(orientation ?? "") && "w-[400px]",
         "mx-auto max-w-full rounded-sm transition-opacity",
+        className,
       )}
       alt={alt}
       width={probedWidth}
