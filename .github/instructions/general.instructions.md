@@ -24,3 +24,4 @@ applyTo: "**"
 - Keep related files together (e.g., component, styles, tests)
 - Create reusable helper functions where appropriate
 - Use comments to explain complex logic or decisions
+- Avoid magic numbers; use named constants.
