@@ -11,8 +11,18 @@ type TwoUpProps = {
 export const TwoUp = ({ left, right }: TwoUpProps) => (
   <CollectionLightbox
     images={[
-      <ImageTile src={left.src} alt={left.alt} caption={left.caption} />,
-      <ImageTile src={right.src} alt={right.alt} caption={right.caption} />,
+      <ImageTile
+        key="right-2up-tile"
+        src={left.src}
+        alt={left.alt}
+        caption={left.caption}
+      />,
+      <ImageTile
+        key="left-2up-tile"
+        src={right.src}
+        alt={right.alt}
+        caption={right.caption}
+      />,
     ]}
     slides={[
       { src: left.src, alt: left.alt },

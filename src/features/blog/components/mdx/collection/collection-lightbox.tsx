@@ -1,8 +1,7 @@
 "use client";
 
 import Lightbox from "yet-another-react-lightbox";
-import { useRef, useState } from "react";
-import { type ImageProps } from "@/types";
+import { useState } from "react";
 
 type CollectionLightboxProps = {
   slides: { src: string; alt?: string }[];
@@ -28,7 +27,7 @@ export const CollectionLightbox = ({
         {images.map((image, i) => (
           // Wrap RSC images to handle click event on the client-side (trigger lightbox)
           <div
-            key={i === 0 ? "two-up-left" : "two-up-right"}
+            key={i === 0 ? "left-2up-wrapper" : "right-2up-wrapper"}
             className="aboslute inset-0"
             onClick={() => handleClick(i)}
           >
