@@ -5,7 +5,7 @@ import probe from "probe-image-size";
 
 import { env } from "@/lib/env";
 
-type Size = "thumbnail" | "small" | "medium" | "large";
+type Size = "thumbnail" /*| "small" */ | "medium" | "large";
 type Orientation = "landscape" | "portrait" | "square";
 
 const calculateOrientation = (
