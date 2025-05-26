@@ -41,6 +41,7 @@ export const Video = ({
   height = 360,
   className,
   type = "portrait",
+  muted = true,
   ...props
 }: VideoProps) => {
   const [isHovering, setIsHovering] = useState<boolean>(false);
@@ -61,7 +62,7 @@ export const Video = ({
         )}
         width={width}
         height={height}
-        muted
+        muted={muted}
         autoPlay
         loop
         onMouseEnter={() => setIsHovering(true)}
