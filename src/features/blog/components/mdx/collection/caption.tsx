@@ -1,11 +1,11 @@
 import { cn } from "@/utils/misc";
 
 export const ImageCaption = ({
-  children,
+  caption,
   isFixed = false,
   styles,
 }: {
-  children: React.ReactNode;
+  caption: string;
   isFixed?: boolean;
   styles?: string;
 }) => {
@@ -18,30 +18,13 @@ export const ImageCaption = ({
 
   return (
     <figcaption
+      title={caption}
       className={cn(
-        "bg-gradient-to-t from-neutral-900 to-neutral-800 px-2 py-1 text-center text-xs text-neutral-400 italic",
+        "truncate bg-gradient-to-t from-neutral-900 to-neutral-800 px-2 py-1 text-center text-xs whitespace-nowrap text-neutral-400 italic",
         className,
       )}
     >
-      {children}
+      {caption}
     </figcaption>
   );
-
-  // return (
-  //   <figcaption
-  //     className={cn(
-  //       "px-2 py-1 text-center text-xs text-neutral-50 italic",
-  //       "bg-black/30 backdrop-blur-sm",
-  //       "shadow-[0_1px_3px_rgba(0,0,0,0.3)]",
-  //       className,
-  //     )}
-  //   >
-  //     <span
-  //       className="block"
-  //       style={{ textShadow: "0 1px 2px rgba(0,0,0,0.5)" }}
-  //     >
-  //       {children}
-  //     </span>
-  //   </figcaption>
-  // );
 };
