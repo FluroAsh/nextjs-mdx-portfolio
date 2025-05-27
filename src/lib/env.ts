@@ -1,3 +1,4 @@
 export const env = {
-  basePath: process.env.NEXT_PUBLIC_BASE_PATH as string,
+  baseS3Origin: `${process.env.NEXT_PUBLIC_S3_HOSTNAME ? `https://${process.env.NEXT_PUBLIC_S3_HOSTNAME}` : ""}`,
+  secondaryS3Origin: `${process.env.NEXT_PUBLIC_S3_HOSTNAME ? `https://${process.env.NEXT_PUBLIC_S3_HOSTNAME}` : ""}`,
 };

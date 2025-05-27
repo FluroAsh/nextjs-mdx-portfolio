@@ -3,6 +3,7 @@ import Image from "next/image";
 import { cn } from "@/utils/misc";
 import { getImagePlaceholder } from "@/server/image";
 import { env } from "@/lib/env";
+import { IMAGE_SIZE } from "@/types";
 
 type MarkDownImageProps = React.ComponentProps<"img">;
 
@@ -19,6 +20,11 @@ export const MarkdownImage = async ({
   if (!src || !alt)
     throw new Error("Images must include src and alt attributes");
 
+  // If src contains an active S3 origin, use it to handle image resizing from source image -> "large" variant.
+  const s3Origin = [env.baseS3Origin, env.secondaryS3Origin].filter(
+    (path) => path && src.startsWith(path),
+  )[0];
+
   const {
     orientation,
     width: probedWidth,
@@ -26,7 +32,8 @@ export const MarkdownImage = async ({
     base64,
   } = await getImagePlaceholder(
     src,
-    src.includes(env.basePath) ? "large" : undefined,
+    s3Origin,
+    s3Origin ? IMAGE_SIZE.LARGE : undefined,
   );
 
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
