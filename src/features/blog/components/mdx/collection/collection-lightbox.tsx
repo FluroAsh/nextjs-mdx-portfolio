@@ -1,7 +1,8 @@
 "use client";
 
-import Lightbox from "yet-another-react-lightbox";
 import { useState } from "react";
+import Lightbox from "yet-another-react-lightbox";
+import Download from "yet-another-react-lightbox/plugins/download";
 
 type CollectionLightboxProps = {
   slides: { src: string; alt?: string }[];
@@ -41,6 +42,14 @@ export const CollectionLightbox = ({
         close={() => setIsOpen(false)}
         index={index}
         slides={slides}
+        controller={{ closeOnBackdropClick: true }}
+        plugins={[Download]}
+        styles={{
+          container: {
+            backgroundColor: "hsla(0, 0%, 0%, 0.75)",
+            backdropFilter: "blur(8px)",
+          },
+        }}
       />
     </div>
   );

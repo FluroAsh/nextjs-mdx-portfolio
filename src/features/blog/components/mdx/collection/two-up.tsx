@@ -10,7 +10,7 @@ type TwoUpProps = {
   useLowerRes?: boolean;
 };
 
-export const TwoUp = ({ left, right, useLowerRes = false }: TwoUpProps) => (
+export const TwoUp = ({ left, right, useLowerRes = true }: TwoUpProps) => (
   <CollectionLightbox
     images={[
       <ImageTile
