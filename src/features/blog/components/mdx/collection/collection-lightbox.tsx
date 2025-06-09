@@ -22,6 +22,7 @@ export const CollectionLightbox = ({
     setIsOpen(true);
   };
 
+  console.log(index);
   return (
     <div className="space-y-2">
       <div className="relative grid grid-cols-2 gap-1">
@@ -40,6 +41,29 @@ export const CollectionLightbox = ({
       <Lightbox
         open={isOpen}
         close={() => setIsOpen(false)}
+        on={{
+          view: ({ index }) => setIndex(index),
+        }}
+        render={{
+          controls: () => (
+            <div className="absolute top-6 left-1/2 z-10 -translate-x-1/2 rounded-full border border-neutral-800 bg-black/80 px-4 py-2 backdrop-blur-xs">
+              <span className="text-sm font-medium tracking-wide text-green-500">
+                {index + 1} <span className="mx-1 text-neutral-200">of</span>{" "}
+                {slides.length}
+              </span>
+            </div>
+          ),
+          slide: ({ slide }) => (
+            <div className="flex h-full items-center justify-center">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={slide.src}
+                alt={slide.alt || ""}
+                className="rounded-lg"
+              />
+            </div>
+          ),
+        }}
         index={index}
         slides={slides}
         controller={{ closeOnBackdropClick: true }}
