@@ -55,6 +55,7 @@ export const CollectionLightbox = ({
         open={isOpen}
         close={() => setIsOpen(false)}
         on={{
+          // Sync the index with lightbox state to handle updating the controls
           view: ({ index }) => setIndex(index),
         }}
         render={{
