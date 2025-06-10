@@ -74,8 +74,8 @@
   }
 
   /* handle margin on the container */
-  [data-type="collection"] img,
-  [data-type="collection"] figcaption {
+  [data-type="image-collection"] img,
+  [data-type="image-collection"] figcaption {
     margin: 0;
   }
 

@@ -14,7 +14,7 @@ type MarkDownImageProps = React.ComponentProps<"img">;
 export const MarkdownImage = async ({
   src,
   alt,
-  className,
+  className = "rounded-sm",
   ...props
 }: MarkDownImageProps) => {
   if (!src || !alt)
@@ -44,7 +44,7 @@ export const MarkdownImage = async ({
       src={src}
       className={cn(
         /portrait|square/.test(orientation ?? "") && "w-[400px]",
-        "mx-auto max-w-full rounded-sm transition-opacity",
+        "mx-auto max-w-full transition-opacity",
         className,
       )}
       alt={alt}
