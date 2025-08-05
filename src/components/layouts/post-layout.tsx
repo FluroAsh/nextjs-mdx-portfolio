@@ -1,9 +1,8 @@
 "use client";
 
 /**
- * TODO:
- * 1. Add a progress bar to the blog layout that shows how far the user has scrolled through the post
- *    - Should be smoothly animated
+ * TODO: Add a progress bar to the blog layout that shows how far the user has scrolled through the post
+ * - Should be smoothly animated
  */
 
 import "@/css/shiki.css";
@@ -40,16 +39,13 @@ export default function PostLayout({
           />
         </header>
 
-        <MobileTableOfContents
-          headingContent={post.toc}
-          className="lg:hidden"
-        />
-
         <div className="block sm:flex">
           <PostSidebar />
           <article className="prose prose-invert pt-4">{children}</article>
         </div>
       </div>
+
+      <MobileTableOfContents headingContent={post.toc} className="lg:hidden" />
     </div>
   );
 }
