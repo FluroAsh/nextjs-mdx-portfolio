@@ -1,6 +1,6 @@
 import { type ImageProps } from "./collection.types";
 
-import { CollectionLightbox } from "./collection-lightbox";
+import { LightboxView } from "./lightbox-view";
 import { ImageTile } from "./image-tile";
 
 export enum CollectionVariant {
@@ -31,7 +31,7 @@ export const ImageCollection = ({
   const captionFontSize = images.length > 2 ? "text-xs" : "text-sm";
 
   return (
-    <CollectionLightbox
+    <LightboxView
       variant={variant}
       images={images.map((image, i) => (
         <ImageTile

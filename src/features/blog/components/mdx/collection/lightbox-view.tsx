@@ -3,12 +3,12 @@
 import { useState } from "react";
 import { cn } from "@/utils/misc";
 
-import { CollectionVariant } from "./image-collection";
+import { CollectionVariant } from "./lightbox-collection";
 
 import Lightbox from "yet-another-react-lightbox";
 import Download from "yet-another-react-lightbox/plugins/download";
 
-type CollectionLightboxProps = {
+type LightboxViewProps = {
   variant: CollectionVariant;
   slides: { src: string; alt?: string }[];
   images: React.ReactNode[];
@@ -23,11 +23,11 @@ const variantLayoutClasses: Record<CollectionVariant, string> = {
   [CollectionVariant.SixUp]: "grid-cols-6",
 };
 
-export const CollectionLightbox = ({
+export const LightboxView = ({
   variant,
   slides,
   images,
-}: CollectionLightboxProps) => {
+}: LightboxViewProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [index, setIndex] = useState<number>(0);
 
@@ -39,14 +39,14 @@ export const CollectionLightbox = ({
   return (
     <div className="space-y-2">
       <div className={cn("relative grid gap-1", variantLayoutClasses[variant])}>
-        {images.map((image, i) => (
+        {images.map((serverImage, i) => (
           // Wrap RSC images to handle click event on the client-side (trigger lightbox)
           <div
             key={`${variant}-wrapper-${i + 1}`}
             className="aboslute inset-0"
             onClick={() => handleClick(i)}
           >
-            {image}
+            {serverImage}
           </div>
         ))}
       </div>
@@ -55,8 +55,7 @@ export const CollectionLightbox = ({
         open={isOpen}
         close={() => setIsOpen(false)}
         on={{
-          // Sync the index with lightbox state to handle updating the controls
-          view: ({ index }) => setIndex(index),
+          view: ({ index }) => setIndex(index), // Sync the index with lightbox state to handle updating the controls
         }}
         render={{
           controls: () => (
@@ -69,7 +68,11 @@ export const CollectionLightbox = ({
           ),
           slide: ({ slide }) => (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={slide.src} alt={slide.alt} className="rounded-lg" />
+            <img
+              src={slide.src}
+              alt={slide.alt}
+              className="max-h-full rounded-lg"
+            />
           ),
         }}
         index={index}

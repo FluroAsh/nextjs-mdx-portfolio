@@ -3,7 +3,8 @@ import { type MDXComponents } from "mdx/types";
 import { Video } from "@/components/video";
 import { MarkdownImage } from "./markdown-image";
 import { CustomLink } from "./link";
-import { ImageCollection } from "./collection/image-collection";
+import { ImageCollection } from "./collection/lightbox-collection";
+import { LightboxImage } from "./lightbox-image";
 
 export const components: MDXComponents = {
   pre: (props: React.ComponentProps<"pre">) => (
@@ -12,11 +13,16 @@ export const components: MDXComponents = {
       {...props}
     />
   ),
+  img: MarkdownImage,
+  LightboxImage: (props) => (
+    <LightboxImage src={props.src} alt={props.alt} caption={props.caption}>
+      <MarkdownImage {...props} />
+    </LightboxImage>
+  ),
   /** Static markdown images in `/public` */
   // Image: ({ src, ...rest }: ImageProps) => (
   //   <Image src={`${basePath || ""}${src}`} {...rest} />
   // ),
-  img: MarkdownImage,
   a: CustomLink,
   ImageCollection,
   Video,
