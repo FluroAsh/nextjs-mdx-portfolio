@@ -27,6 +27,7 @@ export const LightboxView = ({
   variant,
   slides,
   images,
+  className,
 }: LightboxViewProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [index, setIndex] = useState<number>(0);
@@ -38,7 +39,13 @@ export const LightboxView = ({
 
   return (
     <div className="space-y-2">
-      <div className={cn("relative grid gap-1", variantLayoutClasses[variant])}>
+      <div
+        className={cn(
+          "relative grid gap-1",
+          variantLayoutClasses[variant],
+          className,
+        )}
+      >
         {images.map((serverImage, i) => (
           // Wrap RSC images to handle click event on the client-side (trigger lightbox)
           <div
