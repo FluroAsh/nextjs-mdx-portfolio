@@ -2,8 +2,9 @@ import { type Blog } from "contentlayer/generated";
 
 import { POSTS_PER_PAGE } from "@/config/site";
 import { sortByDate } from "@/features/blog/utils";
+import { BlogContent } from "contentlayer/utils";
 
-export const getPaginatedPosts = (page: number, posts: Blog[]) => {
+export const getPaginatedPosts = (page: number, posts: BlogContent[]) => {
   const start = (page - 1) * POSTS_PER_PAGE;
   const end = page * POSTS_PER_PAGE;
 
@@ -16,18 +17,18 @@ export const getPaginatedPosts = (page: number, posts: Blog[]) => {
   };
 };
 
-export const filterDraftPosts = (posts: Blog[]) => {
+export const filterDraftPosts = (posts: BlogContent[]) => {
   return posts.filter((post) => !post.draft);
 };
 
-export const getCoreContent = (posts: Blog[]) =>
+export const getCoreContent = (posts: BlogContent[]) =>
   posts
     .filter((post) =>
       process.env.NODE_ENV === "production" ? !post.draft : true,
     )
     .sort(sortByDate)
     .map((post) => {
-      const newPost: Partial<Blog> = { ...post };
+      const newPost: Partial<BlogContent> = { ...post };
 
       delete newPost._id;
       delete newPost._raw;

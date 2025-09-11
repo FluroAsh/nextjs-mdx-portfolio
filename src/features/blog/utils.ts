@@ -1,17 +1,17 @@
-import { type Blog } from "contentlayer/generated";
+import { type BlogContent } from "contentlayer/utils";
 import { slug } from "github-slugger";
 
 /**
  * Filter out posts based on a `tag` parameter.
  * Only posts with a matching tag, and is *not* a draft will be returned.
  * */
-export const filterByTag = (post: Blog, tag: string) => {
+export const filterByTag = (post: BlogContent, tag: string) => {
   return !post.draft && post.tags.map((t) => slug(t)).includes(tag);
 };
 
 /** Returns true if post is not marked `draft`. */
-export const filterByDraft = (post: Blog) => !post.draft;
+export const filterByDraft = (post: BlogContent) => !post.draft;
 
 /** Returns true if post is marked `draft`. */
-export const sortByDate = (a: Blog, b: Blog) =>
+export const sortByDate = (a: BlogContent, b: BlogContent) =>
   new Date(b.date).getTime() - new Date(a.date).getTime();
