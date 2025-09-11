@@ -1,5 +1,10 @@
 ### Todo
 
+#### Post Features / Enhancements
+
+- [x] Add "Tags" and "Featured Image" to Blog Post Layout
+  - [x] Add tags to blog post layout
+  - [ ] Add featured image to blog post layout
 - [ ] Add a specific "Travel" layout for blog posts － [inspiration](https://photos.paulstamatiou.com/new-zealand/wellington/)
   - [ ] Prefix headings with a "location" icon
   - [ ] Allow sidebar to be toggled on/off for better photo viewing
@@ -8,23 +13,24 @@
   - [ ] Create components for travel content
     - [ ] "Accomodation" card (Hotel name, location, \$\$\$ per night, nights, rating, review, optional photo, etc.)
     - [ ] "Food" card (Restaurant name, location, rating, review, etc.)
-  - [ ] Autoplaying video component (for video content, auto loop, no sound, etc.)
+  - [x] Autoplaying video component (for video content, auto loop, no sound, etc.)
   - [ ] "Other Spots" for other places visited in the same location (will require some additional frontmatter for location(s))
-- [ ] Blog Post Listing page
-  - [ ] Complete initial layout
-  - [x] Add pagination
-  - [x] Add filtering by tags
-  - [x] Add sorting by date
 - [ ] Add [microlink](https://github.com/microlinkhq/sdk) image previews for blog posts
+
+#### Site Features / Enhancements
+
 - [ ] Landing Page
   - [x] Add a hero section
   - [x] Add a featured blog post section
   - [ ] Add a featured photo section
 - [ ] Add enhancing UI features for mobile
-- [ ] Add indexing for blog posts using Algolia
+- [ ] Add search indexing for blog posts
   - [x] Add [kbar](https://github.com/timc1/kbar) to support search functionality
   - [x] Add Blog post search functionality
   - [ ] Add photo search functionality (by tags or other metadata)
+
+### SEO Improvements
+
 - [ ] Improve SEO
   - [ ] Add meta tags
   - [ ] Add sitemap
@@ -32,19 +38,18 @@
   - [ ] Add OG tags
   - [ ] Add Twitter tags
 
-### In Progress
-
-- [x] Add "Tags" and "Featured Image" to Blog Post Layout
-  - [x] Add tags to blog post layout
-  - [ ] Add featured image to blog post layout
-
 ### Stretch Goals
+
+#### Gallery
 
 - [ ] Add a **Photography page**
   - [ ] Add a masonry photo gallery for the landing page
   - [ ] Add search/filtering functionality for the photo gallery
   - [ ] Integrate with Algolia for photo search (by tags or other metadata such as location or date)
   - [ ] Add lightbox functionality for photos in the gallery
+
+#### Blog Posts
+
 - [ ] Add a "Related Posts" section to blog posts
   - [ ] Next/Previous post navigation
 - [ ] Add a "Share" button to blog posts
