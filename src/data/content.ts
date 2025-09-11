@@ -1,4 +1,4 @@
-import { excludeDrafts, sortByDate } from "@/features/blog/utils";
+import { excludeDrafts, sortByDateDesc } from "@/features/blog/utils";
 import { allBlogs, allBlogSeries } from "contentlayer/generated";
 import { type BlogContent } from "contentlayer/utils";
 
@@ -8,4 +8,4 @@ export const allBlogContent: BlogContent[] = [...allBlogs, ...allBlogSeries];
 /** All blog posts (including mutli-part posts) excluding drafts. */
 export const sortedPostsByDate = allBlogContent
   .filter(excludeDrafts)
-  .sort(sortByDate);
+  .sort(sortByDateDesc);

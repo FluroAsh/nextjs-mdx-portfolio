@@ -84,7 +84,12 @@ export const BlogSeries = defineDocumentType(() => ({
     ...sharedPostFields,
     series: {
       type: "string",
-      description: "The name of the blog series",
+      description: "The short name of the series",
+      required: true,
+    },
+    seriesTitle: {
+      type: "string",
+      description: "The full title of the series",
       required: true,
     },
     seriesOrder: {

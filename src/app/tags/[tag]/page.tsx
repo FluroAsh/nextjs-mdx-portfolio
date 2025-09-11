@@ -4,7 +4,7 @@ import { allBlogContent } from "@/data/content";
 import tagData from "@/data/tag-data.json";
 
 import { getPaginatedPosts } from "@/lib/helpers";
-import { filterByTag, sortByDate } from "@/features/blog/utils";
+import { filterByTag, sortByDateDesc } from "@/features/blog/utils";
 import { PostPreview } from "@/features/blog/components/post-preview";
 import { ListLayoutTags } from "@/components/layouts/list-layout-tags";
 
@@ -21,7 +21,7 @@ export default async function TagPage(props: {
 
   const filteredPosts = allBlogContent
     .filter((post) => filterByTag(post, tag))
-    .sort(sortByDate);
+    .sort(sortByDateDesc);
 
   if (filteredPosts.length === 0) {
     return notFound();

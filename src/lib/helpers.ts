@@ -1,7 +1,7 @@
 import { type BlogContent } from "contentlayer/utils";
 
 import { POSTS_PER_PAGE } from "@/config/site";
-import { sortByDate } from "@/features/blog/utils";
+import { sortByDateDesc } from "@/features/blog/utils";
 
 export const getPaginatedPosts = (page: number, posts: BlogContent[]) => {
   const start = (page - 1) * POSTS_PER_PAGE;
@@ -25,7 +25,7 @@ export const getCoreContent = (posts: BlogContent[]) =>
     .filter((post) =>
       process.env.NODE_ENV === "production" ? !post.draft : true,
     )
-    .sort(sortByDate)
+    .sort(sortByDateDesc)
     .map((post) => {
       const newPost: Partial<BlogContent> = { ...post };
 
