@@ -5,7 +5,7 @@ import { LucideTags } from "lucide-react";
 import { type BlogContent } from "contentlayer/utils";
 import { formatDate } from "@/utils/dates";
 import { SectionGradientHeading } from "@/components/section-gradient-heading";
-import { sortedPostsByDate } from "@/data/content";
+import { sortedPostsByDateDesc } from "@/data/content";
 
 import { paths } from "@/config/paths";
 import { cn } from "@/utils/misc";
@@ -75,7 +75,7 @@ const containerStyles = [
 // TODO: Add a cooler hover glow effect all posts
 // ie: Brightness mask on hover over cursor/image
 export const RecentPosts = () => {
-  const recentPosts = sortedPostsByDate.slice(0, 3); // Max 3, but could be less
+  const recentPosts = sortedPostsByDateDesc.slice(0, 3); // Max 3, but could be less
 
   return (
     <div className={`${recentPosts.length > 0 ? "" : "hidden"}`}>

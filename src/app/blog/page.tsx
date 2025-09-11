@@ -1,18 +1,18 @@
 import { notFound } from "next/navigation";
 
 import { getPaginatedPosts } from "@/lib/helpers";
-import { sortedPostsByDate } from "@/data/content";
+import { sortedPostsByDateDesc } from "@/data/content";
 import { PostPreview } from "@/features/blog/components/post-preview";
 import { ListLayoutTags } from "@/components/layouts/list-layout-tags";
 
 export default function Page() {
-  if (sortedPostsByDate.length === 0) {
+  if (sortedPostsByDateDesc.length === 0) {
     return notFound();
   }
 
   const { paginatedPosts, totalPages } = getPaginatedPosts(
     1,
-    sortedPostsByDate,
+    sortedPostsByDateDesc,
   );
 
   const paginationProps = {
