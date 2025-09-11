@@ -1,8 +1,7 @@
-import { type Blog } from "contentlayer/generated";
+import { type BlogContent } from "contentlayer/utils";
 
 import { POSTS_PER_PAGE } from "@/config/site";
 import { sortByDate } from "@/features/blog/utils";
-import { BlogContent } from "contentlayer/utils";
 
 export const getPaginatedPosts = (page: number, posts: BlogContent[]) => {
   const start = (page - 1) * POSTS_PER_PAGE;
@@ -37,7 +36,7 @@ export const getCoreContent = (posts: BlogContent[]) =>
       delete newPost.draft;
 
       return newPost as Exclude<
-        Blog,
+        BlogContent,
         "_id" | "_raw" | "body" | "toc" | "draft"
       >;
     });

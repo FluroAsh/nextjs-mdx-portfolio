@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
-import { allBlogs } from "contentlayer/generated";
 
+import { allBlogContent } from "@/data/content";
 import tagData from "@/data/tag-data.json";
 
 import { getPaginatedPosts } from "@/lib/helpers";
@@ -19,7 +19,7 @@ export default async function TagPage(props: {
 }) {
   const { tag } = await props.params;
 
-  const filteredPosts = allBlogs
+  const filteredPosts = allBlogContent
     .filter((post) => filterByTag(post, tag))
     .sort(sortByDate);
 

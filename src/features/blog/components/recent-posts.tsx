@@ -1,15 +1,16 @@
 import Link from "next/link";
 import Image from "next/image";
 import { LucideTags } from "lucide-react";
-import { allBlogs, type Blog } from "contentlayer/generated";
 
-import { cn } from "@/utils/misc";
-import { paths } from "@/config/paths";
-import { filterByDraft, sortByDate } from "../utils";
+import { type BlogContent } from "contentlayer/utils";
 import { formatDate } from "@/utils/dates";
 import { SectionGradientHeading } from "@/components/section-gradient-heading";
+import { sortedPostsByDate } from "@/data/content";
 
-const Recentpost = ({ idx, post }: { idx: number; post: Blog }) => {
+import { paths } from "@/config/paths";
+import { cn } from "@/utils/misc";
+
+const Recentpost = ({ idx, post }: { idx: number; post: BlogContent }) => {
   return (
     <Link
       className={cn("group flex", idx === 2 && "md:col-span-2 lg:col-span-1")}
@@ -74,10 +75,7 @@ const containerStyles = [
 // TODO: Add a cooler hover glow effect all posts
 // ie: Brightness mask on hover over cursor/image
 export const RecentPosts = () => {
-  const recentPosts = allBlogs
-    .filter(filterByDraft)
-    .sort(sortByDate)
-    .slice(0, 3); // Max 3, but could be less
+  const recentPosts = sortedPostsByDate.slice(0, 3); // Max 3, but could be less
 
   return (
     <div className={`${recentPosts.length > 0 ? "" : "hidden"}`}>

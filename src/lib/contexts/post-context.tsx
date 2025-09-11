@@ -1,12 +1,12 @@
 "use client";
 
 import React, { createContext, useContext } from "react";
-import { type Blog } from "contentlayer/generated";
+import { type BlogContent } from "contentlayer/utils";
 
 type PostContextType = {
-  post: Blog;
-  next: Blog | undefined;
-  prev: Blog | undefined;
+  post: BlogContent;
+  next: BlogContent | undefined;
+  prev: BlogContent | undefined;
 };
 
 const PostContext = createContext<PostContextType | undefined>(undefined);

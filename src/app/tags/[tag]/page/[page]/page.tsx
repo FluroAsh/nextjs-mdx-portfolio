@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
-import { allBlogs } from "contentlayer/generated";
+
+import { allBlogContent } from "@/data/content";
 
 import { getPaginatedPosts } from "@/lib/helpers";
 import { filterByTag, sortByDate } from "@/features/blog/utils";
@@ -11,7 +12,7 @@ export default async function Page(props: {
 }) {
   const { page, tag } = await props.params;
 
-  const filteredPosts = allBlogs
+  const filteredPosts = allBlogContent
     .filter((post) => filterByTag(post, tag))
     .sort(sortByDate);
 

@@ -10,7 +10,7 @@ export const filterByTag = (post: BlogContent, tag: string) => {
 };
 
 /** Returns true if post is not marked `draft`. */
-export const filterByDraft = (post: BlogContent) => !post.draft;
+export const excludeDrafts = (post: BlogContent) => !post.draft;
 
 /** Returns true if post is marked `draft`. */
 export const sortByDate = (a: BlogContent, b: BlogContent) =>
