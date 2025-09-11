@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import Lightbox from "yet-another-react-lightbox";
 import Download from "yet-another-react-lightbox/plugins/download";
-import { ExpandIconHover } from "../icons/expand-hover";
+import { ExpandIconHover } from "@/components/icons/expand-hover";
 
 type LightBoxImageProps = {
   src?: string;

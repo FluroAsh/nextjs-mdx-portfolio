@@ -5,7 +5,7 @@ import { allBlogs } from "contentlayer/generated";
 
 import PostLayout from "@/components/layouts/post-layout";
 import { PostProvider } from "@/lib/contexts/post-context";
-import { components as mdxComponents } from "@/features/blog/components/mdx/mdx-components";
+import { components as mdxComponents } from "@/features/blog/components/mdx";
 
 type PostPageProps = {
   params: Promise<{ slug: string[] }>;

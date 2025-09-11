@@ -1,5 +1,5 @@
 import { IMAGE_SIZE } from "@/types";
-import { ExpandIconHover } from "../../icons/expand-hover";
+import { ExpandIconHover } from "@/components/icons/expand-hover";
 import { MarkdownImage } from "../markdown-image";
 import { ImageCaption } from "./caption";
 
