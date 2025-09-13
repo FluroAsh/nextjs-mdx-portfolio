@@ -2,10 +2,11 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { type BlogContent } from "contentlayer/utils";
+
 import { LucideTags } from "lucide-react";
 
 import { SectionGradientHeading } from "@/components/section-gradient-heading";
-import { paths } from "@/config/paths";
+
 import { sortedPostsByDateDesc } from "@/data/content";
 import { formatDate } from "@/utils/dates";
 import { cn } from "@/utils/misc";
@@ -14,7 +15,7 @@ const Recentpost = ({ idx, post }: { idx: number; post: BlogContent }) => {
   return (
     <Link
       className={cn("group flex", idx === 2 && "md:col-span-2 lg:col-span-1")}
-      href={paths.post.getPathname(post.slug)}
+      href={post.url}
     >
       <div className="border-input relative isolate w-full overflow-hidden rounded-md border p-4 ring-2 ring-transparent transition group-hover:ring-green-500">
         <div className="mb-2 flex items-center gap-3">

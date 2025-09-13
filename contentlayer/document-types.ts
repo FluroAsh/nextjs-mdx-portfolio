@@ -3,6 +3,7 @@ import {
   FieldDefs,
   defineDocumentType,
 } from "contentlayer2/source-files";
+import { slug } from "github-slugger";
 import readingTime from "reading-time";
 
 import { extractTocHeadings } from "@/lib/plugins/extract-headings";
@@ -67,12 +68,11 @@ export const Blog = defineDocumentType(() => ({
     ...sharedPostComputedFields,
     url: {
       type: "string",
-      resolve: (doc) =>
-        `/blog/${doc._raw.sourceFileName.replace(/\.mdx$/, "")}`,
+      resolve: (doc) => `/blog/${slug(doc._raw.flattenedPath)}`,
     },
     slug: {
       type: "string",
-      resolve: (doc) => `${doc._raw.sourceFileName.replace(/\.mdx$/, "")}`,
+      resolve: (doc) => doc._raw.flattenedPath,
     },
   },
 }));
@@ -104,13 +104,15 @@ export const BlogSeries = defineDocumentType(() => ({
     url: {
       type: "string",
       resolve: (doc) => {
-        const segments = doc._raw.flattenedPath.split("/");
-        return `/blog/${segments.join("/")}`;
+        return `/blog/${doc._raw.flattenedPath
+          .split("/")
+          .map((part) => slug(part))
+          .join("/")}`;
       },
     },
     slug: {
       type: "string",
-      resolve: (doc) => doc._raw.sourceFileName.replace(/\.mdx$/, ""),
+      resolve: (doc) => doc._raw.flattenedPath,
     },
     seriesSlug: {
       type: "string",

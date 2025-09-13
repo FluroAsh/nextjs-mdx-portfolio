@@ -7,21 +7,17 @@ import { allBlogContent, sortedPostsByDateAsc } from "@/data/content";
 import { components as mdxComponents } from "@/features/blog/components/mdx";
 import { PostProvider } from "@/lib/contexts/post-context";
 
-type PostPageProps = {
-  params: Promise<{ slug: string[] }>;
-};
-
 export function generateStaticParams() {
-  return allBlogContent.map((p) => ({
-    slug: p.slug.split("/").map((name) => decodeURI(name)),
-  }));
+  return allBlogContent.map((p) => ({ slug: p.slug.split("/") }));
 }
 
-export default async function Post(props: PostPageProps) {
+export default async function Post(props: {
+  params: Promise<{ slug: string[] }>;
+}) {
   const params = await props.params;
-  const slug = decodeURI(params.slug.join("/"));
   const postIndex = sortedPostsByDateAsc.findIndex(
-    (post) => post.slug === slug,
+    // join params to match against series posts (with slashes)
+    (post) => post.slug === params.slug.join("/"),
   );
 
   const post = sortedPostsByDateAsc[postIndex];

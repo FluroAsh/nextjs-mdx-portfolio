@@ -1,7 +1,6 @@
 import { useRouter } from "next/navigation";
 
 import { allBlogs } from "contentlayer/generated";
-import { slug } from "github-slugger";
 import {
   Action,
   KBarAnimator,
@@ -20,7 +19,6 @@ import {
   LucideSearch,
 } from "lucide-react";
 
-import { paths } from "@/config/paths";
 import { getCoreContent } from "@/lib/helpers";
 import { cn } from "@/utils/misc";
 
@@ -35,7 +33,7 @@ const blogPostActions = (router: ReturnType<typeof useRouter>): Action[] =>
         name: post.title,
         keywords: `${post.description} ${post.tags.join(" ")}`,
         icon: <LucideBookOpen />,
-        perform: () => router.push(paths.post.getPathname(slug(post.slug))),
+        perform: () => router.push(post.url),
       }) satisfies Action,
   );
 

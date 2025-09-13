@@ -92,7 +92,7 @@ export const PostSidebar = () => {
         <ArticleNavigation
           heading="Previously"
           title={prev.title}
-          link={paths.post.getPathname(prev.slug)}
+          link={prev.url}
         />
       )}
 
@@ -100,7 +100,7 @@ export const PostSidebar = () => {
         <ArticleNavigation
           heading="Up Next"
           title={next.title}
-          link={paths.post.getPathname(next.slug)}
+          link={next.url}
         />
       )}
 

@@ -39,7 +39,7 @@ export default async function Page(props: {
           title={post.title}
           description={post.description}
           tags={post.tags}
-          slug={post.slug}
+          url={post.url}
         />
       ))}
     </ListLayoutTags>

@@ -30,7 +30,7 @@ export default function Page() {
           title={post.title}
           description={post.description}
           tags={post.tags}
-          slug={post.slug}
+          url={post.url}
         />
       ))}
     </ListLayoutTags>

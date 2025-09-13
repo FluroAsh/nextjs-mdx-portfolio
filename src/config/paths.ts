@@ -1,5 +1,3 @@
-import { slug } from "github-slugger";
-
 export const paths = {
   home: {
     pathname: "/",
@@ -12,9 +10,6 @@ export const paths = {
   },
   notFound: {
     pathname: "/404",
-  },
-  post: {
-    getPathname: (slugParam: string) => `/blog/${slug(slugParam)}`,
   },
   tags: {
     pathname: "/tags",

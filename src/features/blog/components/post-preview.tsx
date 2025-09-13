@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+
 import { useRef } from "react";
 
 import { slug } from "github-slugger";
+
 import { LucideHash } from "lucide-react";
 import { motion as m } from "motion/react";
 
@@ -89,18 +91,18 @@ export const MotionPostsContainer = ({
 
 type PostPreviewProps = {
   title: string;
-  slug: string;
   date: string;
   description: string;
   tags: string[];
+  url: string;
 };
 
 export const PostPreview = ({
   title,
-  slug,
   date,
   description,
   tags,
+  url,
 }: PostPreviewProps) => {
   const articleRef = useRef<HTMLElement>(null);
   const router = useRouter();
@@ -108,7 +110,7 @@ export const PostPreview = ({
   const handleContainerClick = (e: React.MouseEvent) => {
     // Don't navigate if clicking on a tag or any other link
     if (!(e.target as HTMLElement).closest("a")) {
-      router.push(paths.post.getPathname(slug));
+      router.push(url);
     }
   };
 
@@ -136,7 +138,7 @@ export const PostPreview = ({
         />
       </div>
 
-      <Link href={paths.post.getPathname(slug)}>
+      <Link href={url}>
         <span className="sr-only">{title}</span>
       </Link>
     </m.article>

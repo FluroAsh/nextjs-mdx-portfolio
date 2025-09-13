@@ -40,10 +40,10 @@ export default async function TagPage(props: {
         <PostPreview
           key={post._id}
           title={post.title}
-          slug={post.slug}
           date={post.date}
           description={post.description}
           tags={post.tags}
+          url={post.url}
         />
       ))}
     </ListLayoutTags>
