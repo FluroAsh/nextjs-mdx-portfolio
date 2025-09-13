@@ -1,12 +1,14 @@
 import Link from "next/link";
-import { slug } from "github-slugger";
 
+import { slug } from "github-slugger";
+import { LucideChevronLeft } from "lucide-react";
+
+import { Separator } from "@/components/ui/separator";
 import { paths } from "@/config/paths";
 import { usePostContext } from "@/lib/contexts/post-context";
-import { TableOfContents } from "./table-of-contents";
+
 import { PostAuthor } from "./post-author";
-import { Separator } from "@/components/ui/separator";
-import { LucideChevronLeft } from "lucide-react";
+import { TableOfContents } from "./table-of-contents";
 
 const ArticleSeparator = () => (
   <Separator

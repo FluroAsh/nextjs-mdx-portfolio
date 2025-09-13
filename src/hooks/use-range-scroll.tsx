@@ -1,6 +1,7 @@
-import { MotionValue } from "motion/react";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+
+import { MotionValue } from "motion/react";
 
 export const useRangeScroll = (
   isMobile: boolean,

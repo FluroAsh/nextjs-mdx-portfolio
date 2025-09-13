@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+
 import { LucidePause, LucidePlay } from "lucide-react";
 
 import { cn } from "@/utils/misc";

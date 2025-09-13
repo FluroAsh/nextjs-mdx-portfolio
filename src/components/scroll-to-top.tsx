@@ -1,8 +1,8 @@
 import { motion as m, useScroll } from "framer-motion";
 import { ArrowUp } from "lucide-react";
 
-import { cn } from "@/utils/misc";
 import { useRangeScroll } from "@/hooks/use-range-scroll";
+import { cn } from "@/utils/misc";
 
 const AnimatedBorder = () => {
   return (

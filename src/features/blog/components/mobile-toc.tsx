@@ -1,5 +1,8 @@
 import { useState } from "react";
+
 import { LucideBookmark } from "lucide-react";
+import { useScroll } from "motion/react";
+import { useMedia } from "react-use";
 
 import {
   Drawer,
@@ -8,11 +11,9 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
+import { useRangeScroll } from "@/hooks/use-range-scroll";
 import { type TocItem } from "@/lib/plugins/extract-headings";
 import { cn } from "@/utils/misc";
-import { useRangeScroll } from "@/hooks/use-range-scroll";
-import { useScroll } from "motion/react";
-import { useMedia } from "react-use";
 
 type Props = {
   headingContent: TocItem[];

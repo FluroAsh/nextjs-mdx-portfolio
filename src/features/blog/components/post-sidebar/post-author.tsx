@@ -1,8 +1,8 @@
 import Image from "next/image";
 
-import { cn } from "@/utils/misc";
-import { author } from "@/data/author";
 import { Link } from "@/components/link";
+import { author } from "@/data/author";
+import { cn } from "@/utils/misc";
 
 const filteredSocials = author.socials.filter(
   ({ network }) => network !== "Instagram",

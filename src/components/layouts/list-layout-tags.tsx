@@ -1,13 +1,12 @@
 import { slug } from "github-slugger";
 import { title } from "radash";
 
-import { cn } from "@/utils/misc";
 import { Pagination, type PaginationProps } from "@/components/pagination";
-import { TagsSidebar } from "@/features/blog/components/tags-sidebar";
-import { MobileSelectNavigation } from "@/features/blog/components/select-tags";
-import { MotionPostsContainer } from "@/features/blog/components/post-preview";
-
 import tags from "@/data/tag-data.json";
+import { MotionPostsContainer } from "@/features/blog/components/post-preview";
+import { MobileSelectNavigation } from "@/features/blog/components/select-tags";
+import { TagsSidebar } from "@/features/blog/components/tags-sidebar";
+import { cn } from "@/utils/misc";
 
 // TODO: Move this to a utility function
 const mobileLinks = [

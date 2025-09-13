@@ -1,5 +1,5 @@
 import { usePathname } from "next/navigation";
-import { motion as m, useScroll } from "motion/react";
+
 import { useKBar } from "kbar";
 import {
   LucideBookOpen,
@@ -7,12 +7,14 @@ import {
   LucideHome,
   LucideSearch,
 } from "lucide-react";
+import { motion as m, useScroll } from "motion/react";
 
-import { cn } from "@/utils/misc";
 import { isActiveRoute, paths } from "@/config/paths";
+import { useRangeScroll } from "@/hooks/use-range-scroll";
+import { cn } from "@/utils/misc";
+
 import { NavLink } from "./nav-link";
 import { SocialLinks } from "./social-links";
-import { useRangeScroll } from "@/hooks/use-range-scroll";
 
 export const FloatingNav = ({
   hideScrollYLimit = 0,

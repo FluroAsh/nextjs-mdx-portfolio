@@ -1,5 +1,6 @@
+import { MotionProps, motion as m } from "motion/react";
+
 import { cn } from "@/utils/misc";
-import { motion as m, MotionProps } from "motion/react";
 
 type Props = {
   text: string;

@@ -4,15 +4,15 @@
  * TODO: Add a progress bar to the blog layout that shows how far the user has scrolled through the post
  * - Should be smoothly animated
  */
-
-import "@/css/shiki.css";
 import "remark-github-blockquote-alert/alert.css";
 
-import { usePostContext } from "@/lib/contexts/post-context";
+import "@/css/shiki.css";
+import { MobileTableOfContents } from "@/features/blog/components/mobile-toc";
 import { PostSidebar } from "@/features/blog/components/post-sidebar";
 import { ArticleDateTime } from "@/features/blog/components/reading-time";
+import { usePostContext } from "@/lib/contexts/post-context";
+
 import { Separator } from "../ui/separator";
-import { MobileTableOfContents } from "@/features/blog/components/mobile-toc";
 
 export default function PostLayout({
   children,

@@ -1,7 +1,8 @@
 "use client";
 
-import { motion as m, useInView } from "motion/react";
 import { useRef } from "react";
+
+import { motion as m, useInView } from "motion/react";
 
 import { defaultViewMargin } from "@/lib/constants";
 

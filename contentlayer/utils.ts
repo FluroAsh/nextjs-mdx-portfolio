@@ -1,10 +1,9 @@
+import { type Blog, BlogSeries } from "contentlayer/generated";
 import * as fs from "fs";
+import { slug } from "github-slugger";
 import * as path from "path";
 
 import { getCoreContent } from "@/lib/helpers";
-
-import { slug } from "github-slugger";
-import { BlogSeries, type Blog } from "contentlayer/generated";
 
 const isProduction = process.env.NODE_ENV === "production";
 

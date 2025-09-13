@@ -1,9 +1,10 @@
-import readingTime from "reading-time";
 import {
   ComputedFields,
-  defineDocumentType,
   FieldDefs,
+  defineDocumentType,
 } from "contentlayer2/source-files";
+import readingTime from "reading-time";
+
 import { extractTocHeadings } from "@/lib/plugins/extract-headings";
 
 // ---- Shared Field Definitions ---- //

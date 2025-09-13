@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { cn } from "@/utils/misc";
-
-import { CollectionVariant } from "./lightbox-collection";
 
 import Lightbox from "yet-another-react-lightbox";
 import Download from "yet-another-react-lightbox/plugins/download";
+
+import { cn } from "@/utils/misc";
+
+import { CollectionVariant } from "./lightbox-collection";
 
 type LightboxViewProps = {
   variant: CollectionVariant;

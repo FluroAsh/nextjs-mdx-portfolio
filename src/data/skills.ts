@@ -1,5 +1,5 @@
-import * as siIcon from "react-icons/si";
 import * as faIcon from "react-icons/fa";
+import * as siIcon from "react-icons/si";
 
 export const skillsList = [
   {

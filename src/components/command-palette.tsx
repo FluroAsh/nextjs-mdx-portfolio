@@ -1,10 +1,6 @@
-import {
-  LucideBookOpen,
-  LucideCamera,
-  LucideHome,
-  LucideSearch,
-} from "lucide-react";
 import { useRouter } from "next/navigation";
+
+import { allBlogs } from "contentlayer/generated";
 import { slug } from "github-slugger";
 import {
   Action,
@@ -17,8 +13,12 @@ import {
   Priority,
   useMatches,
 } from "kbar";
-
-import { allBlogs } from "contentlayer/generated";
+import {
+  LucideBookOpen,
+  LucideCamera,
+  LucideHome,
+  LucideSearch,
+} from "lucide-react";
 
 import { paths } from "@/config/paths";
 import { getCoreContent } from "@/lib/helpers";

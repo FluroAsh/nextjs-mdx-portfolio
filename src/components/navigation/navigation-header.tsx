@@ -1,13 +1,15 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+
+import { useKBar } from "kbar";
 import { LucideBookOpen, LucideCamera, LucideSearch } from "lucide-react";
 
-import { cn } from "@/utils/misc";
 import { isActiveRoute, paths } from "@/config/paths";
+import { cn } from "@/utils/misc";
+
+import { FloatingNav } from "./floating-nav";
 import { NavLink } from "./nav-link";
 import { SocialLinks } from "./social-links";
-import { FloatingNav } from "./floating-nav";
-import { useKBar } from "kbar";
 
 export const NavigationHeader = () => {
   const { query } = useKBar();

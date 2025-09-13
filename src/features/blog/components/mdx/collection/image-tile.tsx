@@ -1,10 +1,10 @@
-import { IMAGE_SIZE } from "@/types";
 import { ExpandIconHover } from "@/components/icons/expand-hover";
+import { IMAGE_SIZE } from "@/types";
+import { cn } from "@/utils/misc";
+
 import { MarkdownImage } from "../markdown-image";
 import { ImageCaption } from "./caption";
-
 import { type ImageProps } from "./collection.types";
-import { cn } from "@/utils/misc";
 
 type ImageTileProps = ImageProps & {
   className?: string;

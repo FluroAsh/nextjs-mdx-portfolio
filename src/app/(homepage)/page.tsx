@@ -1,7 +1,7 @@
-import { HeroSection } from "@/features/home/components/hero-section";
-import { AboutSection } from "@/features/home/components/about-section";
-import { SkillsSection } from "@/features/home/components/skills-section";
 import { RecentPosts } from "@/features/blog/components/recent-posts";
+import { AboutSection } from "@/features/home/components/about-section";
+import { HeroSection } from "@/features/home/components/hero-section";
+import { SkillsSection } from "@/features/home/components/skills-section";
 import { TimelineSection } from "@/features/home/components/timeline-section";
 
 export default function Home() {

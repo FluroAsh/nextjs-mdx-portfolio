@@ -1,6 +1,7 @@
 import { act, renderHook, waitFor } from "@testing-library/react";
-import { useRangeScroll } from "./use-range-scroll";
 import { MotionValue } from "motion/react";
+
+import { useRangeScroll } from "./use-range-scroll";
 
 describe("useRangeScroll", () => {
   let mockScrollY: MotionValue<number>;

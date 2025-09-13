@@ -1,7 +1,8 @@
 import { makeSource } from "contentlayer2/source-files";
+
 import { Blog, BlogSeries } from "./contentlayer/document-types";
-import { remarkPlugins, rehypePlugins } from "./contentlayer/plugins";
-import { createTagCount, createSearchIndex } from "./contentlayer/utils";
+import { rehypePlugins, remarkPlugins } from "./contentlayer/plugins";
+import { createSearchIndex, createTagCount } from "./contentlayer/utils";
 
 export default makeSource({
   contentDirPath: "blog",

@@ -1,6 +1,7 @@
-import { paths } from "@/config/paths";
 import Image from "next/image";
 import Link from "next/link";
+
+import { paths } from "@/config/paths";
 
 export default function NotFoundPage() {
   return (

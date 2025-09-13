@@ -2,18 +2,19 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+
 import { useKBar } from "kbar";
-import { useScroll } from "motion/react";
 import {
   LucideBookOpen,
   LucideCamera,
   LucideHome,
   LucideSearch,
 } from "lucide-react";
+import { useScroll } from "motion/react";
 
-import { cn } from "@/utils/misc";
 import { isActiveRoute, paths } from "@/config/paths";
 import { useRangeScroll } from "@/hooks/use-range-scroll";
+import { cn } from "@/utils/misc";
 
 export const MobileNav = () => {
   const pathname = usePathname();

@@ -1,12 +1,12 @@
 import { fromHtmlIsomorphic } from "hast-util-from-html-isomorphic";
-import { remarkAlert } from "remark-github-blockquote-alert";
-import remarkGfm from "remark-gfm";
-import rehypeUnwrapImages from "rehype-unwrap-images";
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypePrettyCode, {
   type Options as PrettyCodeOptions,
 } from "rehype-pretty-code";
-import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeSlug from "rehype-slug";
+import rehypeUnwrapImages from "rehype-unwrap-images";
+import remarkGfm from "remark-gfm";
+import { remarkAlert } from "remark-github-blockquote-alert";
 import { type Pluggable } from "unified";
 
 // Heroicon mini link for autolink headings

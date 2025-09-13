@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 
-import { RootLayoutWrapper } from "@/components/layouts/root-layout-wrapper";
-import { catamaran, firaSans } from "../fonts";
-
 import "yet-another-react-lightbox/styles.css";
+
+import { RootLayoutWrapper } from "@/components/layouts/root-layout-wrapper";
 import "@/css/globals.css";
+
+import { catamaran, firaSans } from "../fonts";
 
 export const metadata: Metadata = {
   title: "Ashley Thompson",

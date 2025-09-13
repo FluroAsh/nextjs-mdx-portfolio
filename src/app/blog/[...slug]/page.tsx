@@ -1,10 +1,11 @@
-import { getMDXComponent } from "next-contentlayer2/hooks";
 import { notFound } from "next/navigation";
 
+import { getMDXComponent } from "next-contentlayer2/hooks";
+
 import PostLayout from "@/components/layouts/post-layout";
-import { PostProvider } from "@/lib/contexts/post-context";
-import { components as mdxComponents } from "@/features/blog/components/mdx";
 import { allBlogContent, sortedPostsByDateAsc } from "@/data/content";
+import { components as mdxComponents } from "@/features/blog/components/mdx";
+import { PostProvider } from "@/lib/contexts/post-context";
 
 type PostPageProps = {
   params: Promise<{ slug: string[] }>;

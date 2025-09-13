@@ -2,14 +2,16 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useRef } from "react";
+
 import { slug } from "github-slugger";
-import { motion as m } from "motion/react";
 import { LucideHash } from "lucide-react";
+import { motion as m } from "motion/react";
 
 import { paths } from "@/config/paths";
-import { PublicationDate } from "./reading-time";
 import { cn } from "@/utils/misc";
-import { useRef } from "react";
+
+import { PublicationDate } from "./reading-time";
 
 const Description = ({
   text,

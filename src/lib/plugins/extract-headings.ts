@@ -1,11 +1,10 @@
 import GithubSlugger from "github-slugger";
-import { remark } from "remark";
-import { VFile } from "vfile";
-import { visit } from "unist-util-visit";
-import { toString } from "mdast-util-to-string";
-
 import { type Heading } from "mdast";
+import { toString } from "mdast-util-to-string";
+import { remark } from "remark";
 import { type Parent } from "unist";
+import { visit } from "unist-util-visit";
+import { VFile } from "vfile";
 
 export type TocItem = {
   value: string;

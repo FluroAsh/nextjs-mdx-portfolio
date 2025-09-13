@@ -1,11 +1,10 @@
 import { notFound } from "next/navigation";
 
-import { allBlogContent } from "@/data/content";
-
-import { getPaginatedPosts } from "@/lib/helpers";
-import { filterByTag, sortByDateDesc } from "@/features/blog/utils";
 import { ListLayoutTags } from "@/components/layouts/list-layout-tags";
+import { allBlogContent } from "@/data/content";
 import { PostPreview } from "@/features/blog/components/post-preview";
+import { filterByTag, sortByDateDesc } from "@/features/blog/utils";
+import { getPaginatedPosts } from "@/lib/helpers";
 
 export default async function Page(props: {
   params: Promise<{ page: string; tag: string }>;

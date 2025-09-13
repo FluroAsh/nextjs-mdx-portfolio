@@ -1,14 +1,14 @@
 "use client";
 
+import { usePathname, useRouter } from "next/navigation";
+
 import {
   Select,
-  SelectTrigger,
-  SelectValue,
   SelectContent,
   SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
-
-import { usePathname, useRouter } from "next/navigation";
 
 type SelectComponentProps = {
   items: {

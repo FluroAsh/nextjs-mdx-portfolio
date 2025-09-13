@@ -1,12 +1,13 @@
 "use client";
 
-import { useInView } from "motion/react";
 import { useRef } from "react";
 
-import { type Skill, skillsList } from "@/data/skills";
+import { useInView } from "motion/react";
 
-import { cn } from "@/utils/misc";
+import { type Skill, skillsList } from "@/data/skills";
 import { defaultViewMargin } from "@/lib/constants";
+import { cn } from "@/utils/misc";
+
 import { SectionTag } from "./section-tag";
 
 const topRowSkills = skillsList.slice(0, Math.ceil(skillsList.length / 2));

@@ -1,10 +1,11 @@
 import { type MDXComponents } from "mdx/types";
 
 import { Video } from "@/components/video";
-import { MarkdownImage } from "./markdown-image";
-import { CustomLink } from "./link";
+
 import { ImageCollection } from "./collection/lightbox-collection";
 import { LightboxImage } from "./lightbox-image";
+import { CustomLink } from "./link";
+import { MarkdownImage } from "./markdown-image";
 
 export const components: MDXComponents = {
   pre: (props: React.ComponentProps<"pre">) => (

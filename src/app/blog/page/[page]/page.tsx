@@ -1,9 +1,9 @@
 import { notFound } from "next/navigation";
 
-import { sortedPostsByDateDesc } from "@/data/content";
-import { getPaginatedPosts } from "@/lib/helpers";
 import { ListLayoutTags } from "@/components/layouts/list-layout-tags";
+import { sortedPostsByDateDesc } from "@/data/content";
 import { PostPreview } from "@/features/blog/components/post-preview";
+import { getPaginatedPosts } from "@/lib/helpers";
 
 export default async function Page(props: {
   params: Promise<{ page: string }>;

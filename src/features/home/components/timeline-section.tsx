@@ -1,16 +1,18 @@
 "use client";
 
 import { isValidElement } from "react";
+
 import { BriefcaseIcon, GraduationCapIcon, MapPinIcon } from "lucide-react";
 
-import { cn } from "@/utils/misc";
-import { CustomLink } from "@/features/blog/components/mdx/link";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
+import { CustomLink } from "@/features/blog/components/mdx/link";
+import { cn } from "@/utils/misc";
+
 import { SectionTag } from "./section-tag";
 
 const experiences = [

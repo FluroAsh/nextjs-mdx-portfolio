@@ -1,7 +1,6 @@
 import { type ImageProps } from "./collection.types";
-
-import { LightboxView } from "./lightbox-view";
 import { ImageTile } from "./image-tile";
+import { LightboxView } from "./lightbox-view";
 
 export enum CollectionVariant {
   TwoUp = "2up",

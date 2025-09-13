@@ -1,12 +1,13 @@
 "use client";
 
-import { motion as m } from "motion/react";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
-import { cn } from "@/utils/misc";
-import { author } from "@/data/author";
-import { VerticalText } from "@/components/vertical-text";
+import { motion as m } from "motion/react";
+
 import { BlurredCircle } from "@/components/blurred-circle";
+import { VerticalText } from "@/components/vertical-text";
+import { author } from "@/data/author";
+import { cn } from "@/utils/misc";
 
 const ScrollDownIndicator = () => {
   const [isScrolled, setIsScrolled] = useState(false);

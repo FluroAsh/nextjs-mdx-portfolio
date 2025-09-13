@@ -1,6 +1,7 @@
 import { author } from "@/data/author";
-import { NavLink } from "./nav-link";
 import { cn } from "@/utils/misc";
+
+import { NavLink } from "./nav-link";
 
 export const SocialLinks = ({
   toggleNeutral = false,

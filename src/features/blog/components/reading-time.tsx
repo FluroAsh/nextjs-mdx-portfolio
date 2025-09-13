@@ -1,5 +1,5 @@
-import { type ReadTimeResults } from "reading-time";
 import { LucideCalendar } from "lucide-react";
+import { type ReadTimeResults } from "reading-time";
 
 import { formatDate } from "@/utils/dates";
 import { cn } from "@/utils/misc";

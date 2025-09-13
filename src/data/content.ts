@@ -1,6 +1,7 @@
-import { excludeDrafts, sortByDateDesc } from "@/features/blog/utils";
-import { allBlogs, allBlogSeries } from "contentlayer/generated";
+import { allBlogSeries, allBlogs } from "contentlayer/generated";
 import { type BlogContent } from "contentlayer/utils";
+
+import { excludeDrafts, sortByDateDesc } from "@/features/blog/utils";
 
 /** Combined array of all blog posts and multi-part blog posts (series). */
 export const allBlogContent: BlogContent[] = [...allBlogs, ...allBlogSeries];

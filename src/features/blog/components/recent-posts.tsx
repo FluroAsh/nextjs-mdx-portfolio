@@ -1,13 +1,13 @@
-import Link from "next/link";
 import Image from "next/image";
-import { LucideTags } from "lucide-react";
+import Link from "next/link";
 
 import { type BlogContent } from "contentlayer/utils";
-import { formatDate } from "@/utils/dates";
-import { SectionGradientHeading } from "@/components/section-gradient-heading";
-import { sortedPostsByDateDesc } from "@/data/content";
+import { LucideTags } from "lucide-react";
 
+import { SectionGradientHeading } from "@/components/section-gradient-heading";
 import { paths } from "@/config/paths";
+import { sortedPostsByDateDesc } from "@/data/content";
+import { formatDate } from "@/utils/dates";
 import { cn } from "@/utils/misc";
 
 const Recentpost = ({ idx, post }: { idx: number; post: BlogContent }) => {

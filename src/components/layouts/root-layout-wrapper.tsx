@@ -1,14 +1,16 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+
 import { useMedia } from "react-use";
 
-import { cn } from "@/utils/misc";
-import { ScrollToTop } from "@/components/scroll-to-top";
 import { Footer } from "@/components/footer";
-import { NavigationHeader } from "../navigation/navigation-header";
-import { MobileNav } from "../navigation/mobile-nav";
+import { ScrollToTop } from "@/components/scroll-to-top";
+import { cn } from "@/utils/misc";
+
 import { CommandPalette } from "../command-palette";
+import { MobileNav } from "../navigation/mobile-nav";
+import { NavigationHeader } from "../navigation/navigation-header";
 
 export const BackgroundOverlay = () => (
   <div
