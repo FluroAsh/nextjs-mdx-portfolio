@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 
 import { useRef } from "react";
 
+import { type BlogContent } from "contentlayer/utils";
 import { slug } from "github-slugger";
 
 import { LucideHash } from "lucide-react";
@@ -14,6 +15,7 @@ import { paths } from "@/config/paths";
 import { cn } from "@/utils/misc";
 
 import { PublicationDate } from "./reading-time";
+import { SeriesBadge } from "./series-badge";
 
 const Description = ({
   text,
@@ -76,41 +78,25 @@ export const MotionPostsContainer = ({
   children,
 }: {
   children: React.ReactNode;
-}) => {
-  return (
-    <m.div
-      className="flex h-full flex-col justify-between"
-      variants={container}
-      initial="hidden"
-      animate="show"
-    >
-      <div className="flex flex-col gap-4">{children}</div>
-    </m.div>
-  );
-};
+}) => (
+  <m.div
+    className="flex h-full flex-col justify-between"
+    variants={container}
+    initial="hidden"
+    animate="show"
+  >
+    <div className="flex flex-col gap-4">{children}</div>
+  </m.div>
+);
 
-type PostPreviewProps = {
-  title: string;
-  date: string;
-  description: string;
-  tags: string[];
-  url: string;
-};
-
-export const PostPreview = ({
-  title,
-  date,
-  description,
-  tags,
-  url,
-}: PostPreviewProps) => {
+export const PostPreview = ({ post }: { post: BlogContent }) => {
   const articleRef = useRef<HTMLElement>(null);
   const router = useRouter();
 
   const handleContainerClick = (e: React.MouseEvent) => {
     // Don't navigate if clicking on a tag or any other link
     if (!(e.target as HTMLElement).closest("a")) {
-      router.push(url);
+      router.push(post.url);
     }
   };
 
@@ -124,22 +110,32 @@ export const PostPreview = ({
       <div className="absolute top-0 bottom-0 left-0 mb-4 w-1 rounded-l-full bg-green-500 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
 
       <div className="p-2 pl-0 transition-all duration-200 group-hover:pl-2 sm:pl-4 sm:group-hover:pl-6">
-        <div className="flex items-center pb-2 text-sm text-neutral-400">
-          <PublicationDate date={date} />
+        <div className="flex items-center justify-between pb-2">
+          <div className="flex items-center gap-2 text-sm text-neutral-400">
+            <PublicationDate date={post.date} />
+          </div>
+
+          {post.type === "BlogSeries" && (
+            <SeriesBadge
+              seriesTitle={post.seriesTitle}
+              seriesOrder={post.seriesOrder}
+              className="shrink-0"
+            />
+          )}
         </div>
 
-        <Heading title={title} />
-        <Description text={description} characterLimit={180} />
+        <Heading title={post.title} />
+        <Description text={post.description} characterLimit={180} />
 
         <Tags
-          items={tags.map((tag) => (
+          items={post.tags.map((tag) => (
             <Tag key={tag} tag={tag} />
           ))}
         />
       </div>
 
-      <Link href={url}>
-        <span className="sr-only">{title}</span>
+      <Link href={post.url}>
+        <span className="sr-only">{post.title}</span>
       </Link>
     </m.article>
   );

@@ -24,14 +24,7 @@ export default function Page() {
   return (
     <ListLayoutTags mobileTitle="All Posts" paginationProps={paginationProps}>
       {paginatedPosts.map((post) => (
-        <PostPreview
-          key={post._id}
-          date={post.date}
-          title={post.title}
-          description={post.description}
-          tags={post.tags}
-          url={post.url}
-        />
+        <PostPreview key={post._id} post={post} />
       ))}
     </ListLayoutTags>
   );

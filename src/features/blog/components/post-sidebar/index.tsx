@@ -8,9 +8,10 @@ import { paths } from "@/config/paths";
 import { usePostContext } from "@/lib/contexts/post-context";
 
 import { PostAuthor } from "./post-author";
+import { SeriesView } from "./series-view";
 import { TableOfContents } from "./table-of-contents";
 
-const ArticleSeparator = () => (
+export const ArticleSeparator = () => (
   <Separator
     from="from-neutral-600/10"
     via="via-neutral-600"
@@ -73,7 +74,7 @@ const PostTags = ({ items }: { items: string[] }) => (
 
 export const PostSidebar = () => {
   const {
-    post: { tags },
+    post: { tags, type },
     prev,
     next,
   } = usePostContext();
@@ -88,20 +89,27 @@ export const PostSidebar = () => {
 
       <PostTags items={tags} />
 
-      {hasPrevious && (
-        <ArticleNavigation
-          heading="Previously"
-          title={prev.title}
-          link={prev.url}
-        />
-      )}
+      {/* Show series view for BlogSeries posts, otherwise show regular navigation */}
+      {type === "BlogSeries" ? (
+        <SeriesView />
+      ) : (
+        <>
+          {hasPrevious && (
+            <ArticleNavigation
+              heading="Previously"
+              title={prev.title}
+              link={prev.url}
+            />
+          )}
 
-      {showNext && (
-        <ArticleNavigation
-          heading="Up Next"
-          title={next.title}
-          link={next.url}
-        />
+          {showNext && (
+            <ArticleNavigation
+              heading="Up Next"
+              title={next.title}
+              link={next.url}
+            />
+          )}
+        </>
       )}
 
       <ArticleSeparator />

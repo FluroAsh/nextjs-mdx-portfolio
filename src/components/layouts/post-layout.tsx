@@ -7,6 +7,7 @@
 import "remark-github-blockquote-alert/alert.css";
 
 import "@/css/shiki.css";
+import { MobileSeriesNavigation } from "@/features/blog/components/mobile-series";
 import { MobileTableOfContents } from "@/features/blog/components/mobile-toc";
 import { PostSidebar } from "@/features/blog/components/post-sidebar";
 import { ArticleDateTime } from "@/features/blog/components/reading-time";
@@ -46,6 +47,7 @@ export default function PostLayout({
       </div>
 
       <MobileTableOfContents headingContent={post.toc} className="lg:hidden" />
+      <MobileSeriesNavigation className="lg:hidden" />
     </div>
   );
 }

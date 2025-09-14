@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { ListLayoutTags } from "@/components/layouts/list-layout-tags";
 import { allBlogContent } from "@/data/content";
 import { PostPreview } from "@/features/blog/components/post-preview";
-import { filterByTag, sortByDateDesc } from "@/features/blog/utils";
+import { filterByTag, sortByDateAsc } from "@/features/blog/utils";
 import { getPaginatedPosts } from "@/lib/helpers";
 
 export default async function Page(props: {
@@ -13,7 +13,7 @@ export default async function Page(props: {
 
   const filteredPosts = allBlogContent
     .filter((post) => filterByTag(post, tag))
-    .sort(sortByDateDesc);
+    .sort(sortByDateAsc);
 
   if (filteredPosts.length === 0) {
     return notFound();
@@ -33,14 +33,7 @@ export default async function Page(props: {
   return (
     <ListLayoutTags mobileTitle={`#${tag}`} paginationProps={paginationProps}>
       {paginatedPosts.map((post) => (
-        <PostPreview
-          key={post._id}
-          date={post.date}
-          title={post.title}
-          description={post.description}
-          tags={post.tags}
-          url={post.url}
-        />
+        <PostPreview key={post._id} post={post} />
       ))}
     </ListLayoutTags>
   );
