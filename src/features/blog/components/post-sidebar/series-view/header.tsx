@@ -4,7 +4,11 @@ interface SeriesHeaderProps {
   totalPosts: number;
 }
 
-export const SeriesHeader = ({ title, currentIndex, totalPosts }: SeriesHeaderProps) => (
+export const SeriesHeader = ({
+  title,
+  currentIndex,
+  totalPosts,
+}: SeriesHeaderProps) => (
   <div className="mb-4">
     <div className="mb-2 flex items-center justify-between">
       <h3 className="text-sm font-bold tracking-wider uppercase">Series</h3>

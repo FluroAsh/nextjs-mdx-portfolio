@@ -24,9 +24,7 @@ export const MobileSeriesButton = ({
     <DrawerTrigger asChild>
       <button
         className={cn(
-          isVisible
-            ? "opacity-100"
-            : "pointer-events-none opacity-0",
+          isVisible ? "opacity-100" : "pointer-events-none opacity-0",
           "fixed z-10 mr-2 size-12 transition-opacity duration-300",
           isTablet ? "bottom-3 left-4" : "bottom-19 left-4",
           className,

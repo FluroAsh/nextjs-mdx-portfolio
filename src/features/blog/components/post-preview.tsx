@@ -2,12 +2,10 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-
 import { useRef } from "react";
 
 import { type BlogContent } from "contentlayer/utils";
 import { slug } from "github-slugger";
-
 import { LucideHash } from "lucide-react";
 import { motion as m } from "motion/react";
 
