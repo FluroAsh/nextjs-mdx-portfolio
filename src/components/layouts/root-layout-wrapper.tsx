@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 
 import { useMedia } from "react-use";
 
-import { Footer } from "@/components/footer";
+import { Footer } from "@/components/navigation/footer";
 import { ScrollToTop } from "@/components/scroll-to-top";
 import { cn } from "@/utils/misc";
 

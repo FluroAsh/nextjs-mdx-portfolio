@@ -1,6 +1,6 @@
 import { type MDXComponents } from "mdx/types";
 
-import { Video } from "@/components/video";
+import { Video } from "@/features/blog/components/mdx/video";
 
 import { ImageCollection } from "./collection/lightbox-collection";
 import { LightboxImage } from "./lightbox-image";

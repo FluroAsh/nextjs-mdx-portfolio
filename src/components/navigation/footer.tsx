@@ -5,7 +5,7 @@ import { LucideCoffee, LucideMail } from "lucide-react";
 import { author } from "@/data/author";
 import { getFullYear } from "@/utils/dates";
 
-import { SocialLinks } from "./navigation/social-links";
+import { SocialLinks } from "./social-links";
 
 const Heading = ({ text }: { text: string }) => (
   <h3 className="text-lg font-semibold">{text}</h3>
