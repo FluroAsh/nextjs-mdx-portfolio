@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 
-import Lightbox from "yet-another-react-lightbox";
-import Download from "yet-another-react-lightbox/plugins/download";
-
 import { ExpandIconHover } from "@/components/icons/expand-hover";
+import { useLightboxDimensions } from "@/hooks/use-lightbox-dimensions";
+
+import { Lightbox } from "./lightbox";
 
 type LightBoxImageProps = {
   src?: string;
@@ -18,9 +18,12 @@ export const LightboxImage = ({
   src,
   alt,
   caption,
-  children,
+  children: serverImage,
 }: LightBoxImageProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const { dimensions, containerRef } = useLightboxDimensions();
+
+  const imageDimensions = dimensions[0];
 
   if (!src || !alt) {
     throw new Error(
@@ -32,40 +35,25 @@ export const LightboxImage = ({
     <>
       <Lightbox
         open={isOpen}
-        close={() => setIsOpen(false)}
-        slides={[{ src, alt }]}
-        render={{
-          // Next/prev buttons are not needed for single images
-          buttonNext: () => null,
-          buttonPrev: () => null,
-          slide: ({ slide }) => (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={slide.src}
-              alt={slide.alt}
-              className="max-h-full rounded-lg"
-            />
-          ),
-        }}
-        carousel={{ finite: true }}
-        controller={{
-          disableSwipeNavigation: true,
-          closeOnBackdropClick: true,
-        }}
-        plugins={[Download]}
-        styles={{
-          container: {
-            backgroundColor: "hsla(0, 0%, 0%, 0.75)",
-            backdropFilter: "blur(8px)",
+        onClose={() => setIsOpen(false)}
+        slides={[
+          {
+            src,
+            alt,
+            width: imageDimensions?.width,
+            height: imageDimensions?.height,
           },
-        }}
+        ]}
+        controls={() => null} // No need for next/prev buttons on single images
+        carousel={{ finite: true }}
       />
 
       <div
+        ref={containerRef}
         onClick={() => setIsOpen(true)}
         className="group relative mx-auto max-h-full w-fit hover:cursor-pointer"
       >
-        {children}
+        {serverImage}
         {caption && <em>{caption}</em>}
         <ExpandIconHover />
       </div>
