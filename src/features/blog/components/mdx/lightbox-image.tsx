@@ -2,8 +2,6 @@
 
 import { useState } from "react";
 
-import type { LightboxExternalProps } from "yet-another-react-lightbox";
-
 import { ExpandIconHover } from "@/components/icons/expand-hover";
 import { useLightboxDimensions } from "@/hooks/use-lightbox-dimensions";
 

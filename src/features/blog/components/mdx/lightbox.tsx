@@ -10,7 +10,7 @@ const LightboxSlide = ({ slide }: { slide: SlideImage }) => (
   <img
     src={slide.src}
     alt={slide.alt}
-    className="max-h-full rounded-lg border-2 border-red-500"
+    className="max-h-full rounded-lg"
     draggable={false}
   />
 );
