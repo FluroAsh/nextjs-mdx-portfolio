@@ -5,9 +5,19 @@ import YARLightbox, {
 import Download from "yet-another-react-lightbox/plugins/download";
 import Zoom from "yet-another-react-lightbox/plugins/zoom";
 
+const LightboxSlide = ({ slide }: { slide: SlideImage }) => (
+  // eslint-disable-next-line @next/next/no-img-element
+  <img
+    src={slide.src}
+    alt={slide.alt}
+    className="max-h-full rounded-lg border-2 border-red-500"
+    draggable={false}
+  />
+);
+
 type ImageLightboxProps = {
   open: boolean;
-  controls: () => React.ReactNode;
+  controls?: () => React.ReactNode;
   onClose: () => void;
   index?: number;
   slides: SlideImage[];
@@ -19,22 +29,17 @@ export const Lightbox = ({
   onClose,
   index,
   slides,
+  render: customRender,
   ...rest
 }: ImageLightboxProps) => (
   <YARLightbox
+    {...rest}
     open={open}
     close={onClose}
     render={{
+      ...customRender, // For overrides (eg. disabling next/prev buttons)
       controls,
-      slide: ({ slide }) => (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={slide.src}
-          alt={slide.alt}
-          className="max-h-full rounded-lg"
-          draggable={false}
-        />
-      ),
+      slide: LightboxSlide,
     }}
     index={index}
     slides={slides}
@@ -42,7 +47,7 @@ export const Lightbox = ({
     plugins={[Download, Zoom]}
     zoom={{
       scrollToZoom: true,
-      maxZoomPixelRatio: 4,
+      maxZoomPixelRatio: 2,
       doubleClickMaxStops: 1,
     }}
     animation={{ zoom: 200, fade: 200 }}
@@ -52,6 +57,5 @@ export const Lightbox = ({
         backdropFilter: "blur(8px)",
       },
     }}
-    {...rest}
   />
 );
