@@ -47,6 +47,7 @@ export const ImageCollection = ({
       slides={images.map((image) => ({
         src: image.src,
         alt: image.alt,
+        download: image.src,
       }))}
     />
   );

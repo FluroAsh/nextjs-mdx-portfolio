@@ -42,6 +42,7 @@ export const LightboxImage = ({
             alt,
             width: imageDimensions?.width,
             height: imageDimensions?.height,
+            download: src,
           },
         ]}
         render={{

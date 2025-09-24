@@ -10,7 +10,7 @@ import { CollectionVariant } from "./lightbox-collection";
 
 type LightboxViewProps = {
   variant: CollectionVariant;
-  slides: { src: string; alt?: string }[];
+  slides: { src: string; alt?: string; download?: string }[];
   images: React.ReactNode[];
   className?: string;
 };
@@ -73,7 +73,7 @@ export const LightboxView = ({
         slides={slidesWithDimensions}
         on={{ view: ({ index }) => setIndex(index) }} // Syncs state
         controls={() => (
-          <div className="absolute top-6 left-1/2 z-10 -translate-x-1/2 rounded-full border border-neutral-800 bg-black/80 px-4 py-2 backdrop-blur-xs">
+          <div className="absolute bottom-4 left-1/2 z-10 -translate-x-1/2 rounded-full border border-neutral-800 bg-black/80 px-4 py-2 backdrop-blur-xs sm:top-6 sm:bottom-auto">
             <span className="text-sm font-semibold tracking-wide text-green-500">
               {index + 1} <span className="mx-1 text-neutral-200">of</span>{" "}
               {slides.length}
