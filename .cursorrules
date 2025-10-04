@@ -1,0 +1,168 @@
+# Cursor Rules for Next.js MDX Portfolio
+
+## Project Overview
+
+This is a Next.js 15 portfolio website with MDX blog support, built with TypeScript, Tailwind CSS, and ContentLayer for content management. The site features a travel blog with photo galleries, lightbox functionality, and series-based content organization.
+
+## Tech Stack
+
+- **Framework**: Next.js 15 with App Router
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS with custom CSS
+- **Content**: MDX with ContentLayer
+- **UI Components**: Custom components with shadcn/ui
+- **Images**: Next.js Image optimization with S3 storage
+- **Icons**: Custom React components
+- **Fonts**: Custom font loading (Catamaran, Fira Sans)
+
+## Project Structure
+
+```
+src/
+├── app/                   # Next.js App Router pages
+│   ├── (homepage)/         # Homepage route group
+│   ├── blog/               # Blog pages and routing
+│   ├── gallery/            # Photo gallery
+│   └── tags/               # Tag-based filtering
+├── components/            # Reusable UI components
+│   ├── ui/                 # Base UI components (shadcn/ui)
+│   ├── layouts/            # Layout components
+│   ├── navigation/         # Navigation components
+│   └── icons/              # Custom icon components
+├── features/              # Feature-specific components, utilities, hooks, etc.
+│   ├── blog/               # Blog features
+│   ├── gallery/            # Gallery features
+│   └── home/               # Homepage features
+├── lib/                   # Utility libraries
+├── hooks/                 # Custom React hooks
+├── data/                  # Static data and content
+└── css/                   # Global styles and themes
+```
+
+## Key Features
+
+- **MDX Blog System**: Multi-part blog series with photo gallery
+- **ContentLayer (contentlayer2) Integration**: Type-safe content management
+- **Image Lightbox**: Interactive photo viewing with collections
+- **Series Navigation**: Multi-part content with navigation
+- **Tag System**: Content categorization and filtering
+- **Responsive Design**: Mobile-first approach
+- **SEO Optimization**: Metadata and structured data
+
+## Code Style Guidelines
+
+### TypeScript
+
+- Use strict TypeScript with proper type definitions
+- Prefer types over interfaces
+- Use union types for content variants (Blog, BlogSeries)
+- Implement proper error handling with typed errors
+
+### React/Next.js
+
+- Use functional components with hooks
+- Implement proper loading and error states
+- Use Next.js Image component for all images
+- Follow App Router conventions and patterns
+- Use proper SEO metadata and structured data
+
+### Styling
+
+- Use Tailwind CSS utility classes
+- Follow mobile-first responsive design
+- Use CSS custom properties for theming
+- Implement proper focus states and accessibility
+
+### Content Management
+
+- Use ContentLayer for type-safe content
+- Implement proper slug generation
+- Handle draft content appropriately
+- Use proper date formatting and sorting
+
+## File Naming Conventions
+
+- Components: kebab-case (e.g., `post-layout.tsx`)
+- Hooks: kebab-case starting with 'use' (e.g., `use-range-scroll.ts`)
+- Utilities: kebab-case (e.g., `format-date.ts`)
+- Types: kebab-case (e.g., `blog-content.ts`)
+- Constants: kebab-case (e.g., `site-config.ts`)
+
+## Import Organization
+
+- React/Next.js imports first
+- Third-party library imports second
+- Internal imports last (components, utils, types)
+- Use absolute imports from `src/` when possible
+
+## Content Guidelines
+
+- Blog posts use MDX format with frontmatter
+- Images stored in S3 with proper optimization
+- Use proper alt text for accessibility
+- Implement proper image captions and collections
+- Support for video content with custom components
+
+## Performance Considerations
+
+- Optimize images with Next.js Image component
+- Implement proper loading states
+- Use dynamic imports for heavy components
+- Optimize bundle size with proper tree shaking
+- Implement proper caching strategies
+
+## Accessibility
+
+- Use semantic HTML elements
+- Implement proper ARIA labels
+- Ensure keyboard navigation works
+- Use proper color contrast ratios
+- Test with screen readers
+
+## Testing
+
+- Use Vitest for unit testing
+- Test custom hooks and utilities
+- Implement proper test data mocking
+- Test responsive behavior
+- Only add unit tests when explicitly requested by the user
+
+## Common Patterns
+
+- Use the compound component pattern for complex UI
+- Implement proper error boundaries
+- Use React.memo and React.useCallback for performance optimization when heavy compute/re-renders are expected
+- Implement proper loading states
+- Use custom hooks for shared logic
+
+## ContentLayer Configuration
+
+- Blog posts support series grouping
+- Proper slug generation for routing
+- Draft content filtering
+- Date-based sorting and filtering
+- Tag-based content organization
+
+## Image Handling
+
+- Use Next.js Image component for optimization
+- Implement lightbox functionality
+- Support for image collections
+- Proper responsive image sizing
+
+## SEO and Metadata
+
+- Implement proper meta tags
+- Use structured data for content
+- Optimize for Core Web Vitals
+
+When working on this project:
+
+1. Follow the established patterns and conventions
+2. Maintain type safety throughout
+3. Ensure responsive design works on all devices
+4. Test accessibility features
+5. Optimize for performance
+6. Use proper error handling
+7. Follow Next.js best practices
+8. Maintain clean, readable code
