@@ -1,3 +1,5 @@
+import { altToFilename } from "@/utils/image";
+
 import { type ImageProps } from "./collection.types";
 import { ImageTile } from "./image-tile";
 import { LightboxView } from "./lightbox-view";
@@ -47,7 +49,11 @@ export const ImageCollection = ({
       slides={images.map((image) => ({
         src: image.src,
         alt: image.alt,
-        download: image.src,
+        download: {
+          // ?: Search param is required for CORS issue, see: https://yet-another-react-lightbox.com/plugins/download#Cross-OriginImages
+          url: `${image.src}?download`,
+          filename: altToFilename(image.alt ?? crypto.randomUUID()),
+        },
       }))}
     />
   );

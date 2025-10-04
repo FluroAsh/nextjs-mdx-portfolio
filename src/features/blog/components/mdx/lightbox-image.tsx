@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import { ExpandIconHover } from "@/components/icons/expand-hover";
 import { useLightboxDimensions } from "@/hooks/use-lightbox-dimensions";
+import { altToFilename } from "@/utils/image";
 
 import { Lightbox } from "./lightbox";
 
@@ -42,7 +43,11 @@ export const LightboxImage = ({
             alt,
             width: imageDimensions?.width,
             height: imageDimensions?.height,
-            download: src,
+            download: {
+              // ?: Search param is required for CORS issue, see: https://yet-another-react-lightbox.com/plugins/download#Cross-OriginImages
+              url: `${src}?download`,
+              filename: altToFilename(alt),
+            },
           },
         ]}
         render={{

@@ -10,7 +10,14 @@ import { CollectionVariant } from "./lightbox-collection";
 
 type LightboxViewProps = {
   variant: CollectionVariant;
-  slides: { src: string; alt?: string; download?: string }[];
+  slides: {
+    src: string;
+    alt?: string;
+    download?: {
+      url: string;
+      filename: string;
+    };
+  }[];
   images: React.ReactNode[];
   className?: string;
 };
