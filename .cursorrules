@@ -87,6 +87,9 @@ src/
 - Utilities: kebab-case (e.g., `format-date.ts`)
 - Types: kebab-case (e.g., `blog-content.ts`)
 - Constants: kebab-case (e.g., `site-config.ts`)
+- Generated files: Store in `.generated/` folder (excluded from git)
+  - This is to be used for AI generated files that are not to be committed to the repository
+  - For example when the user asks you to generate a plan for a new feature, writing prompts or similar content that is not to be committed to the repository
 
 ## Import Organization
 
