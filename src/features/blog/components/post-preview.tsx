@@ -108,16 +108,13 @@ export const PostPreview = ({ post }: { post: BlogContent }) => {
       <div className="absolute top-0 bottom-0 left-0 mb-4 w-1 rounded-l-full bg-green-500 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
 
       <div className="p-2 pl-0 transition-all duration-200 group-hover:pl-2 sm:pl-4 sm:group-hover:pl-6">
-        <div className="flex items-center justify-between pb-2">
-          <div className="flex items-center gap-2 text-sm text-neutral-400">
-            <PublicationDate date={post.date} />
-          </div>
-
+        <div className="flex w-full items-center justify-between gap-2 pb-2 text-sm text-neutral-400">
+          <PublicationDate date={post.date} />
           {post.type === "BlogSeries" && (
             <SeriesBadge
               seriesTitle={post.seriesTitle}
               seriesOrder={post.seriesOrder}
-              className="shrink-0"
+              className="max-w-full overflow-hidden"
             />
           )}
         </div>

@@ -19,7 +19,7 @@ export const SeriesBadge = ({
       className,
     )}
   >
-    <LucideBook className="size-3" />
+    <LucideBook className="size-3 shrink-0" />
     <span className="truncate">{seriesTitle}</span>
 
     {seriesOrder && (

@@ -19,7 +19,7 @@ export const PublicationDate = ({
 }) => (
   <span
     className={cn(
-      "flex items-center rounded-full bg-neutral-800/70 px-3 py-0.5 text-xs text-neutral-300/90",
+      "flex items-center rounded-full bg-neutral-800/70 px-3 py-0.5 text-xs text-nowrap text-neutral-300/90",
       className,
     )}
   >
