@@ -41,5 +41,6 @@ next-env.d.ts
 
 # generated
 .contentlayer
-search.json
 .generated/
+search.json
+tag-data.json
