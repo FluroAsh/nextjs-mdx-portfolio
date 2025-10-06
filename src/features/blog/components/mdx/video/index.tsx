@@ -60,7 +60,7 @@ export const Video = ({
           // Make the container dimensions static: video fits the container for reduced CLS
           type === "landscape"
             ? "aspect-[16/9] w-[640px]"
-            : "aspect-[9/16] max-h-[700px] w-[360px] max-w-full",
+            : "aspect-[9/16] max-h-[700px] w-[360px]",
         )}
       >
         {!hasLoaded && (
