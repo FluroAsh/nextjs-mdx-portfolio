@@ -18,14 +18,14 @@ export const UseIntersectionObserver = <T extends HTMLElement>({
     if (ref.current && ref.current.nodeType === Node.ELEMENT_NODE) {
       const observer = new IntersectionObserver(
         ([entry]) => {
-          if (entry.isIntersecting) {
-            setIsIntersecting(true);
-          }
+          setIsIntersecting(entry.isIntersecting);
         },
         { threshold, root, rootMargin },
       );
 
       observer.observe(ref.current);
+
+      return () => observer.disconnect();
     }
   }, [ref, threshold, root, rootMargin]);
 
