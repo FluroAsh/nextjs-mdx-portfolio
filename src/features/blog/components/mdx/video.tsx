@@ -31,8 +31,6 @@ type VideoProps = React.ComponentProps<"video"> & {
 
 export const Video = ({
   src,
-  width = 640,
-  height = 360,
   type = "portrait",
   muted = true,
   className,
@@ -44,18 +42,18 @@ export const Video = ({
   // Only set src when it's in view (trigger load)
 
   return (
-    <div className="flex justify-center">
-      <div className="group relative my-4">
+    <div className="flex max-w-full justify-center">
+      <div
+        className={cn(
+          "group relative my-4",
+          // Make the container dimensions static: video fits the container for reduced CLS
+          type === "landscape"
+            ? "aspect-[16/9] w-[640px]"
+            : "aspect-[9/16] max-h-[700px] w-[360px] max-w-full",
+        )}
+      >
         <video
-          className={cn(
-            "w-fit rounded-md hover:cursor-pointer",
-            type === "landscape"
-              ? "aspect-[16/9]"
-              : "aspect-[9/16] max-h-[700px]",
-            className,
-          )}
-          width={width}
-          height={height}
+          className={cn("size-full rounded-md hover:cursor-pointer", className)}
           muted={muted}
           autoPlay
           loop
