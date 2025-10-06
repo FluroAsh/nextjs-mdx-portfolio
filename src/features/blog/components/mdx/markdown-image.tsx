@@ -5,7 +5,9 @@ import { getImagePlaceholder } from "@/server/image";
 import { IMAGE_SIZE } from "@/types";
 import { cn } from "@/utils/misc";
 
-type MarkDownImageProps = React.ComponentProps<"img">;
+type MarkDownImageProps = {
+  isLightboxImage?: boolean;
+} & React.ComponentProps<"img">;
 
 /**
  * This component is server-side rendered and cannot be used in client-components.
@@ -15,6 +17,7 @@ export const MarkdownImage = async ({
   src,
   alt,
   className = "rounded-sm",
+  isLightboxImage,
   ...props
 }: MarkDownImageProps) => {
   if (!src || !alt)
@@ -53,7 +56,7 @@ export const MarkdownImage = async ({
       loading="lazy"
       placeholder="blur"
       blurDataURL={base64}
-      // sizes="(max-width: 600px) 750px, 1000px"
+      sizes={isLightboxImage ? "100vw" : "(max-width: 640px) 100vw, 620px"}
       {...newProps}
     />
   );

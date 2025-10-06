@@ -19,7 +19,7 @@ export const components: MDXComponents = {
   // Then we can just have Lightbox exist along-side it, and have the whole component be (client component + server child)!
   LightboxImage: (props) => (
     <LightboxImage src={props.src} alt={props.alt} caption={props.caption}>
-      <MarkdownImage {...props} />
+      <MarkdownImage {...props} isLightboxImage />
     </LightboxImage>
   ),
   /** Static markdown images in `/public` */
