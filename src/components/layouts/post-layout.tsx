@@ -23,7 +23,7 @@ export default function PostLayout({
   const { post } = usePostContext();
 
   return (
-    <div className="block: sm:flex sm:flex-col">
+    <div className="block sm:flex sm:flex-col">
       <div className="mx-auto px-8">
         <header className="text-center sm:pt-4">
           <h1 className="text-3xl font-bold text-balance">{post.title}</h1>
