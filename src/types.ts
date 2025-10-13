@@ -1,6 +1,7 @@
 export enum IMAGE_SIZE {
   THUMBNAIL = "thumbnail",
-  // SMALL = 'small',
+  SMALL = "small",
   MEDIUM = "medium",
   LARGE = "large",
+  PLACEHOLDER = "placeholder",
 }

@@ -35,7 +35,7 @@ export const ImageCollection = ({
     <LightboxView
       variant={variant}
       // Ensure all image tiles fill the grid cell, even with mixed aspect ratios
-      className="[&_div]:h-full [&_img]:h-full [&_img]:object-cover"
+      className="[&_div]:h-full [&_img]:size-full [&_img]:object-cover [&_picture]:size-full [&_picture]:object-cover"
       images={images.map((image, i) => (
         <ImageTile
           key={`${variant}-tile-${i}`}

@@ -1,11 +1,10 @@
-import Image from "next/image";
-
 import { env } from "@/lib/env";
 import { getImagePlaceholder } from "@/server/image";
 import { IMAGE_SIZE } from "@/types";
-import { cn } from "@/utils/misc";
 
-type MarkDownImageProps = {
+import { ClientImage } from "./client-image";
+
+type ResponsiveImageProps = {
   isLightboxImage?: boolean;
 } & React.ComponentProps<"img">;
 
@@ -13,13 +12,13 @@ type MarkDownImageProps = {
  * This component is server-side rendered and cannot be used in client-components.
  * If you want to use it in a client component, you must pass it using the children prop.
  */
-export const MarkdownImage = async ({
+export const ResponsiveImage = async ({
   src,
   alt,
   className = "rounded-sm",
-  isLightboxImage,
+  isLightboxImage = false,
   ...props
-}: MarkDownImageProps) => {
+}: ResponsiveImageProps) => {
   if (!src || !alt)
     throw new Error("Images must include src and alt attributes");
 
@@ -28,8 +27,10 @@ export const MarkdownImage = async ({
     (path) => path && src.startsWith(path),
   )[0];
 
+  // TODO: Placeholders should should be pre-generated ideally, will come back to this... probably.
+  // Get placeholder data for blur effect
   const {
-    orientation,
+    orientation = "",
     width: probedWidth,
     height: probedHeight,
     base64,
@@ -42,21 +43,21 @@ export const MarkdownImage = async ({
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   const { width, height, ...newProps } = props; // removes unused width/height props
 
+  // This needs to be generated on the server so it does not change when hydrating
+  const imageId = crypto.randomUUID();
+
   return (
-    <Image
+    <ClientImage
+      imageId={imageId}
+      s3Origin={s3Origin}
       src={src}
-      className={cn(
-        /portrait|square/.test(orientation ?? "") && "w-[400px]",
-        "mx-auto max-w-full transition-opacity",
-        className,
-      )}
       alt={alt}
       width={probedWidth}
       height={probedHeight}
-      loading="lazy"
-      placeholder="blur"
+      orientation={orientation}
+      isLightboxImage={isLightboxImage}
+      className={className}
       blurDataURL={base64}
-      sizes={isLightboxImage ? "100vw" : "(max-width: 640px) 100vw, 620px"}
       {...newProps}
     />
   );

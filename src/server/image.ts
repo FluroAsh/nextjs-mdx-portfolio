@@ -11,7 +11,7 @@ type Orientation = "landscape" | "portrait" | "square";
 const calculateOrientation = (
   width: number,
   height: number,
-): Orientation | null => {
+): Orientation | undefined => {
   switch (true) {
     case width > height:
       return "landscape";
@@ -20,7 +20,7 @@ const calculateOrientation = (
     case height === width:
       return "square";
     default:
-      return null;
+      return undefined;
   }
 };
 

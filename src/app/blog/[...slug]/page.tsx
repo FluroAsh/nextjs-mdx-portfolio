@@ -7,6 +7,9 @@ import { allBlogContent, sortedPostsByDateAsc } from "@/data/content";
 import { components as mdxComponents } from "@/features/blog/components/mdx";
 import { PostProvider } from "@/lib/contexts/post-context";
 
+// On-demand ISR: Only revalidate when explicitly triggered
+export const revalidate = false;
+
 export function generateStaticParams() {
   return allBlogContent.map((p) => ({ slug: p.slug.split("/") }));
 }

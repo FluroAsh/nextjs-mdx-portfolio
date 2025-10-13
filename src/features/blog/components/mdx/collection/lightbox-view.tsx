@@ -65,7 +65,6 @@ export const LightboxView = ({
           // Wrap RSC images to handle click event on the client-side (trigger lightbox)
           <div
             key={`${variant}-wrapper-${i + 1}`}
-            className="aboslute inset-0"
             onClick={() => handleClick(i)}
           >
             {serverImage}
