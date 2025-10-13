@@ -73,9 +73,9 @@ export const ClientImage = ({
       />
 
       <div
-        style={{ backgroundImage: `url(${blurDataURL})` }}
         role="presentation"
         className="absolute inset-0 -z-10 bg-cover bg-center bg-no-repeat blur-sm"
+        style={{ backgroundImage: `url(${blurDataURL})` }}
       />
 
       {/*

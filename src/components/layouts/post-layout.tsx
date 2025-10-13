@@ -24,7 +24,7 @@ export default function PostLayout({
 
   return (
     <div className="lg:flex lg:flex-col">
-      <div className="px-8">
+      <div className="mx-auto px-8">
         <header className="text-center sm:pt-4">
           <h1 className="text-3xl font-bold text-balance">{post.title}</h1>
           <ArticleDateTime
