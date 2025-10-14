@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useRef } from "react";
+
 import { IMAGE_SIZE } from "@/types";
 import { getFileNameFromUrl } from "@/utils/image";
 import { cn } from "@/utils/misc";
@@ -30,6 +32,8 @@ export const ClientImage = ({
   blurDataURL,
   ...props
 }: ClientImageProps) => {
+  const imgRef = useRef<HTMLImageElement>(null);
+
   // Generate responsive image variants
   const generateSrcVariant = (size: IMAGE_SIZE) => {
     if (!s3Origin) return src;
@@ -42,6 +46,41 @@ export const ClientImage = ({
     `${generateSrcVariant(IMAGE_SIZE.MEDIUM)} 640w`,
     `${generateSrcVariant(IMAGE_SIZE.LARGE)} 1200w`,
   ].join(", ");
+
+  // Handle image loading for both SSR and client-side navigation
+  useEffect(() => {
+    const img = imgRef.current;
+    if (!img) return;
+
+    // Check if image has already loaded on component mount
+    if (img.complete && img.naturalHeight > 0) {
+      img.setAttribute("data-loaded", "true");
+      img.style.opacity = "1";
+      return;
+    }
+
+    // Not loaded yet - set up load listener
+    const handleLoad = () => {
+      img.setAttribute("data-loaded", "true");
+      img.style.opacity = "1";
+    };
+
+    img.addEventListener("load", handleLoad);
+
+    return () => img.removeEventListener("load", handleLoad);
+  }, []);
+
+  // Inline script for immediate execution before React hydration (first paint)
+  // This only runs on initial page load, not on client-side navigation
+  // const inlineScript = `
+  //   (function() {
+  //     const img = document.getElementById('${imageId}');
+  //     if (img && img.complete && img.naturalHeight > 0) {
+  //       img.setAttribute('data-loaded', 'true');
+  //       img.style.opacity = '1';
+  //     }
+  //   })();
+  // `;
 
   return (
     <picture className={cn("relative overflow-hidden", className)}>
@@ -56,6 +95,7 @@ export const ClientImage = ({
       />
 
       <img
+        ref={imgRef}
         id={imageId}
         src={src}
         alt={alt}
@@ -63,7 +103,7 @@ export const ClientImage = ({
         height={height}
         loading="lazy"
         data-loaded="false"
-        suppressHydrationWarning
+        // suppressHydrationWarning
         className={cn(
           "mx-auto max-w-full transition-opacity duration-300",
           "data-[loaded=false]:opacity-0 data-[loaded=true]:opacity-100",
@@ -78,39 +118,14 @@ export const ClientImage = ({
         style={{ backgroundImage: `url(${blurDataURL})` }}
       />
 
-      {/*
-       * This is required as images in the viewport may have already loaded through the serverside HTML
-       * by the time React has hydrated. It's innevitable because we need to
-       */}
-      <script
+      {/* Inline script for immediate execution before React hydration (first paint) */}
+      {/* NOTE: This is not currently working when navigating via client-side, eg: Blog List -> Blog Post */}
+      {/* The script will only execute on initial page load */}
+      {/* <script
         dangerouslySetInnerHTML={{
-          __html: `
-              (function() {
-                const img = document.getElementById('${imageId}');
-                if (img && img.complete && img.naturalHeight > 0) {
-                  // Images that load immediately via serverside HTML
-                  img.setAttribute('data-loaded', 'true');
-                  img.style.opacity = '1';
-                } else {
-                  // Images that load after React has hydrated
-                  img.addEventListener('load', function() {
-                    img.setAttribute('data-loaded', 'true');
-                    img.style.opacity = '1';
-                  });
-                }
-              })();
-            `,
+          __html: inlineScript,
         }}
-      />
+      /> */}
     </picture>
-
-    // This works without the IIFE (for above the fold)...
-    // <img
-    //   src={src}
-    //   alt={alt}
-    //   width={width}
-    //   height={height}
-    //   loading="lazy"
-    // />
   );
 };
