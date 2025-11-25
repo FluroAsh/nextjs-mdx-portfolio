@@ -83,7 +83,8 @@ export const ClientImage = ({
   // `;
 
   return (
-    <picture className={cn("relative overflow-hidden", className)}>
+    // "my-0" override prevents prose margin from being applied to picture element
+    <picture className={cn("relative my-0! overflow-hidden", className)}>
       <source
         srcSet={srcSet}
         sizes={
