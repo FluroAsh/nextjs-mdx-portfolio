@@ -72,7 +72,7 @@ export const Video = ({
         <video
           ref={videoRef}
           className={cn(
-            "size-full rounded-md opacity-0 transition-opacity duration-300 hover:cursor-pointer",
+            "my-0! size-full rounded-md opacity-0 transition-opacity duration-300 hover:cursor-pointer",
             hasLoaded && "opacity-100",
             className,
           )}
