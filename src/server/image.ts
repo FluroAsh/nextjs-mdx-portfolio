@@ -49,17 +49,20 @@ export const getImagePlaceholder = async (
     ? `${s3Origin}/${targetSize}_${fileName}`
     : sourceUrl;
 
-  const { width, height } = await probe(imageSrc);
+  try {
+    const { width, height } = await probe(imageSrc);
+    const { base64 } = await fetchPlaceholder(imageSrc);
+    const orientation = calculateOrientation(width, height);
+    const aspectRatio = (width / height).toFixed(2);
 
-  const { base64 } = await fetchPlaceholder(imageSrc);
-  const orientation = calculateOrientation(width, height);
-  const aspectRatio = (width / height).toFixed(2);
-
-  return {
-    width,
-    height,
-    base64,
-    orientation,
-    aspectRatio,
-  };
+    return {
+      width,
+      height,
+      base64,
+      orientation,
+      aspectRatio,
+    };
+  } catch (error) {
+    console.error(`Image placeholder failed: ${imageSrc}`, error);
+  }
 };
