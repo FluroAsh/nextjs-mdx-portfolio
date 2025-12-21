@@ -64,5 +64,13 @@ export const getImagePlaceholder = async (
     };
   } catch (error) {
     console.error(`Image placeholder failed: ${imageSrc}`, error);
+
+    return {
+      width: 1200,
+      height: 800,
+      base64: "",
+      orientation: "landscape" as Orientation,
+      aspectRatio: "1.50",
+    };
   }
 };
