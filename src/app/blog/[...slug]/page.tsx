@@ -8,7 +8,6 @@ import { components as mdxComponents } from "@/features/blog/components/mdx";
 import { PostProvider } from "@/lib/contexts/post-context";
 
 export const revalidate = false; // On-demand ISR: Only revalidate when explicitly triggered
-export const maxDuration = 60; // Maximum duration for server functions on hobby tier (60s)
 
 export function generateStaticParams() {
   return allBlogContent.map((p) => ({ slug: p.slug.split("/") }));
