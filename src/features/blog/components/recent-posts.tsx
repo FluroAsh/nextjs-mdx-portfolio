@@ -38,6 +38,7 @@ const Recentpost = ({ idx, post }: { idx: number; post: BlogContent }) => {
             alt={post.title}
             width={400}
             height={300}
+            unoptimized // force use absolute URL as it should already optimised as an image variant
           />
         </div>
 
