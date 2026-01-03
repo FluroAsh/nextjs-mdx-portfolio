@@ -1,6 +1,4 @@
-import { env } from "@/lib/env";
 import { getImagePlaceholder } from "@/server/image";
-import { IMAGE_SIZE } from "@/types";
 
 import { ClientImage } from "./client-image";
 
@@ -22,23 +20,14 @@ export const ResponsiveImage = async ({
   if (!src || !alt)
     throw new Error("Images must include src and alt attributes");
 
-  // If src contains an active S3 origin, use it to handle image resizing from source image -> "large" variant.
-  const s3Origin = [env.baseS3Origin, env.secondaryS3Origin].filter(
-    (path) => path && src.startsWith(path),
-  )[0];
-
-  // TODO: Placeholders should should be pre-generated ideally, will come back to this... probably.
+  // TODO: Placeholders should be pre-generated ideally, will come back to this... probably.
   // Get placeholder data for blur effect
   const {
     orientation = "",
     width: probedWidth,
     height: probedHeight,
     base64,
-  } = await getImagePlaceholder(
-    src,
-    s3Origin,
-    s3Origin ? IMAGE_SIZE.LARGE : undefined,
-  );
+  } = await getImagePlaceholder(src);
 
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   const { width, height, ...newProps } = props; // removes unused width/height props
@@ -49,7 +38,6 @@ export const ResponsiveImage = async ({
   return (
     <ClientImage
       imageId={imageId}
-      s3Origin={s3Origin}
       src={src}
       alt={alt}
       width={probedWidth}

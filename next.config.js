@@ -11,11 +11,6 @@ const nextConfig = {
         protocol: "https",
         hostname: process.env.NEXT_PUBLIC_S3_HOSTNAME,
       },
-      {
-        // The new "secondary" S3 bucket prior to migration
-        protocol: "https",
-        hostname: process.env.NEXT_PUBLIC_SECONDARY_S3_HOSTNAME,
-      },
     ],
   },
   async rewrites() {

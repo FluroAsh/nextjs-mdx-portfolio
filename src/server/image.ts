@@ -3,9 +3,6 @@
 import { getPlaiceholder } from "plaiceholder";
 import probe from "probe-image-size";
 
-import { IMAGE_SIZE } from "@/types";
-import { getFileNameFromUrl } from "@/utils/image";
-
 type Orientation = "landscape" | "portrait" | "square";
 
 const calculateOrientation = (
@@ -37,18 +34,7 @@ const fetchPlaceholder = async (src: string) => {
   return await getPlaiceholder(buffer);
 };
 
-export const getImagePlaceholder = async (
-  sourceUrl: string,
-  s3Origin: string,
-  targetSize: IMAGE_SIZE | undefined,
-) => {
-  const fileName = getFileNameFromUrl(sourceUrl);
-
-  // If the host (baesPath) is recognised, update the source URL to instead use the resized "large" image.
-  const imageSrc = targetSize
-    ? `${s3Origin}/${targetSize}_${fileName}`
-    : sourceUrl;
-
+export const getImagePlaceholder = async (imageSrc: string) => {
   try {
     const { width, height } = await probe(imageSrc);
     const { base64 } = await fetchPlaceholder(imageSrc);
