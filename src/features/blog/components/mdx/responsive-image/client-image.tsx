@@ -53,19 +53,20 @@ export const ClientImage = ({
     return () => img.removeEventListener("load", handleLoad);
   }, []);
 
-  // Create responsive srcset for different screen sizes
-  const srcSet = [`${src} 320w`, `${src} 640w`, `${src} 1200w`].join(", ");
+  // TODO: Should take into account orientations
+  // Need to review how to better set this up, currently not all portrait images have the same widths... So this is a bit hacky.
+  const srcSet = [
+    // `${src.replace("large_", "small_")} 320w`,
+    `${src.replace("large_", "medium_")} 640w`,
+    `${src} 1200w`,
+  ].join(", ");
 
   return (
     // "my-0" override prevents prose margin from being applied to picture element
     <picture className={cn("relative my-0! overflow-hidden", className)}>
       <source
         srcSet={srcSet}
-        sizes={
-          isLightboxImage
-            ? "100vw"
-            : "(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 620px"
-        }
+        sizes={isLightboxImage ? "100vw" : "(width <= 768px) 640px, 1200px"}
         type="image/webp"
       />
 
