@@ -47,3 +47,7 @@ tag-data.json
 
 # dev
 .todo/
+
+# cursor & local documentation
+.cursor/
+.features/
