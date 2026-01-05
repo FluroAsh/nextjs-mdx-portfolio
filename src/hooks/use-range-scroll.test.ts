@@ -1,7 +1,13 @@
+import { usePathname } from "next/navigation";
+
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { MotionValue } from "motion/react";
 
 import { useRangeScroll } from "./use-range-scroll";
+
+vi.mock("next/navigation", () => ({
+  usePathname: vi.fn(),
+}));
 
 describe("useRangeScroll", () => {
   let mockScrollY: MotionValue<number>;
@@ -16,22 +22,21 @@ describe("useRangeScroll", () => {
       }),
       clearListeners: vi.fn(),
     } as unknown as MotionValue<number>;
+    vi.mocked(usePathname).mockReturnValue("/");
   });
 
   it("should initialize visible state based on isMobile prop", () => {
-    const { result } = renderHook(() => useRangeScroll("/", true, mockScrollY));
+    const { result } = renderHook(() => useRangeScroll(true, mockScrollY));
     expect(result.current.shouldBeVisible).toBe(true);
 
     const { result: desktopResult } = renderHook(() =>
-      useRangeScroll("/", false, mockScrollY),
+      useRangeScroll(false, mockScrollY),
     );
     expect(desktopResult.current.shouldBeVisible).toBe(false);
   });
 
   it("should toggle visibility based on scroll direction when threshold is reached", async () => {
-    const { result } = renderHook(() =>
-      useRangeScroll("/", false, mockScrollY, 50),
-    );
+    const { result } = renderHook(() => useRangeScroll(false, mockScrollY, 50));
 
     // Simulate scrolling down
     act(() => onChange(100));
@@ -44,7 +49,7 @@ describe("useRangeScroll", () => {
 
   it("should force hide on desktop when below hideScrollYLimit", () => {
     const { result } = renderHook(() =>
-      useRangeScroll("/", false, mockScrollY, 50, 100),
+      useRangeScroll(false, mockScrollY, 50, 100),
     );
 
     onChange(50);
@@ -52,12 +57,12 @@ describe("useRangeScroll", () => {
   });
 
   it("should reset on pathname change", () => {
-    const { rerender, result } = renderHook(
-      ({ pathname }) => useRangeScroll(pathname, true, mockScrollY),
-      { initialProps: { pathname: "/" } },
+    const { rerender, result } = renderHook(() =>
+      useRangeScroll(true, mockScrollY),
     );
 
-    rerender({ pathname: "/new-route" });
+    vi.mocked(usePathname).mockReturnValue("/new-route");
+    rerender();
     expect(result.current.shouldBeVisible).toBe(true);
   });
 });
