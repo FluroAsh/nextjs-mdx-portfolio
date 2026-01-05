@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "NODE_ENV=development next dev",
+    "dev": "NODE_ENV=development bun --bun next dev",
     "build": "next build",
     "build:content": "bun --bun contentlayer2 build",
     "start": "next start",
