@@ -1,4 +1,5 @@
 import { seriesPosts } from "@/data/content";
+import { filterBySeries } from "@/features/blog/utils";
 import { usePostContext } from "@/lib/contexts/post-context";
 
 import { ArticleSeparator } from "..";
@@ -13,7 +14,12 @@ export const SeriesView = () => {
     return null;
   }
 
-  const currentIndex = seriesPosts.findIndex((p) => p.slug === post.slug);
+  // Filter to only show posts from the same series
+  const currentSeriesPosts = filterBySeries(seriesPosts, post);
+
+  const currentIndex = currentSeriesPosts.findIndex(
+    (p) => p.slug === post.slug,
+  );
 
   return (
     <>
@@ -23,11 +29,11 @@ export const SeriesView = () => {
         <SeriesHeader
           title={post.seriesTitle}
           currentIndex={currentIndex}
-          totalPosts={seriesPosts.length}
+          totalPosts={currentSeriesPosts.length}
         />
 
         <div className="space-y-1">
-          {seriesPosts.map((seriesPost, index) => (
+          {currentSeriesPosts.map((seriesPost, index) => (
             <SeriesItem
               key={seriesPost.slug}
               title={seriesPost.title}

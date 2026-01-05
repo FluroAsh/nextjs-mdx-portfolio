@@ -1,3 +1,4 @@
+import { BlogSeries } from "contentlayer/generated";
 import { type BlogContent } from "contentlayer/utils";
 import { slug } from "github-slugger";
 
@@ -7,6 +8,15 @@ import { slug } from "github-slugger";
  * */
 export const filterByTag = (post: BlogContent, tag: string) =>
   !post.draft && post.tags.map((t) => slug(t)).includes(tag);
+
+/**
+ * Filter all series posts by the given series slug, returning only posts
+ * that are part of a given series, sorted by `seriesOrder` in descending order (1 -> n).
+ */
+export const filterBySeries = (allSeries: BlogSeries[], post: BlogSeries) =>
+  allSeries
+    .filter((s) => s.type === "BlogSeries" && s.series === post.series)
+    .sort((a, b) => a.seriesOrder - b.seriesOrder);
 
 /** Returns true if post is not marked `draft`. */
 export const excludeDrafts = (post: BlogContent) =>
