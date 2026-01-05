@@ -1,6 +1,7 @@
 import { type MDXComponents } from "mdx/types";
 
 import { ImageCollection } from "./collection/lightbox-collection";
+import { Gif } from "./gif";
 import { LightboxImage } from "./lightbox-image";
 import { CustomLink } from "./link";
 import { ResponsiveImage } from "./responsive-image";
@@ -14,6 +15,7 @@ export const components: MDXComponents = {
     />
   ),
   img: ResponsiveImage,
+  Gif,
   LightboxImage: (props) => (
     <LightboxImage src={props.src} alt={props.alt} caption={props.caption}>
       <ResponsiveImage {...props} isLightboxImage />
