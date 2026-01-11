@@ -1,0 +1,129 @@
+---
+description: "Project utilities & helper functions for use across the project"
+applyIntelligently: true
+---
+
+# Utility Functions
+
+## External Libraries
+
+### Radash
+
+- Use [Radash](https://github.com/radash/radash) for common operations
+- Currently used: `title` function for capitalizing strings
+- Prefer Radash over custom implementations for common operations (sorting, grouping, string manipulation, etc.)
+
+### Date Handling
+
+- Use `date-fns` for all date operations
+- Import from `date-fns`: `format`, `parseISO`
+
+### String Utilities
+
+- Use `github-slugger` for generating URL-safe slugs from strings
+- Import: `import { slug } from "github-slugger"`
+
+### Class Names
+
+- Use `clsx` for conditional class names
+- Use `tailwind-merge` to merge Tailwind classes properly
+- Combine both in the `cn()` utility function
+
+## Project Utilities Organization
+
+### `/src/utils/` - General Utilities
+
+#### `dates.ts`
+
+- `getFullYear()` - Returns current year
+- `formatDate(date: string, formatString?: string)` - Formats ISO date strings using date-fns
+  - Default format: "LLLL do, yyyy" (e.g., "January 1st, 2024")
+
+#### `image.ts`
+
+- `getFileNameFromUrl(url: string)` - Extracts filename from URL
+- `altToFilename(text: string)` - Converts alt text to safe filename format
+  - Replaces spaces with dashes
+  - Removes non-alphanumeric characters
+  - Converts to lowercase
+
+#### `misc.ts`
+
+- `cn(...inputs: ClassValue[])` - Combines clsx and tailwind-merge for class names
+- `isBrowser` - Boolean check for browser environment
+- `toRomanNumeral(num: number)` - Converts numbers to Roman numerals
+
+### `/src/lib/` - Core Library Functions
+
+#### `helpers.ts`
+
+- `getPaginatedPosts(page: number, posts: BlogContent[])` - Returns paginated posts and total pages
+- `filterDraftPosts(posts: BlogContent[])` - Filters out draft posts
+- `getCoreContent(posts: BlogContent[])` - Strips unnecessary fields from posts for search index
+  - Removes: `_id`, `_raw`, `body`, `toc`, `draft`
+  - Filters drafts in production
+  - Sorts by date ascending
+
+#### `constants.ts`
+
+- `defaultViewMargin` - Default IntersectionObserver margin: "0px 100px -50px 0px"
+
+### `/src/features/blog/utils.ts` - Blog-Specific Utilities
+
+- `filterByTag(post: BlogContent, tag: string)` - Filters posts by tag (excludes drafts)
+- `excludeDrafts(post: BlogContent)` - Returns true if post is not a draft
+- `sortByDateAsc(a: BlogContent, b: BlogContent)` - Sorts posts by date (newest first)
+- `sortBySeriesOrderDesc(a: BlogContent, b: BlogContent)` - Sorts series posts by order
+
+### `/contentlayer/utils.ts` - ContentLayer Build Utilities
+
+- `createTagCount(allBlogs: BlogContent[])` - Generates tag count JSON file
+  - Output: `src/data/tag-data.json`
+- `createSearchIndex(allBlogs: BlogContent[])` - Generates search index
+  - Output: `public/search.json`
+
+### `/src/server/image.ts` - Server-Side Image Utilities
+
+- `getImagePlaceholder(imageSrc: string)` - Generates image metadata and placeholder
+  - Uses `probe-image-size` to get dimensions
+  - Uses `plaiceholder` to generate base64 placeholder
+  - Returns: width, height, base64, orientation, aspectRatio
+  - Includes error handling with fallback values
+
+## Common Patterns
+
+### String Manipulation
+
+```typescript
+// Capitalize strings
+import { slug } from "github-slugger";
+import { title } from "radash";
+
+// Generate URL-safe slugs
+```
+
+### Date Formatting
+
+```typescript
+import { formatDate } from "@/utils/dates";
+
+const formatted = formatDate(post.date); // "January 1st, 2024"
+```
+
+### Class Names
+
+```typescript
+import { cn } from "@/utils/misc";
+
+const classes = cn("base-class", condition && "conditional-class");
+```
+
+### Environment Checks
+
+```typescript
+import { isBrowser } from "@/utils/misc";
+
+if (isBrowser) {
+  // Client-side only code
+}
+```

@@ -1,0 +1,16 @@
+---
+description: "Accessibility standards"
+applyIntelligently: true
+---
+
+## Accessibility
+
+- Use semantic HTML elements
+- Implement proper ARIA labels
+- Ensure keyboard navigation works, where appropriate based on component type:
+  - Arrow keys for navigation
+  - Spacebar/enter for selection
+  - Escape for cancelliation/closing
+  - Tab for focus traversal
+  - Shift+Tab for reverse focus traversal
+- Use proper color contrast ratios

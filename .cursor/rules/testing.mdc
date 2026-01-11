@@ -1,0 +1,16 @@
+---
+description: "Testing standards & Practices"
+applyIntelligently: true
+---
+
+# Unit & End-to-End Testing
+
+- Use Vitest for unit testing
+- When creating tests, ensure mock data is used and/or created as needed
+  - If possible ensure that mock data can be re-used across different test suites
+- Use Playwright for testing end-to-end user flows
+- Provide clear and readable test names and descriptions
+
+## Restrictions
+
+- Only add unit tests when explicitly requested by the user

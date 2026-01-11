@@ -1,0 +1,121 @@
+---
+description: "UI component standards"
+applyIntelligently: true
+---
+
+# UI Components and Styling
+
+## Component Libraries
+
+### shadcn/ui
+
+- Use [shadcn/ui](https://ui.shadcn.com/) for base UI components
+- Style: "new-york"
+- Components located in `src/components/ui/`
+- Current components: Card, Drawer, Select, Separator
+- Add new components using: `npx shadcn@latest add [component-name]`
+
+### Custom Components
+
+- Use custom components for complex, feature-specific UI
+- Located in `src/components/` and `src/features/*/components/`
+- Examples: CommandPalette, NavigationHeader, PostSidebar
+
+## Styling Approach
+
+### Tailwind CSS
+
+- Use Tailwind CSS utility classes for styling
+- Mobile-first responsive design
+- Use `cn()` utility from `@/utils/misc` for conditional classes
+- Import pattern: `import { cn } from "@/utils/misc"`
+
+### CSS Custom Properties
+
+Located in `src/css/*.css`:
+
+- **`globals.css`** - Main stylesheet, imports theme and animations
+
+  - Overrides library & prose defaults
+  - Custom scrollbar styles
+  - Markdown/prose overrides
+  - Selection styles
+
+- **`theme.css`** - Tailwind CSS theme variables
+
+  - Color system (OKLCH color space)
+  - Font variables (`--font-firaSans`, `--font-catamaran`)
+  - Custom colors (primary-green, secondary-green, etc.)
+  - Spacing variables (header, mobile-nav)
+  - Animation references
+
+- **`animations.css`** - CSS keyframes
+
+  - `conic-gradient` - Rotating gradient animation
+  - `scroll-right` / `scroll-left` - Horizontal scrolling animations
+  - Use as Tailwind utilities: `animate-conic-gradient`, `animate-scroll-right`, etc.
+
+- **`shiki.css`** - Syntax highlighting styles
+  - Code block styling
+  - Line number formatting
+  - Highlighted line indicators
+  - Uses rehype-pretty-code plugin
+
+## Component Patterns
+
+### Component Structure
+
+```typescript
+import * as React from "react";
+import { cn } from "@/utils/misc";
+
+function Component({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="component-name"
+      className={cn("base-classes", className)}
+      {...props}
+    />
+  );
+}
+```
+
+### Key Patterns
+
+- **`cn()` utility**: Always use for className merging
+- **Spread props**: Use `React.ComponentProps<"element">` for type safety
+- **Compound components**: Export multiple related components (e.g., Card, CardHeader, CardContent)
+
+### Client Components
+
+- Mark with `"use client"` directive when needed
+- Use for interactive components, hooks, or browser APIs
+
+## Design System
+
+### Colors
+
+- Primary: Green (`--color-primary-green: #bfe81c`)
+- Secondary: Green (`--color-secondary-green: #b0c84e`)
+- Use semantic color tokens: `bg-card`, `text-foreground`, `border-border`, etc.
+
+### Typography
+
+- Headings: Fira Sans (`--font-firaSans`)
+- Body: Catamaran (`--font-catamaran`)
+- Prose: Use `prose prose-invert` classes for markdown content
+  - Ensure `globals.css` styles are used, respected and override `prose` defaults as needed
+
+### Spacing
+
+- Header spacing: `--spacing-header: 55px`
+- Mobile nav spacing: `--spacing-mobile-nav: 68px`
+- Use Tailwind spacing scale for consistency
+- Use consistent spacing throughout the project
+
+## Responsive Design
+
+- Mobile-first approach
+- Breakpoints: `sm:`, `md:`, `lg:`, `xl:`
+- Use `useMedia` hook for conditional rendering
+- Ensure behaviour is consistent across all breakpoints
