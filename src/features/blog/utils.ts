@@ -15,7 +15,7 @@ export const filterByTag = (post: BlogContent, tag: string) =>
  */
 export const filterBySeries = (allSeries: BlogSeries[], post: BlogSeries) =>
   allSeries
-    .filter((s) => s.type === "BlogSeries" && s.series === post.series)
+    .filter((s) => s.series === post.series)
     .sort((a, b) => a.seriesOrder - b.seriesOrder);
 
 /** Returns true if post is not marked `draft`. */
@@ -27,9 +27,4 @@ export const sortByDateAsc = (a: BlogContent, b: BlogContent) =>
   new Date(b.date).getTime() - new Date(a.date).getTime();
 
 /** Sorts posts by date in descending order (newest first). */
-export const sortBySeriesOrderDesc = (a: BlogContent, b: BlogContent) => {
-  if (a.type === "BlogSeries" && b.type === "BlogSeries") {
-    return a.seriesOrder - b.seriesOrder;
-  }
-  return 0;
-};
+export const sortBySeriesOrderDesc = (a: BlogSeries, b: BlogSeries) => a.seriesOrder - b.seriesOrder;

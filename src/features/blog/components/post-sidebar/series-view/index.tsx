@@ -1,5 +1,4 @@
-import { seriesPosts } from "@/data/content";
-import { filterBySeries } from "@/features/blog/utils";
+import { getSeriesPosts, isBlogSeries } from "@/data/content";
 import { usePostContext } from "@/lib/contexts/post-context";
 
 import { ArticleSeparator } from "..";
@@ -10,16 +9,12 @@ import { SeriesItem } from "./item";
 export const SeriesView = () => {
   const { post } = usePostContext();
 
-  if (post.type !== "BlogSeries") {
+  if (!isBlogSeries(post)) {
     return null;
   }
 
-  // Filter to only show posts from the same series
-  const currentSeriesPosts = filterBySeries(seriesPosts, post);
-
-  const currentIndex = currentSeriesPosts.findIndex(
-    (p) => p.slug === post.slug,
-  );
+  const currentSeriesPosts = getSeriesPosts(post);
+  const currentIndex = currentSeriesPosts.findIndex((p) => p.slug === post.slug);
 
   return (
     <>
