@@ -48,6 +48,7 @@
     "simple-icons": "^14.6.0",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
+    "unist-util-visit": "^5.0.0",
     "vaul": "^1.1.2",
     "yet-another-react-lightbox": "^3.23.2"
   },

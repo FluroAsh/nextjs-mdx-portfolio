@@ -9,6 +9,8 @@ import remarkGfm from "remark-gfm";
 import { remarkAlert } from "remark-github-blockquote-alert";
 import { type Pluggable } from "unified";
 
+import { rehypeImageCaption } from "./plugins/rehype-image-caption";
+
 // Heroicon mini link for autolink headings
 export const linkIcon = fromHtmlIsomorphic(
   `<span class="content-header-link">
@@ -32,6 +34,7 @@ export const remarkPlugins: Pluggable[] = [remarkAlert, remarkGfm];
 export const rehypePlugins: Pluggable[] = [
   [rehypePrettyCode, prettyCodeOptions],
   rehypeUnwrapImages,
+  rehypeImageCaption, // IMPORTANT: Must run after rehypeUnwrapImages
   rehypeSlug,
   [
     rehypeAutolinkHeadings,

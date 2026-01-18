@@ -58,15 +58,15 @@ export const LightboxImage = ({
         carousel={{ finite: true }}
       />
 
-      <div
+      <figure
         ref={containerRef}
         onClick={() => setIsOpen(true)}
         className="group relative mx-auto max-h-full w-fit hover:cursor-pointer"
       >
         {serverImage}
-        {caption && <em>{caption}</em>}
+        {caption && <figcaption>{caption}</figcaption>}
         <ExpandIconHover />
-      </div>
+      </figure>
     </>
   );
 };
