@@ -19,7 +19,7 @@ export default async function Page(props: {
     return notFound();
   }
 
-  const { paginatedPosts, totalPages } = getPaginatedPosts(
+  const { paginatedPosts: paginatedTagPosts, totalPages } = getPaginatedPosts(
     parseInt(page),
     filteredPosts,
   );
@@ -32,7 +32,7 @@ export default async function Page(props: {
 
   return (
     <ListLayoutTags mobileTitle={`#${tag}`} paginationProps={paginationProps}>
-      {paginatedPosts.map((post) => (
+      {paginatedTagPosts.map((post) => (
         <PostPreview key={post._id} post={post} />
       ))}
     </ListLayoutTags>
