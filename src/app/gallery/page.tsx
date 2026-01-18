@@ -1,3 +1,10 @@
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Gallery",
+  description: "A collection of my photography from my travels.",
+};
+
 export default function PhotographyPage() {
   return (
     <div className="grid place-items-center">

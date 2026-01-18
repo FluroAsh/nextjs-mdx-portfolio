@@ -16,21 +16,23 @@ export const SocialLinks = ({
     stroke: toggleNeutral ? "stroke-neutral-400" : "stroke-white",
   };
 
-  return author.socials.map(({ network, href, Icon: SocialIcon }) => (
-    <li key={network}>
-      <NavLink
-        href={href}
-        label={network}
-        icon={SocialIcon}
-        target="_blank"
-        className={cn(
-          "size-5",
-          network === "X"
-            ? `${colors.fill} hover:fill-green-500`
-            : `${colors.stroke} hover:stroke-green-500`,
-          className,
-        )}
-      />
-    </li>
-  ));
+  return Object.values(author.socials).map(
+    ({ network, href, Icon: SocialIcon }) => (
+      <li key={network}>
+        <NavLink
+          href={href}
+          label={network}
+          icon={SocialIcon}
+          target="_blank"
+          className={cn(
+            "size-5",
+            network === "X"
+              ? `${colors.fill} hover:fill-green-500`
+              : `${colors.stroke} hover:stroke-green-500`,
+            className,
+          )}
+        />
+      </li>
+    ),
+  );
 };

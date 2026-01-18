@@ -4,7 +4,7 @@ import { Link } from "@/components/link";
 import { author } from "@/data/author";
 import { cn } from "@/utils/misc";
 
-const filteredSocials = author.socials.filter(
+const filteredSocials = Object.values(author.socials).filter(
   ({ network }) => network !== "Instagram",
 );
 
