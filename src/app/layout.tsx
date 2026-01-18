@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     url: "./",
     siteName: siteMetaData.title,
     images: [siteMetaData.socialBanner],
-    locale: "en_AU",
+    locale: siteMetaData.locale,
     type: "website",
   },
   alternates: {

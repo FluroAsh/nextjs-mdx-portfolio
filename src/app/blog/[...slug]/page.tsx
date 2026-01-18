@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { getMDXComponent } from "next-contentlayer2/hooks";
 
 import PostLayout from "@/components/layouts/post-layout";
+import { author } from "@/data/author";
 import { allBlogContent, sortedPostsByDateAsc } from "@/data/content";
 import { siteMetaData } from "@/data/site-metadata";
 import { components as mdxComponents } from "@/features/blog/components/mdx";
@@ -50,9 +51,7 @@ export async function generateMetadata(props: {
   }
 
   const publishedAt = new Date(post.date).toISOString();
-  const modifiedAt = new Date(post.date).toISOString(); // You could add a lastmod field if you want
-  const authors = ["Ashley Thompson"];
-  const ogImages = post.image ? [post.image] : [siteMetaData.socialBanner];
+  const ogImages = [post.image];
 
   return {
     title: post.title,
@@ -61,12 +60,11 @@ export async function generateMetadata(props: {
       title: post.title,
       description: post.description,
       siteName: siteMetaData.title,
-      locale: "en_AU",
+      locale: siteMetaData.locale,
       type: "article",
       publishedTime: publishedAt,
-      modifiedTime: modifiedAt,
       url: "./",
-      authors: authors,
+      authors: [author.name],
       images: ogImages,
     },
     twitter: {
