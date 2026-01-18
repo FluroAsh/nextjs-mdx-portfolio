@@ -1,4 +1,3 @@
-import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { getMDXComponent } from "next-contentlayer2/hooks";
@@ -42,7 +41,7 @@ export default async function Post(props: {
 
 export async function generateMetadata(props: {
   params: Promise<{ slug: string[] }>;
-}): Promise<Metadata | undefined> {
+}) {
   const params = await props.params;
   const post = allBlogContent.find((p) => p.slug === params.slug.join("/"));
 

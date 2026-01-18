@@ -42,3 +42,14 @@ export default async function TagPage(props: {
     </ListLayoutTags>
   );
 }
+
+export async function generateMetadata(props: {
+  params: Promise<{ tag: string }>;
+}) {
+  const { tag } = await props.params;
+
+  return {
+    title: `#${tag}`,
+    description: `Posts tagged with #${tag}`,
+  };
+}
