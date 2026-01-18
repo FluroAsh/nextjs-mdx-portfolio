@@ -53,7 +53,9 @@ export function rehypeImageCaption() {
           const figure: Element = {
             type: "element",
             tagName: "figure",
-            properties: {},
+            properties: {
+              class: "mx-auto max-w-fit",
+            },
             children: [
               imageElement,
               {
