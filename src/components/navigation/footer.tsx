@@ -3,8 +3,10 @@ import Link from "next/link";
 import { LucideCoffee, LucideMail } from "lucide-react";
 
 import { author } from "@/data/author";
+import { siteMetaData } from "@/data/site-metadata";
 import { getFullYear } from "@/utils/dates";
 
+import { GitHub } from "../icons/social-icons";
 import { SocialLinks } from "./social-links";
 
 const Heading = ({ text }: { text: string }) => (
@@ -60,6 +62,14 @@ export const Footer = () => (
           <p className="pt-2 text-sm text-neutral-400">
             Questions or ideas? Let&apos;s talk!
           </p>
+          <Link
+            href={siteMetaData.siteRepo}
+            target="_blank"
+            className="inline-flex items-center gap-1.5 text-xs text-neutral-400 transition-colors hover:text-green-500"
+          >
+            <GitHub className="size-4" />
+            <span>View on GitHub</span>
+          </Link>
         </div>
       </div>
 
