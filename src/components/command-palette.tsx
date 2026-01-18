@@ -1,6 +1,5 @@
 import { useRouter } from "next/navigation";
 
-import { allBlogs } from "contentlayer/generated";
 import {
   Action,
   KBarAnimator,
@@ -19,11 +18,12 @@ import {
   LucideSearch,
 } from "lucide-react";
 
+import { allBlogContent } from "@/data/content";
 import { getCoreContent } from "@/lib/helpers";
 import { cn } from "@/utils/misc";
 
 const blogPostActions = (router: ReturnType<typeof useRouter>): Action[] =>
-  getCoreContent(allBlogs).map(
+  getCoreContent(allBlogContent).map(
     (post) =>
       ({
         id: post.slug,
