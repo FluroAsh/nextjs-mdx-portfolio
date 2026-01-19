@@ -48,7 +48,7 @@ h3 {
   font-family: var(--font-firaSans);
 }
 
-/* ---- Anchor Link Styles ---- */
+/* ---- Inline Anchor Link Styles ---- */
 .content-header {
   @apply relative scroll-m-4;
 }
@@ -58,7 +58,6 @@ h3 {
   fill: var(--color-green-600);
   padding-right: calc(var(--spacing) * 1);
   transition: fill opacity;
-  align-self: start;
 }
 .content-header:hover .link-icon {
   opacity: 100%;
@@ -72,11 +71,11 @@ h3 {
 }
 
 .content-header-link {
-  @apply absolute top-0 bottom-0 left-0 flex h-fit -translate-x-full items-center py-[5.5px];
+  @apply absolute top-0 bottom-0 left-0 flex h-full -translate-x-full items-center;
 }
 
 .content-header .content-header-link > svg {
-  @apply w-6 md:w-8;
+  @apply size-[max(1.15em,24px)];
 }
 
 /* ---- Prose Overrides ---- */
