@@ -1,99 +1,90 @@
 "use client";
 
-import { useRef } from "react";
+import { motion as m } from "motion/react";
 
-import { useInView } from "motion/react";
-
-import { type Skill, skillsList } from "@/data/skills";
-import { defaultViewMargin } from "@/lib/constants";
+import { skillsList } from "@/data/skills";
 import { cn } from "@/utils/misc";
 
-import { SectionTag } from "./section-tag";
+export const SkillsSection = () => {
+  return (
+    <m.div
+      className="group relative h-full overflow-hidden rounded-2xl border border-neutral-800/50 bg-gradient-to-br from-neutral-900/50 via-neutral-900/30 to-black p-8 shadow-2xl backdrop-blur-sm transition-all duration-500 hover:border-green-500/30 hover:shadow-green-500/10 lg:p-10"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.6, delay: 0.1 }}
+    >
+      {/* Subtle gradient overlay */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-green-500/5 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
 
-const topRowSkills = skillsList.slice(0, Math.ceil(skillsList.length / 2));
-const bottomRowSkills = skillsList.slice(Math.ceil(skillsList.length / 2));
+      <div className="relative z-10">
+        {/* Header */}
+        <div className="mb-8">
+          <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-green-500/20 bg-green-500/10 px-4 py-1.5 text-xs font-medium tracking-wider text-green-400 backdrop-blur-sm">
+            <span className="relative flex size-2">
+              <span className="absolute inline-flex size-full animate-ping rounded-full bg-green-400 opacity-75" />
+              <span className="relative inline-flex size-2 rounded-full bg-green-500" />
+            </span>
+            TECH STACK
+          </div>
 
-const SkillRow = ({
-  skills,
-  className,
-}: {
-  skills: Skill[];
-  className?: string;
-}) => (
-  <div className="flex">
-    <div className={cn("flex py-2", className)}>
-      {Array(2) // Any more than 2 would require an update to the animate-scroll-* classes to prevent reflow
-        .fill([...skills])
-        .map((_, i) => {
-          return skills.map(
-            ({ name, label, icon: Icon, iconStyles, containerStyles }, x) => (
-              <div
-                key={`${name}-${i}-${x}`}
+          <h2 className="mb-3 bg-gradient-to-r from-neutral-100 to-neutral-400 bg-clip-text text-3xl font-bold tracking-tight text-transparent lg:text-4xl">
+            Technologies & Tools
+          </h2>
+
+          <p className="max-w-2xl text-sm leading-relaxed text-neutral-400 lg:text-base">
+            A curated selection of technologies I work with to build modern,
+            scalable applications.
+          </p>
+        </div>
+
+        {/* Skills Grid */}
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:gap-4">
+          {skillsList.map(
+            ({ name, label, icon: Icon, iconStyles, containerStyles }, idx) => (
+              <m.div
+                key={name}
                 className={cn(
-                  "mx-2 flex h-24 items-center justify-center gap-2 rounded-md border border-neutral-800 bg-black/30 px-6",
-                  "transition-colors select-none hover:border-green-500 hover:bg-green-500/10 hover:text-green-500",
+                  "group/skill relative flex flex-col items-center justify-center gap-3 rounded-xl border border-neutral-800/50 bg-neutral-900/30 p-4 backdrop-blur-sm transition-all duration-300",
+                  "hover:scale-105 hover:border-green-500/50 hover:bg-neutral-800/50 hover:shadow-lg hover:shadow-green-500/10",
                   containerStyles,
                 )}
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{
+                  duration: 0.4,
+                  delay: 0.3 + idx * 0.03,
+                  ease: "easeOut",
+                }}
+                whileHover={{ y: -4 }}
               >
-                <Icon className={cn("size-10", iconStyles)} />
-                {label ? label : null}
-              </div>
+                <Icon
+                  className={cn(
+                    "size-10 transition-transform duration-300 group-hover/skill:scale-110 lg:size-12",
+                    iconStyles,
+                  )}
+                />
+                {label && (
+                  <span className="text-center text-xs font-medium text-neutral-300 transition-colors group-hover/skill:text-neutral-100 lg:text-sm">
+                    {label}
+                  </span>
+                )}
+
+                {/* Hover glow effect */}
+                <div className="pointer-events-none absolute inset-0 rounded-xl bg-gradient-to-br from-green-500/0 via-green-500/0 to-green-500/0 opacity-0 transition-opacity duration-300 group-hover/skill:opacity-20" />
+              </m.div>
             ),
-          );
-        })}
-    </div>
-  </div>
-);
-
-export const SkillsSection = () => {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { margin: defaultViewMargin });
-
-  return (
-    <section ref={ref} className="mx-auto pt-20 pb-8">
-      <div className="px-8 pb-4 text-center">
-        <SectionTag text="Technologies" />
-
-        <h2 className="bg-gradient-to-r from-green-400 to-green-600 bg-clip-text pt-4 pb-1 text-4xl font-bold tracking-wide text-transparent">
-          My Digital Arsenal
-        </h2>
-
-        <p className="mx-auto max-w-2xl pt-4 text-sm text-neutral-300 sm:text-base">
-          Tools and technologies I&apos;ve worked with throughout my journey as
-          a developer. I&apos;m adding new tools to my belt every day!
-        </p>
-      </div>
-
-      <div
-        className="group relative mx-auto max-w-4xl overflow-x-hidden"
-        style={{
-          maskImage:
-            "linear-gradient(to right, transparent, #000 80px, #000 calc(100% - 80px), transparent)",
-          WebkitMaskImage:
-            "linear-gradient(to right, transparent, #000 80px, #000 calc(100% - 80px), transparent)",
-        }}
-      >
-        <SkillRow
-          skills={topRowSkills}
-          className={cn(
-            "animate-scroll-right group-hover:animate-scroll-right-pause",
-            !isInView && "animate-scroll-right-pause",
           )}
-        />
-        <SkillRow
-          skills={bottomRowSkills}
-          className={cn(
-            "animate-scroll-left group-hover:animate-scroll-left-pause",
-            !isInView && "animate-scroll-left-pause",
-          )}
-        />
-      </div>
+        </div>
 
-      <div className="mt-6 text-center">
-        <p className="text-xs text-neutral-500 italic">
-          Hover/tap to pause scrolling
-        </p>
+        {/* Footer note */}
+        <div className="mt-8 flex items-center justify-center gap-2 text-xs text-neutral-500">
+          <div className="h-px w-8 bg-gradient-to-r from-transparent to-neutral-700" />
+          <span>Continuously expanding</span>
+          <div className="h-px w-8 bg-gradient-to-l from-transparent to-neutral-700" />
+        </div>
       </div>
-    </section>
+    </m.div>
   );
 };

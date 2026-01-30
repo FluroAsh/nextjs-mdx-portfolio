@@ -9,17 +9,23 @@ export default function Home() {
     <div className="pt-0">
       <HeroSection />
       <AboutSection />
-      <SkillsSection />
-      <TimelineSection />
 
-      {/* TODO: Create some more meaningful full-stack projects */}
-      {/* <section className="mx-auto bg-sky-600">
-        <div className="p-8 sm:p-20 max-w-5xl">Projects</div>
-      </section> */}
+      {/* Professional Bento Grid Layout */}
+      <section className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 md:px-8 lg:py-24">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:gap-8">
+          {/* Skills - Spans 8 columns on desktop */}
+          <div className="lg:col-span-8">
+            <SkillsSection />
+          </div>
 
-      <section className="mx-auto max-w-5xl p-8 pb-0 sm:p-12">
-        <RecentPosts />
+          {/* Recent Posts - Spans 4 columns on desktop */}
+          <div className="lg:col-span-4">
+            <RecentPosts />
+          </div>
+        </div>
       </section>
+
+      <TimelineSection />
     </div>
   );
 }
