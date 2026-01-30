@@ -83,7 +83,7 @@ export const PostSidebar = () => {
   const showNext = !hasPrevious && !!next;
 
   return (
-    <aside className="hidden max-w-[250px] min-w-[250px] pt-2 pr-10 lg:block">
+    <aside className="hidden w-[270px] pt-2 pr-10 lg:block">
       <PostAuthor />
       <ArticleSeparator />
 
