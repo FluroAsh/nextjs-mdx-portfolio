@@ -42,7 +42,7 @@ export default function PostLayout({
 
         <div className="lg:flex">
           <PostSidebar />
-          <article className="prose prose-invert mx-auto pt-4">
+          <article className="prose prose-base md:prose-lg prose-invert mx-auto pt-4">
             {children}
           </article>
         </div>

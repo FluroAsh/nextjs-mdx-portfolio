@@ -3,7 +3,7 @@ import Link from "next/link";
 import { cn } from "@/utils/misc";
 
 const className =
-  "text-green-500 hover:text-green-600 transition-colors no-underline transition-75";
+  "text-green-500 hover:text-green-400 transition-colors duration-100 underline-offset-4 deoration-green-600/30";
 
 export const CustomLink = ({
   href,
