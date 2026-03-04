@@ -44,9 +44,3 @@ next-env.d.ts
 .generated/
 search.json
 tag-data.json
-
-# dev
-.todo/
-
-# local documentation
-.features/
