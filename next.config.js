@@ -1,5 +1,4 @@
-import { withContentlayer } from "next-contentlayer2";
-
+/** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
     remotePatterns: [
@@ -13,6 +12,9 @@ const nextConfig = {
       },
     ],
   },
+  // Dev only: keep compiled page entries in memory longer (default is ~15s). Matches the old
+  // `withContentlayer` default so heavy content imports are less aggressively evicted when idle.
+  onDemandEntries: { maxInactiveAge: 60 * 60 * 1000 },
 };
 
-export default withContentlayer(nextConfig);
+export default nextConfig;

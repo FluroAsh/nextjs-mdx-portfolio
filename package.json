@@ -4,8 +4,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "NODE_ENV=development bun --bun next dev",
-    "build": "next build",
+    "dev": "concurrently -k -n contentlayer,next -c cyan,magenta \"bun run dev:contentlayer\" \"bun run dev:next\"",
+    "dev:contentlayer": "bun --bun contentlayer2 dev",
+    "dev:next": "NODE_ENV=development bun --bun next dev",
+    "build": "bun run build:content && next build",
     "build:content": "bun --bun contentlayer2 build",
     "start": "next start",
     "test": "vitest",
@@ -27,7 +29,7 @@
     "kbar": "^0.1.0-beta.45",
     "lucide-react": "^0.472.0",
     "motion": "^12.4.10",
-    "next": "15.1.9",
+    "next": "16.2.1",
     "probe-image-size": "^7.2.3",
     "radash": "^12.1.0",
     "react": "19.0.0",
@@ -76,6 +78,7 @@
     "tailwindcss": "^4.0.9",
     "typescript": "^5",
     "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^3.0.6"
+    "vitest": "^3.0.6",
+    "concurrently": "^9.1.2"
   }
 }
