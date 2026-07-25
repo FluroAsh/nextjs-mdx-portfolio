@@ -12,7 +12,7 @@
     "start": "next start",
     "test": "vitest",
     "test:watch": "vitest --watch",
-    "lint": "next lint",
+    "lint": "eslint",
     "format": "prettier --write ."
   },
   "dependencies": {
@@ -65,8 +65,8 @@
     "@types/react-dom": "^19",
     "@vitejs/plugin-react": "^4.3.4",
     "concurrently": "^9.1.2",
-    "eslint": "^8",
-    "eslint-config-next": "15.0.3",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.1",
     "jsdom": "^26.0.0",
     "plaiceholder": "^3.0.0",
     "postcss": "^8",
