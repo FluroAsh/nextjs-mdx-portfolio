@@ -2,9 +2,12 @@ import { getImagePlaceholder } from "@/server/image";
 
 import { ClientImage } from "./client-image";
 
+// React 19's types widen `src` to `string | Blob`; this component only ever
+// takes a URL, which it probes on the server.
 type ResponsiveImageProps = {
+  src?: string;
   isLightboxImage?: boolean;
-} & React.ComponentProps<"img">;
+} & Omit<React.ComponentProps<"img">, "src">;
 
 /**
  * This component is server-side rendered and cannot be used in client-components.

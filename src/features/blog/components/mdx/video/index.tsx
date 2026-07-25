@@ -9,7 +9,10 @@ import { cn } from "@/utils/misc";
 
 import { PlayPauseIcon } from "./play-pause-overlay";
 
-type VideoProps = React.ComponentProps<"video"> & {
+// React 19's types widen `src` to `string | Blob | MediaSource | MediaStream`;
+// this component only ever takes a URL, which it assigns for lazy loading.
+type VideoProps = Omit<React.ComponentProps<"video">, "src"> & {
+  src?: string;
   type?: "landscape" | "portrait";
 };
 
