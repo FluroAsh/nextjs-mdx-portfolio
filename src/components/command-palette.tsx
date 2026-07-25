@@ -131,10 +131,10 @@ export const CommandPalette = ({ children }: { children: React.ReactNode }) => {
         return;
       }
 
-      if (open || isTypingElsewhere) return;
+      if (open || isTypingElsewhere || event.altKey || event.shiftKey) return;
 
       const shortcutAction = actions.find(
-        (action) => action.shortcut === event.key,
+        (action) => action.shortcut === event.key.toLowerCase(),
       );
 
       if (shortcutAction) {
