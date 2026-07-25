@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { useKBar } from "kbar";
 import { LucideBookOpen, LucideCamera, LucideSearch } from "lucide-react";
 
+import { useCommandPalette } from "@/components/command-palette";
 import { isActiveRoute, paths } from "@/config/paths";
 import { cn } from "@/utils/misc";
 
@@ -12,7 +12,7 @@ import { NavLink } from "./nav-link";
 import { SocialLinks } from "./social-links";
 
 export const NavigationHeader = () => {
-  const { query } = useKBar();
+  const { toggle } = useCommandPalette();
   const pathname = usePathname();
 
   const navLinkClasses = (paths: string[]) =>
@@ -55,7 +55,7 @@ export const NavigationHeader = () => {
               />
             </li>
             <li className="flex">
-              <button onClick={() => query.toggle()}>
+              <button onClick={toggle}>
                 <span className="sr-only">Search</span>
                 <LucideSearch className="size-5 stroke-neutral-400 hover:stroke-green-500" />
               </button>
