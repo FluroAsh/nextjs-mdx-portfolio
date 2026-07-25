@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { useKBar } from "kbar";
 import {
   LucideBookOpen,
   LucideCamera,
@@ -12,13 +11,14 @@ import {
 } from "lucide-react";
 import { useScroll } from "motion/react";
 
+import { useCommandPalette } from "@/components/command-palette";
 import { isActiveRoute, paths } from "@/config/paths";
 import { useRangeScroll } from "@/hooks/use-range-scroll";
 import { cn } from "@/utils/misc";
 
 export const MobileNav = () => {
   const pathname = usePathname();
-  const { query } = useKBar();
+  const { toggle } = useCommandPalette();
 
   const { scrollY } = useScroll();
   const { shouldBeVisible } = useRangeScroll(true, scrollY, 50, 0);
@@ -130,7 +130,7 @@ export const MobileNav = () => {
 
         <li className="flex flex-col items-center">
           <button
-            onClick={() => query.toggle()}
+            onClick={toggle}
             className="group flex flex-col items-center"
           >
             <LucideSearch className="size-6 stroke-white transition-colors duration-200 group-hover:stroke-green-500" />

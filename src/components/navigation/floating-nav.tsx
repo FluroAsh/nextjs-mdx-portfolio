@@ -1,6 +1,5 @@
 import { usePathname } from "next/navigation";
 
-import { useKBar } from "kbar";
 import {
   LucideBookOpen,
   LucideCamera,
@@ -9,6 +8,7 @@ import {
 } from "lucide-react";
 import { motion as m, useScroll } from "motion/react";
 
+import { useCommandPalette } from "@/components/command-palette";
 import { isActiveRoute, paths } from "@/config/paths";
 import { useRangeScroll } from "@/hooks/use-range-scroll";
 import { cn } from "@/utils/misc";
@@ -22,7 +22,7 @@ export const FloatingNav = ({
   isMobile = false,
 }) => {
   const pathname = usePathname();
-  const { query } = useKBar();
+  const { toggle } = useCommandPalette();
   const { scrollY } = useScroll();
   const { shouldBeVisible } = useRangeScroll(
     false,
@@ -86,7 +86,7 @@ export const FloatingNav = ({
           />
         </li>
         <li className="flex">
-          <button onClick={() => query.toggle()}>
+          <button onClick={toggle}>
             <span className="sr-only">Search</span>
             <LucideSearch className="size-5 hover:stroke-green-500" />
           </button>
