@@ -29,15 +29,25 @@ export const useCommandShortcuts = ({
 }: UseCommandShortcutsOptions) => {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if ((event.metaKey || event.ctrlKey) && event.key === "k") {
+      // `key` is compared lowercased so the toggle survives Caps Lock; alt/shift
+      // are excluded so we don't swallow chords like Firefox's cmd+shift+k.
+      if (
+        (event.metaKey || event.ctrlKey) &&
+        !event.altKey &&
+        !event.shiftKey &&
+        event.key.toLowerCase() === "k"
+      ) {
         event.preventDefault();
         onToggle();
         return;
       }
 
-      // Bare keys are only shortcuts when nothing else could be claiming them.
+      // Bare keys are only shortcuts when no modifier could be claiming them —
+      // ctrl+h, cmd+b and friends belong to the browser.
       if (
         open ||
+        event.metaKey ||
+        event.ctrlKey ||
         event.altKey ||
         event.shiftKey ||
         isTypingTarget(event.target)
