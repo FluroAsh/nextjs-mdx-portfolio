@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import {
   createContext,
   useCallback,
@@ -8,7 +9,6 @@ import {
   useMemo,
   useState,
 } from "react";
-import { useRouter } from "next/navigation";
 
 import {
   Description as DialogDescription,
@@ -55,7 +55,9 @@ export const useCommandPalette = () => {
   return context;
 };
 
-const blogPostActions = (router: ReturnType<typeof useRouter>): CommandAction[] =>
+const blogPostActions = (
+  router: ReturnType<typeof useRouter>,
+): CommandAction[] =>
   getCoreContent(allBlogContent).map((post) => ({
     id: post.slug,
     section: "Blog Posts",
@@ -109,13 +111,10 @@ export const CommandPalette = ({ children }: { children: React.ReactNode }) => {
     [router],
   );
 
-  const runAction = useCallback(
-    (action: CommandAction) => {
-      setOpen(false);
-      action.perform();
-    },
-    [],
-  );
+  const runAction = useCallback((action: CommandAction) => {
+    setOpen(false);
+    action.perform();
+  }, []);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -210,12 +209,12 @@ export const CommandPalette = ({ children }: { children: React.ReactNode }) => {
                   className={cn(
                     "group flex cursor-pointer items-center justify-between rounded-md px-4 py-2.5 text-neutral-400 transition-colors",
                     "data-[selected=true]:bg-neutral-800/80 data-[selected=true]:text-neutral-100",
-                    "hover:bg-neutral-900/80",
+                    "data-[selected=false]:hover:bg-neutral-900/80",
                   )}
                 >
                   <div className="flex items-center gap-3">
                     {action.icon && (
-                      <div className="flex items-center justify-center text-neutral-500 [&_svg]:size-5 group-data-[selected=true]:text-green-400">
+                      <div className="flex items-center justify-center text-neutral-500 group-data-[selected=true]:text-green-400 [&_svg]:size-5">
                         {action.icon}
                       </div>
                     )}

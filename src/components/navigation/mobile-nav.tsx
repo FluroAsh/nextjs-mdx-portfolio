@@ -129,10 +129,7 @@ export const MobileNav = () => {
         </li>
 
         <li className="flex flex-col items-center">
-          <button
-            onClick={toggle}
-            className="group flex flex-col items-center"
-          >
+          <button onClick={toggle} className="group flex flex-col items-center">
             <LucideSearch className="size-6 stroke-white transition-colors duration-200 group-hover:stroke-green-500" />
             <span className="mt-1 text-[10px] text-white/70 transition-colors duration-200 group-hover:text-green-500">
               Search
