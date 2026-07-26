@@ -48,8 +48,8 @@ export const EXPERIENCES: Experience[] = [
     end: null,
     role: "Frontend Engineer",
     content: [
-      "Contributed to the frontend development of Australia's leading department store e-commerce platform, enhancing responsiveness, performance, and user experience for hundreds of thousands of customers.",
-      "Played a key role in revamping the MYER One linking experience, pioneering frontend involvement in experimentation, and introducing developer tools and processes to improve productivity.",
+      "Frontend engineer on one of Australia's largest e-commerce platforms, shipping customer-facing features across legacy and micro-frontend architectures. Led the Minibag pre-checkout experience — $50,000 in additional revenue within 4.5 days of launch — and migrated search recommendations to a headless Dynamic Yield integration, setting the pattern the team now uses for all future DY-driven features.",
+      "Primary Dynamic Yield subject matter expert across teams — built a custom development tool adopted by the wider team, shipped 20+ experiments, and led the integration of retail media advertising (Mirakl), introducing a new revenue stream for the business.",
     ],
     location: "Melbourne, Australia",
     type: "work",
@@ -60,7 +60,7 @@ export const EXPERIENCES: Experience[] = [
     end: 2022,
     role: "Student",
     content:
-      "Intensive full-stack coding bootcamp focused on modern web development. Achieved proficiency in React, Node.js, and full-stack development in 10 short months.",
+      "Intensive 10-month full-stack bootcamp. Built practical proficiency in React, Node.js, and end-to-end application delivery through project-based learning",
     location: "Melbourne, Australia",
     type: "education",
   },
@@ -71,17 +71,24 @@ export const EXPERIENCES: Experience[] = [
     role: "Player & Coach (Fluro)",
     content: (
       <>
-        <p>
-          Competed semi-professionally in the AU Overwatch esports scene while
-          working part-time. Developed team communication, strategic thinking,
-          and performance under pressure. Participated in various tournaments
-          mostly online, as-well as in-person, most notably IEM Sydney 2019.
+        <p className="mb-2">
+          Competed and coached semi-professionally in the Australian Overwatch
+          scene under the tag Fluro, including a run at IEM Sydney 2019. Led
+          roster decisions, VOD reviews, and in-game shot-calling. Developed
+          strong communication under pressure, strategic thinking, and the
+          ability to get a group to execute as a unit.
+        </p>
+        <p className="mb-2">
+          It&apos;s a different kind of engineering problem: real-time systems
+          thinking with human components that don&apos;t always follow the spec.
+          The discipline carried forward — structured feedback, fast iteration,
+          and staying composed at 2-2 in a best of 5 series.
         </p>
         <CustomLink
           href="https://liquipedia.net/overwatch/Fluro"
           className="mt-2 inline-block text-green-500 transition-colors duration-75 hover:text-green-400 [&_svg]:size-2.5"
         >
-          Liquipedia
+          Career History
         </CustomLink>
       </>
     ),
@@ -92,11 +99,9 @@ export const EXPERIENCES: Experience[] = [
     title: "Swinburne University",
     start: 2014,
     end: 2017,
-    role: "Bachelors of Information Systems",
-    content: [
-      "Studied database analysis & design, data visualisation, project management, and business analysis.",
-      "Developed strong foundations in SQL and business analysis.",
-    ],
+    role: "Bachelor of Business (Information Systems)",
+    content:
+      "Studied database design, data visualisation, project management, and business analysis. Built foundational skills in SQL and translating business requirements into technical solutions.",
     location: "Hawthorn, Australia",
     type: "education",
   },
