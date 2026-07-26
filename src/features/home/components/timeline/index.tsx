@@ -21,7 +21,7 @@ import { RecordScale, groupBoundsFor, spacingAfter } from "./year-scale";
  */
 export const TimelineSection = () => {
   return (
-    <section className="mx-auto max-w-3xl px-6">
+    <section className="mx-auto max-w-3xl pr-6 pl-2">
       <div className="pb-8 text-center">
         <SectionTag text="Timeline" />
 

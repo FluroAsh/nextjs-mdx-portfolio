@@ -7,7 +7,7 @@ export default function Page() {
   const tags = Object.entries(tagData);
 
   return (
-    <div className="mx-auto grid max-w-5xl grid-cols-2 place-items-center px-6 py-8">
+    <div className="mx-auto grid max-w-5xl grid-cols-2 place-items-center px-2 py-8">
       <h1 className="pb-4 text-4xl">Tags</h1>
 
       <div className="flex flex-wrap gap-4">
