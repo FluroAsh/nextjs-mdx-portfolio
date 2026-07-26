@@ -45,7 +45,7 @@ body {
 h1,
 h2,
 h3 {
-  font-family: var(--font-firaSans);
+  font-family: var(--font-fira-sans);
 }
 
 /* ---- Inline Anchor Link Styles ---- */

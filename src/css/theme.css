@@ -21,7 +21,6 @@
 }
 
 @theme {
-  --font-firaSans: "FiraSans", sans-serif;
   --font-catamaran: "Catamaran", sans-serif;
 
   --color-foreground: var(--foreground);
@@ -35,6 +34,24 @@
   --spacing-header: 55px;
   --spacing-mobile-nav: 68px;
 
+  /* The one non-green accent. Reserved for a single recurring signal — the
+     currently-held role — so it stays legible as "state" rather than becoming
+     a second decorative tint. Do not reach for this for general emphasis.
+
+     Two steps, mirroring the green ramp, so a bilingual label can carry
+     hierarchy inside a single hue: the glyph takes the bright step, its gloss
+     the dim one. Tuned to the same contrasts as the green equivalents
+     (11.9/6.3 against 11.1/6.2), so both states read with the same separation
+     rather than the accent shouting louder than the default.
+
+     The dim step holds the bright step's hue and drops only lightness. It is
+     deliberately *not* Tailwind's `amber-600`: that ramp warms as it darkens,
+     swinging 26° from gold to burnt orange, so the pair read as two colours
+     instead of one dimmed. Green's ramp drifts 2.5° over the same span, which
+     is why it blends and a stock amber pair does not. */
+  --color-signal: #fbbf24;
+  --color-signal-dim: oklch(0.66 0.16 84.4);
+
   --animate-rotate-conic-border: conic-gradient 1.5s
     cubic-bezier(0.4, 0, 0.2, 1) infinite;
   --animate-scroll-right: scroll-right 15s linear infinite;
@@ -45,6 +62,12 @@
 
 /* https://tailwindcss.com/docs/theme#referening-other-variables */
 @theme inline {
+  /* Points at the variable next/font already publishes, rather than
+     redeclaring the family. That keeps the metric-matched fallback next/font
+     generates, and avoids two declarations of the same name racing each other.
+     Kebab-case is what makes it emit a `font-fira` utility at all. */
+  --font-fira: var(--font-fira-sans);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
