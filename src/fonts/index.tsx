@@ -21,6 +21,10 @@ const catamaran = localFont({
 const firaSans = localFont({
   src: [
     {
+      path: "./FiraSans-Regular.ttf",
+      weight: "400",
+    },
+    {
       path: "./FiraSans-Medium.ttf",
       weight: "500",
     },
