@@ -1,72 +1,139 @@
 "use client";
 
-import { useRef } from "react";
+import { motion as m } from "motion/react";
 
-import { motion as m, useInView } from "motion/react";
+import {
+  ABOUT_ANCHOR_ID,
+  ABOUT_FIELDS,
+  ABOUT_HEADING,
+  ABOUT_MARKER,
+  ABOUT_PROSE,
+} from "@/data/identity";
+import { cn } from "@/utils/misc";
 
-import { defaultViewMargin } from "@/lib/constants";
+import { ENTER } from "../utils";
+import { BilingualLabel } from "./bilingual-label";
+
+/** Spacing does the grouping — real divider lines get stranded when it wraps. */
+const MetadataStrip = () => (
+  // Capped to the same width as the text below, so their right edges line up.
+  <dl
+    className={cn(
+      "max-w-measure mt-6 flex flex-wrap items-baseline gap-x-7 gap-y-2 py-3",
+      "border-y border-green-500/15",
+      "sm:gap-x-9",
+    )}
+  >
+    {ABOUT_FIELDS.map(({ zh, en, value }, index) => (
+      <m.div
+        key={en}
+        className="flex items-baseline gap-x-2"
+        initial={{ opacity: 0, y: 4 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.6 }}
+        transition={{ ...ENTER, delay: index * 0.05 }}
+      >
+        <dt>
+          <BilingualLabel zh={zh} en={en} />
+        </dt>
+        <dd className="font-mono text-[13px] text-neutral-200">{value}</dd>
+      </m.div>
+    ))}
+  </dl>
+);
+
+/**
+ * Sits over the content to suggest you are looking at a screen.
+ *
+ * The scanlines are faded out before they reach any edge, or the effect stops
+ * on a hard line at the section boundary. The darkened edges are what make it
+ * look like a CRT, done with a gradient since blur isn't used anywhere here.
+ */
+const EDGE_FADE =
+  "radial-gradient(115% 90% at 50% 50%, black 30%, transparent 88%)";
+
+const ScanlinePlane = () => (
+  <div aria-hidden className="pointer-events-none absolute inset-0 z-20">
+    <div
+      className="absolute inset-0"
+      style={{
+        backgroundImage:
+          "repeating-linear-gradient(to bottom, var(--scanline-color) 0px, var(--scanline-color) 1px, transparent 1px, transparent var(--scanline-pitch))",
+        maskImage: EDGE_FADE,
+        WebkitMaskImage: EDGE_FADE,
+      }}
+    />
+
+    <div
+      className="absolute inset-0"
+      style={{
+        backgroundImage:
+          "radial-gradient(120% 95% at 50% 50%, transparent 50%, rgba(0, 0, 0, 0.3) 100%)",
+      }}
+    />
+  </div>
+);
 
 export const AboutSection = () => {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, {
-    margin: defaultViewMargin,
-  });
-
   return (
     <section
-      ref={ref}
-      className="relative mx-auto justify-center bg-black px-8 py-6"
+      id={ABOUT_ANCHOR_ID}
+      className="bg-surface-section relative scroll-mt-0 border-b border-green-500/40"
     >
-      <div className="absolute -bottom-4 left-0 h-18 w-full translate-y-1/2 bg-gradient-to-b from-black via-black to-transparent" />
+      {/* No border on top — the marquee's bottom border is already there. */}
+      <ScanlinePlane />
 
-      <div className="pb-6 text-center">
-        <m.h2
-          className="bg-gradient-to-r from-green-400 to-green-600 bg-clip-text pb-1 text-4xl font-bold tracking-tight text-transparent"
-          initial={{ opacity: 0, y: -10 }}
-          animate={{
-            opacity: isInView ? 1 : 0,
-            y: isInView ? 0 : -10,
-          }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          Hey. I&apos;m Ash
-        </m.h2>
-        <m.span
-          className="text-sm text-neutral-300 italic"
-          initial={{ opacity: 0, x: 10 }}
-          animate={{
-            opacity: isInView ? 1 : 0,
-            x: isInView ? 0 : 10,
-          }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-        >
-          Ashley Thompson
-        </m.span>
-      </div>
-
-      <m.div
-        className="mx-auto max-w-4xl space-y-4 text-neutral-300"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: isInView ? 1 : 0 }}
-        transition={{ duration: 0.5, delay: 0.6 }}
+      <div
+        className={cn(
+          "max-w-frame py-section relative z-10 mx-auto grid w-full px-6",
+          "grid-cols-1 gap-x-10",
+          "md:grid-cols-[8rem_1fr]",
+        )}
       >
-        <p className="text-sm sm:text-base">
-          I use my passion and skills to build digital products and tooling on
-          the web. With my formal education in Business Information Systems and
-          experience with retail and experimentation, I have developed a keen
-          eye for detail and a strong understanding of connecting business needs
-          and outcomes with technical solutions.
-        </p>
-        <p className="text-sm sm:text-base">
-          For the past 3 years, I&apos;ve been working primarily as a{" "}
-          <span className="font-bold text-green-500">Frontend Engineer</span> in
-          Melbourne, Australia, focusing my efforts on developing my skills
-          within the JavaScript ecosystem, building user interfaces that are
-          both functional and beautiful. The core of my work is in{" "}
-          <span className="font-bold text-green-500">React</span>, but I&apos;m
-          always playing around with new technologies and frameworks.
-        </p>
-      </m.div>
+        {/* Full height, with a small tick at the bottom so the line ends
+              deliberately rather than trailing off. */}
+        <div
+          className={cn(
+            "relative",
+            "md:col-start-1 md:row-start-1 md:border-r md:border-green-500/15",
+          )}
+        >
+          {/* Grid aligns to the top of the row; this drops the label down
+                onto the heading's first line instead. */}
+          <BilingualLabel
+            zh={ABOUT_MARKER.zh}
+            en={ABOUT_MARKER.en}
+            className="block md:mt-[21px]"
+          />
+
+          <span
+            aria-hidden
+            className={cn(
+              "absolute -right-px bottom-0 hidden h-px w-2.5",
+              "bg-green-500/40",
+              "md:block",
+            )}
+          />
+        </div>
+
+        <div className="mt-6 md:col-start-2 md:row-start-1 md:mt-0">
+          <h2 className="text-4xl font-bold tracking-tight text-neutral-50">
+            {ABOUT_HEADING}
+          </h2>
+
+          <MetadataStrip />
+
+          {/* Never faded in: this can appear above the fold, and fading it
+                would slow down LCP. */}
+          <div className="max-w-measure mt-8 space-y-4 text-neutral-300">
+            {ABOUT_PROSE.map((paragraph) => (
+              <p key={paragraph} className="text-sm sm:text-base">
+                {paragraph}
+              </p>
+            ))}
+          </div>
+        </div>
+      </div>
     </section>
   );
 };
