@@ -27,4 +27,5 @@ export const sortByDateAsc = (a: BlogContent, b: BlogContent) =>
   new Date(b.date).getTime() - new Date(a.date).getTime();
 
 /** Sorts posts by date in descending order (newest first). */
-export const sortBySeriesOrderDesc = (a: BlogSeries, b: BlogSeries) => a.seriesOrder - b.seriesOrder;
+export const sortBySeriesOrderDesc = (a: BlogSeries, b: BlogSeries) =>
+  a.seriesOrder - b.seriesOrder;

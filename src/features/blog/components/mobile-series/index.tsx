@@ -33,7 +33,9 @@ export const MobileSeriesNavigation = ({
   }
 
   const currentSeriesPosts = getSeriesPosts(post);
-  const currentIndex = currentSeriesPosts.findIndex((p) => p.slug === post.slug);
+  const currentIndex = currentSeriesPosts.findIndex(
+    (p) => p.slug === post.slug,
+  );
 
   return (
     <Drawer open={isOpen} onOpenChange={setIsOpen}>
