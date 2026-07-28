@@ -39,7 +39,7 @@ export const FloatingNav = ({
 
   return (
     <m.nav
-      className="fixed left-1/2 z-20"
+      className="fixed left-1/2 z-20 hidden sm:block"
       style={{ x: "-50%" }}
       initial={{ y: isMobile ? 10 : -100 }}
       animate={{ y: shouldBeVisible ? 10 : -100 }}
@@ -51,7 +51,11 @@ export const FloatingNav = ({
     >
       <ul
         aria-label="navigation links"
-        className="flex items-center gap-4 rounded-full border border-neutral-800 bg-black/80 px-4 py-3 backdrop-blur-xs sm:px-6 sm:py-3"
+        className={cn(
+          "flex items-center gap-4 px-4 py-3",
+          "rounded-full border border-neutral-800 bg-black/80 backdrop-blur-xs",
+          "sm:px-6 sm:py-3",
+        )}
       >
         <li>
           <NavLink
