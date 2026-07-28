@@ -7,20 +7,40 @@
   }
 }
 
-@keyframes scroll-right {
-  0% {
-    transform: translateX(-50%);
+/* Moves each *copy* by its own width rather than the whole track by -50%. The
+   -50% version quietly breaks as soon as the track has any padding of its own;
+   measuring from the copy can't break that way, and the gap value covers the
+   one case where -100% alone falls short. */
+@keyframes marquee-scroll {
+  from {
+    transform: translateX(0);
   }
-  100% {
-    transform: translateX(0%);
+  to {
+    transform: translateX(calc(-100% - var(--marquee-gap, 0px)));
   }
 }
 
-@keyframes scroll-left {
-  0% {
-    transform: translateX(0%);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
+.marquee {
+  display: flex;
+  overflow: hidden;
+}
+
+.marquee__copy {
+  display: flex;
+  flex: none;
+  align-items: center;
+  /* Keeps the pair covering the container when the content is narrower. */
+  min-width: 100%;
+  animation: marquee-scroll var(--marquee-duration, 30s) linear infinite;
+  animation-play-state: var(--marquee-state, running);
+}
+
+.marquee[data-reverse] .marquee__copy {
+  animation-direction: reverse;
+}
+
+/* More specific than the variable default above, so these win. */
+.marquee:hover .marquee__copy,
+.marquee:focus-within .marquee__copy {
+  animation-play-state: paused;
 }
