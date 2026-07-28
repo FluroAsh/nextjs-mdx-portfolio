@@ -14,9 +14,7 @@ import { cn } from "@/utils/misc";
 import { ENTER } from "../utils";
 import { BilingualLabel } from "./bilingual-label";
 
-/** Spacing does the grouping — real divider lines get stranded when it wraps. */
 const MetadataStrip = () => (
-  // Capped to the same width as the text below, so their right edges line up.
   <dl
     className={cn(
       "max-w-measure mt-6 flex flex-wrap items-baseline gap-x-7 gap-y-2 py-3",
@@ -90,16 +88,14 @@ export const AboutSection = () => {
           "md:grid-cols-[8rem_1fr]",
         )}
       >
-        {/* Full height, with a small tick at the bottom so the line ends
-              deliberately rather than trailing off. */}
+        {/* Full height, with a small tick at the bottom so the line ends deliberately rather than trailing off. */}
         <div
           className={cn(
             "relative",
             "md:col-start-1 md:row-start-1 md:border-r md:border-green-500/15",
           )}
         >
-          {/* Grid aligns to the top of the row; this drops the label down
-                onto the heading's first line instead. */}
+          {/* Grid aligns to the top of the row; this drops the label down onto the heading's first line instead. */}
           <BilingualLabel
             zh={ABOUT_MARKER.zh}
             en={ABOUT_MARKER.en}
@@ -123,8 +119,6 @@ export const AboutSection = () => {
 
           <MetadataStrip />
 
-          {/* Never faded in: this can appear above the fold, and fading it
-                would slow down LCP. */}
           <div className="max-w-measure mt-8 space-y-4 text-neutral-300">
             {ABOUT_PROSE.map((paragraph) => (
               <p key={paragraph} className="text-sm sm:text-base">
