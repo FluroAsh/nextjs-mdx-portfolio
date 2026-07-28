@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 
+import { MotionConfig } from "motion/react";
 import { useMedia } from "react-use";
 
 import { Footer } from "@/components/navigation/footer";
@@ -50,21 +51,25 @@ export const RootLayoutWrapper = ({
   const isHomepage = pathname === "/";
 
   return (
-    <CommandPalette>
-      <div className="page-inner flex min-h-dvh flex-col">
-        <BackgroundOverlay />
-        {isMobile ? <MobileNav /> : <NavigationHeader />}
-        <main
-          className={cn(
-            "flex flex-1 grow justify-center pt-8 sm:pt-0 [&>div]:w-full",
-            isHomepage && "pt-0",
-          )}
-        >
-          {children}
-        </main>
-        <ScrollToTop isMobile={isMobile} />
-        <Footer />
-      </div>
-    </CommandPalette>
+    // `reducedMotion="user"` drops transforms and keeps opacity, so nothing
+    // animates into place but everything still ends up visible.
+    <MotionConfig reducedMotion="user">
+      <CommandPalette>
+        <div className="page-inner flex min-h-dvh flex-col">
+          <BackgroundOverlay />
+          {isMobile ? <MobileNav /> : <NavigationHeader />}
+          <main
+            className={cn(
+              "flex flex-1 grow justify-center pt-8 sm:pt-0 [&>div]:w-full",
+              isHomepage && "pt-0",
+            )}
+          >
+            {children}
+          </main>
+          <ScrollToTop isMobile={isMobile} />
+          <Footer />
+        </div>
+      </CommandPalette>
+    </MotionConfig>
   );
 };
