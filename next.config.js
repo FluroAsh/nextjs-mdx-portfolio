@@ -1,7 +1,6 @@
 import { execSync } from "node:child_process";
 
-/** Empty if it can't be resolved — the readout shows a dash, never a made-up
- *  value. */
+/** Empty if it can't be resolved — the readout shows a dash, never a made-up value. */
 const resolveBuildId = () => {
   if (process.env.VERCEL_GIT_COMMIT_SHA) {
     return process.env.VERCEL_GIT_COMMIT_SHA.slice(0, 7);

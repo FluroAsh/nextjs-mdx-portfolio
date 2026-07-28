@@ -1,11 +1,7 @@
 /** A label written in both scripts. Both halves are always shown together. */
 export type BilingualPair = { zh: string; en: string };
 
-/**
- * The shared field vocabulary. Every labelled row on the homepage draws from
- * this, so the same glyph always carries the same English gloss — the hero and
- * the timeline previously disagreed on 期間 (TERM vs PERIOD).
- */
+/** The shared field vocabulary. */
 export const FIELD_LABELS = {
   role: { zh: "職務", en: "ROLE" },
   location: { zh: "地點", en: "LOC" },
@@ -21,10 +17,6 @@ export const ABOUT_MARKER: BilingualPair = { zh: "檔案", en: "ABOUT" };
 
 export const ABOUT_ANCHOR_ID = "about";
 
-/**
- * The label is what makes this read as a data field, which is what lets the
- * name itself stay in normal sentence case rather than shouting in caps.
- */
 export const HERO_NAME_LABEL: BilingualPair = { zh: "姓名", en: "NAME" };
 
 /** Short uppercase values — never a sentence. */
@@ -33,7 +25,7 @@ export const HERO_FIELDS = [
   { ...FIELD_LABELS.location, value: "MELBOURNE AU" },
 ] as const;
 
-/** Markers for the two marquee segments. 最新 "latest" · 系統 "system". */
+/** Markers for the two marquee segments. */
 export const LATEST_MARKER: BilingualPair = { zh: "最新", en: "LATEST" };
 export const SYSTEM_MARKER: BilingualPair = { zh: "系統", en: "SYSTEM" };
 
