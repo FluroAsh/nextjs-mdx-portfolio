@@ -1,5 +1,20 @@
 :root {
-  --background: oklch(0.145 0 0);
+  /* Background levels, from the page colour upward. Everything above the page
+     is semi-transparent rather than solid: the page texture sits at
+     `z-index: -1`, and a solid colour would cover it up. Text contrast is
+     measured against the section level. */
+  --surface-page: oklch(0.145 0.005 155);
+  --surface-section: color-mix(in oklab, white 3.5%, transparent);
+  --surface-panel: color-mix(in oklab, white 7%, transparent);
+
+  /* One level *below* the page, for sunken strips like the marquee. */
+  --surface-recess: color-mix(in oklab, black 40%, transparent);
+
+  /* Tuned for the section background, the only place scanlines are used. */
+  --scanline-color: rgba(74, 222, 128, 0.05);
+  --scanline-pitch: 3px;
+
+  --background: var(--surface-page);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.145 0 0);
   --card-foreground: oklch(0.985 0 0);
@@ -34,39 +49,37 @@
   --spacing-header: 55px;
   --spacing-mobile-nav: 68px;
 
-  /* The one non-green accent. Reserved for a single recurring signal — the
-     currently-held role — so it stays legible as "state" rather than becoming
-     a second decorative tint. Do not reach for this for general emphasis.
+  /* Used top and bottom on every section, so the space between sections is
+     always bigger than the space inside one. */
+  --spacing-section: clamp(3.5rem, 7vw, 6rem);
 
-     Two steps, mirroring the green ramp, so a bilingual label can carry
-     hierarchy inside a single hue: the glyph takes the bright step, its gloss
-     the dim one. Tuned to the same contrasts as the green equivalents
-     (11.9/6.3 against 11.1/6.2), so both states read with the same separation
-     rather than the accent shouting louder than the default.
+  /* `measure` limits the text width and sits *inside* `frame`; putting it on
+     the frame itself narrows the whole page. */
+  --container-frame: 64rem;
+  --container-measure: 38rem;
 
-     The dim step holds the bright step's hue and drops only lightness. It is
-     deliberately *not* Tailwind's `amber-600`: that ramp warms as it darkens,
-     swinging 26° from gold to burnt orange, so the pair read as two colours
-     instead of one dimmed. Green's ramp drifts 2.5° over the same span, which
-     is why it blends and a stock amber pair does not. */
+  /* The only non-green accent, used just for the current role so it reads as a
+     status rather than decoration. Not for general emphasis.
+
+     The dimmer shade only drops lightness — deliberately not `amber-600`, which
+     shifts towards orange as it darkens and looks like a different colour
+     rather than the same one dimmed. */
   --color-signal: #fbbf24;
   --color-signal-dim: oklch(0.66 0.16 84.4);
 
   --animate-rotate-conic-border: conic-gradient 1.5s
     cubic-bezier(0.4, 0, 0.2, 1) infinite;
-  --animate-scroll-right: scroll-right 15s linear infinite;
-  --animate-scroll-left: scroll-left 15s linear infinite;
-  --animate-scroll-right-pause: scroll-right 15s linear infinite paused;
-  --animate-scroll-left-pause: scroll-left 15s linear infinite paused;
 }
 
 /* https://tailwindcss.com/docs/theme#referening-other-variables */
 @theme inline {
-  /* Points at the variable next/font already publishes, rather than
-     redeclaring the family. That keeps the metric-matched fallback next/font
-     generates, and avoids two declarations of the same name racing each other.
-     Kebab-case is what makes it emit a `font-fira` utility at all. */
+  /* Points at next/font's own variable so its fallback font stays in place. */
   --font-fira: var(--font-fira-sans);
+
+  --color-surface-page: var(--surface-page);
+  --color-surface-section: var(--surface-section);
+  --color-surface-panel: var(--surface-panel);
+  --color-surface-recess: var(--surface-recess);
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);

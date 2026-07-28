@@ -23,8 +23,14 @@
   }
 }
 
-html {
-  scroll-behavior: smooth;
+/* Gated rather than unconditional: a long smooth scroll is exactly the kind of
+   large-viewport movement reduced-motion exists to suppress. Scrolling done via
+   `scrollIntoView` inherits this, so the gate covers script-driven jumps too and
+   there is no second reduced-motion check in JS. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 body {
