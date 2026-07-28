@@ -33,12 +33,19 @@ export const MobileNav = () => {
   return (
     <nav
       className={cn(
-        "fixed bottom-0 z-50 w-full border-t border-neutral-800 bg-black/80 backdrop-blur-xs transition-transform duration-300",
+        "fixed bottom-0 z-50 w-full",
+        "border-t border-neutral-800 bg-black/80 backdrop-blur-xs",
+        "transition-transform duration-300",
+        "sm:hidden",
         shouldBeVisible ? "translate-y-0" : "translate-y-full",
       )}
     >
       <ul
-        className="mx-auto flex max-w-[250px] items-center justify-between gap-4 px-4 py-3 sm:px-6 sm:py-3"
+        className={cn(
+          "mx-auto flex max-w-[250px] items-center justify-between",
+          "gap-4 px-4 py-3",
+          "sm:px-6 sm:py-3",
+        )}
         aria-label="navigation links"
       >
         <li className="flex flex-col items-center">
@@ -130,8 +137,18 @@ export const MobileNav = () => {
 
         <li className="flex flex-col items-center">
           <button onClick={toggle} className="group flex flex-col items-center">
-            <LucideSearch className="size-6 stroke-white transition-colors duration-200 group-hover:stroke-green-500" />
-            <span className="mt-1 text-[10px] text-white/70 transition-colors duration-200 group-hover:text-green-500">
+            <LucideSearch
+              className={cn(
+                "size-6 stroke-white",
+                "transition-colors duration-200 group-hover:stroke-green-500",
+              )}
+            />
+            <span
+              className={cn(
+                "mt-1 text-[10px] text-white/70",
+                "transition-colors duration-200 group-hover:text-green-500",
+              )}
+            >
               Search
             </span>
           </button>

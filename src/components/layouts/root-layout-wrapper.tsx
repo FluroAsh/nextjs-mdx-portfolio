@@ -57,7 +57,8 @@ export const RootLayoutWrapper = ({
       <CommandPalette>
         <div className="page-inner flex min-h-dvh flex-col">
           <BackgroundOverlay />
-          {isMobile ? <MobileNav /> : <NavigationHeader />}
+          <MobileNav />
+          <NavigationHeader />
           <main
             className={cn(
               "flex flex-1 grow justify-center pt-8 sm:pt-0 [&>div]:w-full",
