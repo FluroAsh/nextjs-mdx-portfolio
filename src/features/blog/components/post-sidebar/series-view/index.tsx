@@ -14,7 +14,9 @@ export const SeriesView = () => {
   }
 
   const currentSeriesPosts = getSeriesPosts(post);
-  const currentIndex = currentSeriesPosts.findIndex((p) => p.slug === post.slug);
+  const currentIndex = currentSeriesPosts.findIndex(
+    (p) => p.slug === post.slug,
+  );
 
   return (
     <>
