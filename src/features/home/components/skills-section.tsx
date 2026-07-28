@@ -1,11 +1,5 @@
-"use client";
-
-import { useRef } from "react";
-
-import { useInView } from "motion/react";
-
+import { Marquee } from "@/components/marquee";
 import { type Skill, skillsList } from "@/data/skills";
-import { defaultViewMargin } from "@/lib/constants";
 import { cn } from "@/utils/misc";
 
 import { SectionTag } from "./section-tag";
@@ -13,87 +7,73 @@ import { SectionTag } from "./section-tag";
 const topRowSkills = skillsList.slice(0, Math.ceil(skillsList.length / 2));
 const bottomRowSkills = skillsList.slice(Math.ceil(skillsList.length / 2));
 
+/** Shared by both rows so they move at the same speed. Sharing a duration
+ *  doesn't work, since the rows hold different amounts of content. */
+const SKILL_ROW_SPEED = 76;
+
+/** Fades both ends so rows enter and leave without a hard edge. */
+const EDGE_FADE =
+  "linear-gradient(to right, transparent, #000 80px, #000 calc(100% - 80px), transparent)";
+
 const SkillRow = ({
   skills,
-  className,
+  reverse,
 }: {
   skills: Skill[];
-  className?: string;
+  reverse?: boolean;
 }) => (
-  <div className="flex">
-    <div className={cn("flex py-2", className)}>
-      {Array(2) // Any more than 2 would require an update to the animate-scroll-* classes to prevent reflow
-        .fill([...skills])
-        .map((_, i) => {
-          return skills.map(
-            ({ name, label, icon: Icon, iconStyles, containerStyles }, x) => (
-              <div
-                key={`${name}-${i}-${x}`}
-                className={cn(
-                  "mx-2 flex h-24 items-center justify-center gap-2 rounded-md border border-neutral-800 bg-black/30 px-6",
-                  "transition-colors select-none hover:border-green-500 hover:bg-green-500/10 hover:text-green-500",
-                  containerStyles,
-                )}
-              >
-                <Icon className={cn("size-10", iconStyles)} />
-                {label ? label : null}
-              </div>
-            ),
-          );
-        })}
-    </div>
-  </div>
+  <Marquee speed={SKILL_ROW_SPEED} reverse={reverse} copyClassName="py-2">
+    {skills.map(({ name, label, icon: Icon, iconStyles, containerStyles }) => (
+      <div
+        key={name}
+        className={cn(
+          "mx-2 flex h-24 shrink-0 items-center justify-center gap-2 px-6",
+          "rounded-md border border-neutral-800 bg-black/30",
+          "transition-colors select-none",
+          "hover:border-green-500 hover:bg-green-500/10 hover:text-green-500",
+          containerStyles,
+        )}
+      >
+        <Icon className={cn("size-10", iconStyles)} />
+        {label ? label : null}
+      </div>
+    ))}
+  </Marquee>
 );
 
-export const SkillsSection = () => {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { margin: defaultViewMargin });
+export const SkillsSection = () => (
+  <section className="mx-auto pt-20 pb-8">
+    <div className="px-8 pb-4 text-center">
+      <SectionTag text="Technologies" />
 
-  return (
-    <section ref={ref} className="mx-auto pt-20 pb-8">
-      <div className="px-8 pb-4 text-center">
-        <SectionTag text="Technologies" />
-
-        <h2 className="bg-gradient-to-r from-green-400 to-green-600 bg-clip-text pt-4 pb-1 text-4xl font-bold tracking-wide text-transparent">
-          My Digital Arsenal
-        </h2>
-
-        <p className="mx-auto max-w-2xl pt-4 text-sm text-neutral-300 sm:text-base">
-          Tools and technologies I&apos;ve worked with throughout my journey as
-          a developer. I&apos;m adding new tools to my belt every day!
-        </p>
-      </div>
-
-      <div
-        className="group relative mx-auto max-w-4xl overflow-x-hidden"
-        style={{
-          maskImage:
-            "linear-gradient(to right, transparent, #000 80px, #000 calc(100% - 80px), transparent)",
-          WebkitMaskImage:
-            "linear-gradient(to right, transparent, #000 80px, #000 calc(100% - 80px), transparent)",
-        }}
+      <h2
+        className={cn(
+          "pt-4 pb-1 text-4xl font-bold tracking-wide",
+          "bg-gradient-to-r from-green-400 to-green-600",
+          "bg-clip-text text-transparent",
+        )}
       >
-        <SkillRow
-          skills={topRowSkills}
-          className={cn(
-            "animate-scroll-right group-hover:animate-scroll-right-pause",
-            !isInView && "animate-scroll-right-pause",
-          )}
-        />
-        <SkillRow
-          skills={bottomRowSkills}
-          className={cn(
-            "animate-scroll-left group-hover:animate-scroll-left-pause",
-            !isInView && "animate-scroll-left-pause",
-          )}
-        />
-      </div>
+        My Digital Arsenal
+      </h2>
 
-      <div className="mt-6 text-center">
-        <p className="text-xs text-neutral-500 italic">
-          Hover/tap to pause scrolling
-        </p>
-      </div>
-    </section>
-  );
-};
+      <p className="mx-auto max-w-2xl pt-4 text-sm text-neutral-300 sm:text-base">
+        Tools and technologies I&apos;ve worked with throughout my journey as a
+        developer. I&apos;m adding new tools to my belt every day!
+      </p>
+    </div>
+
+    <div
+      className="relative mx-auto max-w-4xl"
+      style={{ maskImage: EDGE_FADE, WebkitMaskImage: EDGE_FADE }}
+    >
+      <SkillRow skills={topRowSkills} reverse />
+      <SkillRow skills={bottomRowSkills} />
+    </div>
+
+    <div className="mt-6 text-center">
+      <p className="text-xs text-neutral-500 italic">
+        Hover/tap to pause scrolling
+      </p>
+    </div>
+  </section>
+);
