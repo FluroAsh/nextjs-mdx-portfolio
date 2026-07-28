@@ -16,6 +16,9 @@ import { isActiveRoute, paths } from "@/config/paths";
 import { useRangeScroll } from "@/hooks/use-range-scroll";
 import { cn } from "@/utils/misc";
 
+const BOTTOM_GLOW =
+  "radial-gradient(70% 130% at 50% 100%, rgba(74, 222, 128, 0.11) 0%, rgba(74, 222, 128, 0.04) 45%, transparent 75%)";
+
 export const MobileNav = () => {
   const pathname = usePathname();
   const { toggle } = useCommandPalette();
@@ -40,9 +43,15 @@ export const MobileNav = () => {
         shouldBeVisible ? "translate-y-0" : "translate-y-full",
       )}
     >
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-14"
+        style={{ backgroundImage: BOTTOM_GLOW }}
+      />
+
       <ul
         className={cn(
-          "mx-auto flex max-w-[250px] items-center justify-between",
+          "relative mx-auto flex max-w-[250px] items-center justify-between",
           "gap-4 px-4 py-3",
           "sm:px-6 sm:py-3",
         )}
