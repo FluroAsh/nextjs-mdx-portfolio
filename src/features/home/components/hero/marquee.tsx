@@ -85,7 +85,11 @@ const FeedPass = ({
     <Marker {...SYSTEM_MARKER} />
 
     <Chevron />
-    <span className="text-neutral-200">{system.commitSubject}</span>
+    <span className="text-neutral-200">
+      {system.commitSubject.length >= 80
+        ? system.commitSubject.slice(0, 80) + "..."
+        : system.commitSubject}
+    </span>
 
     <span className="flex items-center gap-4 sm:gap-5">
       <Chevron />
