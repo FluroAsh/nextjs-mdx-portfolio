@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
+import { Catamaran, Fira_Sans } from "next/font/google";
 
 import "yet-another-react-lightbox/styles.css";
 
 import { RootLayoutWrapper } from "@/components/layouts/root-layout-wrapper";
 import "@/css/globals.css";
 import { siteMetaData } from "@/data/site-metadata";
-
-import { catamaran, firaSans } from "../fonts";
 
 export const metadata: Metadata = {
   title: {
@@ -43,6 +42,20 @@ export const metadata: Metadata = {
     images: [siteMetaData.socialBanner],
   },
 };
+
+/* `subsets` only controls preload — unused unicode-range files still ship but
+   aren't fetched unless those code points appear on the page. */
+const catamaran = Catamaran({
+  subsets: ["latin"],
+  variable: "--font-catamaran",
+});
+
+/* No variable build: each weight is a separate file and is preloaded by default. */
+const firaSans = Fira_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-fira-sans",
+});
 
 export default function RootLayout({
   children,

@@ -36,8 +36,6 @@
 }
 
 @theme {
-  --font-catamaran: "Catamaran", sans-serif;
-
   --color-foreground: var(--foreground);
   --color-background: var(--background);
   --color-primary-green: #bfe81c;
