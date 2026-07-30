@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { motion as m } from "motion/react";
 
 import { MELBOURNE } from "@/data/identity";
+import { formatMelbourneClock } from "@/utils/melbourne-time";
 import { cn } from "@/utils/misc";
 
 import { ENTER } from "../../utils";
@@ -14,31 +15,13 @@ import { BilingualLabel } from "../bilingual-label";
  * Background readouts, placed diagonally opposite the photo. One busy corner
  * and one empty one is what makes the empty space look intentional.
  *
+ * A row in the hero's column below `sm`, where it shares that column with the
+ * name, and a layer over the top at `sm` and up, where the name sits beside the
+ * photo instead and has the corner to itself.
+ *
  * Every value is real rather than made up. Hidden from screen readers — the
  * only useful fact here is repeated as a field in About.
  */
-
-const TIME_FORMAT = new Intl.DateTimeFormat("en-AU", {
-  timeZone: MELBOURNE.timeZone,
-  hour: "2-digit",
-  minute: "2-digit",
-  second: "2-digit",
-  hour12: false,
-  timeZoneName: "short",
-});
-
-/** Reads the parts rather than one formatted string, so the timezone stays
- *  correct on its own: `AEST` in winter, `AEDT` in daylight saving. */
-const formatMelbourneTime = (date: Date) => {
-  const parts = TIME_FORMAT.formatToParts(date);
-  const part = (type: Intl.DateTimeFormatPartTypes) =>
-    parts.find((candidate) => candidate.type === type)?.value ?? "";
-
-  return {
-    zone: part("timeZoneName"),
-    clock: `${part("hour")}:${part("minute")}:${part("second")}`,
-  };
-};
 
 const formatCoordinate = (value: number) => value.toFixed(4);
 
@@ -46,7 +29,7 @@ const formatCoordinate = (value: number) => value.toFixed(4);
  *  values stay null until mount so the server and client markup match. */
 const LiveReadouts = () => {
   const [time, setTime] = useState<ReturnType<
-    typeof formatMelbourneTime
+    typeof formatMelbourneClock
   > | null>(null);
   const [viewport, setViewport] = useState<{
     width: number;
@@ -54,7 +37,7 @@ const LiveReadouts = () => {
   } | null>(null);
 
   useEffect(() => {
-    const tick = () => setTime(formatMelbourneTime(new Date()));
+    const tick = () => setTime(formatMelbourneClock(new Date()));
     tick();
 
     const interval = window.setInterval(tick, 1000);
@@ -112,7 +95,10 @@ const Row = ({
 export const ReadoutCluster = () => (
   <m.div
     aria-hidden
-    className="pointer-events-none absolute top-0 right-0 left-0 z-10"
+    className={cn(
+      "pointer-events-none relative z-10 shrink-0",
+      "sm:absolute sm:inset-x-0 sm:top-0",
+    )}
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
     transition={{ ...ENTER, delay: 0.27 }}

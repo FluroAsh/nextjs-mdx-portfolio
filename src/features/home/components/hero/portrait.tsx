@@ -23,8 +23,11 @@ const DISSOLVE_FALLOFF =
  * would expect.
  *
  * Centred below `sm`, where the text and the photo share one column — anchored
- * right, the scattered edge ran straight through the surname. The mobile height
- * here has to match the space the name block leaves for it.
+ * right, the scattered edge ran straight through the surname.
+ *
+ * Below `sm` this is a row in the hero's column rather than a layer over it, and
+ * the only row allowed to shrink. A short screen therefore takes height off the
+ * photo instead of sliding it up over the text.
  */
 export const HeroPortrait = () => (
   // The fade sits on this wrapper, not the mirrored layer below it: motion
@@ -32,15 +35,18 @@ export const HeroPortrait = () => (
   // because this is the LCP element and it cannot count as painted until it
   // is visible.
   <m.div
-    className="pointer-events-none absolute inset-0 overflow-hidden"
+    className={cn(
+      "pointer-events-none relative shrink basis-[34dvh] overflow-hidden",
+      "sm:absolute sm:inset-0 sm:basis-auto",
+    )}
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
     transition={{ ...SETTLE, duration: 0.3 }}
   >
     <div
       className={cn(
-        "absolute inset-x-0 -bottom-[3%] mx-auto h-[34dvh] w-[78%]",
-        "sm:inset-x-auto sm:-right-[10%] sm:bottom-0 sm:mx-0 sm:h-[92%] sm:w-[58%]",
+        "absolute inset-x-0 top-0 -bottom-[3%] mx-auto w-[78%]",
+        "sm:inset-x-auto sm:top-auto sm:-right-[10%] sm:bottom-0 sm:mx-0 sm:h-[92%] sm:w-[58%]",
         "lg:-right-[6%] lg:w-[46%]",
       )}
       style={{

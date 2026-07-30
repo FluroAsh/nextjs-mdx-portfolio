@@ -40,16 +40,17 @@ export const HeroSection = ({
       <div className="relative flex flex-1 flex-col overflow-hidden">
         <CityPlane scrollTarget={sectionRef} />
         <HeroBackdrop />
-        <HeroPortrait />
 
+        {/* Below `sm` these three share this column as rows rather than stacking
+            as layers, so a short screen squeezes them together instead of
+            printing one on top of another. Only the photo gives up height. */}
         <ReadoutCluster />
 
-        {/* The mobile padding leaves room for the photo below it, so it has to
-            match `HeroPortrait`'s mobile height. */}
         <div
           className={cn(
-            "relative z-10 flex flex-1 flex-col justify-end",
-            "pb-[41dvh] sm:pb-[14vh]",
+            "relative z-10 flex shrink-0 grow basis-auto flex-col justify-end",
+            "mt-8 mb-14",
+            "sm:my-0 sm:shrink sm:basis-0 sm:pb-[14vh]",
           )}
         >
           <MastheadName />
@@ -58,6 +59,8 @@ export const HeroSection = ({
 
           <MastheadFields className="mt-4" />
         </div>
+
+        <HeroPortrait />
       </div>
 
       <HeroMarquee posts={posts} system={system} />

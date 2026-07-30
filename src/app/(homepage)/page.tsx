@@ -6,6 +6,7 @@ import { HeroSection } from "@/features/home/components/hero";
 import { SkillsSection } from "@/features/home/components/skills-section";
 import { TimelineSection } from "@/features/home/components/timeline";
 import { formatDate } from "@/utils/dates";
+import { formatMelbourneDateTime } from "@/utils/melbourne-time";
 
 /**
  * Built on the server: formatting here keeps date-fns and the post index out of
@@ -24,7 +25,7 @@ const buildTime = process.env.NEXT_PUBLIC_BUILD_TIME;
 
 const systemStatus: SystemStatus = {
   commitSubject: process.env.NEXT_PUBLIC_COMMIT_SUBJECT || "—",
-  deployedAt: buildTime ? formatDate(buildTime, "dd.MM.yy HH:mm") : "—",
+  deployedAt: buildTime ? formatMelbourneDateTime(buildTime) : "—",
   buildId: process.env.NEXT_PUBLIC_BUILD_ID || "—",
 };
 
