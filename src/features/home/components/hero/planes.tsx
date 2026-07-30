@@ -68,7 +68,8 @@ export const CityPlane = ({
   });
 
   // Moves slower than the page rather than against it, which is what makes it
-  // feel further away.
+  // feel further away. Rounded so the compositor doesn't soft-paint the bitmap
+  // on a fractional translate (reads as blur until the next layout/resize).
   const y = useTransform(
     scrollYProgress,
     [0, 1],
@@ -79,31 +80,24 @@ export const CityPlane = ({
     // This box does the cropping and the fading; only the image inside it
     // moves. Move this element instead and the image escapes past the bottom of
     // the section, taking the fade with it.
-    <m.div
+    <div
       aria-hidden
       className="pointer-events-none absolute inset-0 overflow-hidden"
       style={{ maskImage: DENSITY_MASK, WebkitMaskImage: DENSITY_MASK }}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={SETTLE}
     >
-      <m.div
-        className="absolute inset-0 -top-[10%] h-[120%] opacity-[0.1]"
-        style={{ y }}
-      >
-        {/* Neither number is a typo. `130vw` because `object-cover` draws this
-            wider than the screen, and `sizes` means the drawn width, not the
-            screen width. `2048px` is the source file's width and the only size
-            Next passes through untouched — ask for 1920px and it re-encodes to
-            573KB, three times the size. */}
-        <Image
-          src="/static/images/hero-city-grid.webp"
-          alt=""
-          fill
-          sizes="(max-width: 640px) 130vw, 2048px"
-          className="object-cover object-[62%_55%]"
-        />
+      <m.div className="absolute inset-0 -top-[10%] h-[120%]" style={{ y }}>
+        <div className="absolute inset-0 opacity-[0.1]">
+          <Image
+            src="/static/images/hero-city-grid.webp"
+            alt=""
+            fill
+            unoptimized // Already a compressed 2048px WebP.
+            preload
+            fetchPriority="high"
+            className="object-cover object-[62%_55%]"
+          />
+        </div>
       </m.div>
-    </m.div>
+    </div>
   );
 };

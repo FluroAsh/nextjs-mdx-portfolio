@@ -19,8 +19,8 @@ const DISSOLVE_FALLOFF =
   "linear-gradient(to right, black 68%, transparent 88%)";
 
 /**
- * `priority` because this image is the LCP element, not the heading as you
- * would expect.
+ * Not the LCP element — the city backdrop is — so this stays lazy and does not
+ * compete for early bandwidth / fetch priority.
  *
  * Centred below `sm`, where the text and the photo share one column — anchored
  * right, the scattered edge ran straight through the surname.
@@ -31,9 +31,7 @@ const DISSOLVE_FALLOFF =
  */
 export const HeroPortrait = () => (
   // The fade sits on this wrapper, not the mirrored layer below it: motion
-  // writes `transform`, which would clobber the `scaleX(-1)`. Kept short
-  // because this is the LCP element and it cannot count as painted until it
-  // is visible.
+  // writes `transform`, which would clobber the `scaleX(-1)`.
   <m.div
     className={cn(
       "pointer-events-none relative shrink basis-[34dvh] overflow-hidden",
@@ -61,7 +59,6 @@ export const HeroPortrait = () => (
         src="/static/images/hero-portrait.webp"
         alt="Ashley Thompson, rendered as a dot-matrix dither"
         fill
-        priority
         sizes="(max-width: 640px) 78vw, (max-width: 1024px) 58vw, 46vw"
         className="object-contain object-bottom"
       />
