@@ -11,6 +11,19 @@ import { FloatingNav } from "./floating-nav";
 import { NavLink } from "./nav-link";
 import { SocialLinks } from "./social-links";
 
+export const HeroLogo = ({ className }: { className?: string }) => (
+  <span
+    className={cn(
+      "flex items-center font-mono text-[1rem] leading-none tracking-tight",
+      className,
+    )}
+  >
+    <span className="text-neutral-200">a</span>
+    <span className="text-green-500">.</span>
+    <span className="text-neutral-200">thompson</span>
+  </span>
+);
+
 export const NavigationHeader = () => {
   const { toggle } = useCommandPalette();
   const pathname = usePathname();
@@ -28,10 +41,7 @@ export const NavigationHeader = () => {
       <nav className="h-header hidden place-items-center border-b border-neutral-800 bg-linear-to-t from-black/80 to-neutral-900/80 shadow-md sm:grid">
         <div className="flex w-full max-w-5xl items-center justify-between px-4">
           <Link href="/" className="flex items-center gap-2">
-            <span className="text-lg font-bold">
-              <span className="text-green-500">A</span>
-              Thompson
-            </span>
+            <HeroLogo />
           </Link>
 
           <ul className="flex items-center gap-4">
