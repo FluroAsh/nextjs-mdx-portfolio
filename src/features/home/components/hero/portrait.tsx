@@ -19,8 +19,10 @@ const DISSOLVE_FALLOFF =
   "linear-gradient(to right, black 68%, transparent 88%)";
 
 /**
- * Not the LCP element — the city backdrop is — so this stays lazy and does not
- * compete for early bandwidth / fetch priority.
+ * Not the LCP element — the city backdrop is. On mobile this still sits in the
+ * first viewport, so the browser would promote a lazy image to High and race
+ * the LCP request; `fetchPriority="low"` keeps it demoted. Bytes are kept down
+ * too: dither compresses cleanly, and the painted width is ~320px on phones.
  *
  * Centred below `sm`, where the text and the photo share one column — anchored
  * right, the scattered edge ran straight through the surname.
@@ -59,7 +61,9 @@ export const HeroPortrait = () => (
         src="/static/images/hero-portrait.webp"
         alt="Ashley Thompson, rendered as a dot-matrix dither"
         fill
-        sizes="(max-width: 640px) 78vw, (max-width: 1024px) 58vw, 46vw"
+        sizes="(max-width: 640px) 360px, (max-width: 1024px) 58vw, 46vw"
+        quality={50}
+        fetchPriority="low"
         className="object-contain object-bottom"
       />
     </div>

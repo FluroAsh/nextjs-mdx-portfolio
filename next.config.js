@@ -41,6 +41,7 @@ const nextConfig = {
     NEXT_PUBLIC_BUILD_TIME: new Date().toISOString(), // Deliberately frozen at build time — it is the deploy timestamp
   },
   images: {
+    qualities: [50, 75], // Extend the Next.js default to include lower (50) quality.
     remotePatterns: [
       {
         protocol: "https",
