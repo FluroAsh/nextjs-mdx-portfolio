@@ -9,7 +9,8 @@ export const SectionTag = ({
 }) => (
   <div
     className={cn(
-      "inline-block rounded-md border border-green-800/30 bg-black/40 px-3 py-1 text-xs font-medium tracking-wider text-green-400/80 uppercase",
+      "inline-block rounded-md border border-green-800/30 bg-black/40 px-3 py-1",
+      "text-xs font-medium tracking-wider text-green-400/80 uppercase",
       className,
     )}
   >
