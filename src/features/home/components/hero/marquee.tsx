@@ -26,9 +26,9 @@ const scrollToAbout = () => {
 
 /**
  * The strip that closes the hero. A flex row rather than an overlay, so the
- * name block shrinks around it on short screens. The fixed block on the left
- * doubles as the scroll button and gives the moving text something to appear
- * from behind.
+ * name block shrinks around it on short screens. The ABOUT control is the
+ * fixed block: right on mobile (thumb-side CTA), left from `sm` up so the
+ * crawl can emerge from behind it like a classic ticker.
  */
 
 /** Pixels per second. Any faster and the titles are hard to read. */
@@ -114,14 +114,16 @@ export const HeroMarquee = ({
       "sm:text-[10px]",
     )}
   >
+    {/* DOM-first so it stays the strip's first tab stop. Visual side flips at
+        `sm`: right on mobile, left on desktop. */}
     <button
       type="button"
       onClick={scrollToAbout}
       className={cn(
-        "group relative z-10 flex shrink-0 items-center gap-2 px-4 py-3",
-        "border-r border-green-500/40 text-green-600",
+        "group relative z-10 order-last flex shrink-0 items-center gap-2 px-4 py-3",
+        "border-l border-green-500/40 text-green-600",
         "transition-colors hover:text-green-400",
-        "sm:py-2.5",
+        "sm:order-first sm:border-r sm:border-l-0 sm:py-2.5",
       )}
     >
       <span aria-hidden className="hidden text-green-400 sm:inline">
@@ -138,9 +140,10 @@ export const HeroMarquee = ({
 
     <Marquee
       aria-hidden
-      className="flex-1"
+      className="min-w-0 flex-1"
       copyClassName="py-3 sm:py-2.5"
       speed={CRAWL_SPEED}
+      data-exit-toward-cta
     >
       <FeedPass posts={posts} system={system} />
     </Marquee>

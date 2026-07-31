@@ -7,6 +7,9 @@ export function cn(...inputs: ClassValue[]) {
 
 export const isBrowser = typeof window !== "undefined";
 
+/** Two-digit chrome numbers — record indices, counters, chapter marks. */
+export const zeroPad = (value: number) => String(value).padStart(2, "0");
+
 export const toRomanNumeral = (num: number) => {
   const values = [1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1];
   const numerals = [

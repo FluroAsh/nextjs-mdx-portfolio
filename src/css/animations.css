@@ -39,6 +39,18 @@
   animation-direction: reverse;
 }
 
+/*
+ * Hero strip: crawl always exits toward the ABOUT control. Below `sm` that
+ * control is on the right, so reverse; from `sm` up the default leftward
+ * scroll already exits into the left-side button. Keep in lockstep with the
+ * button's `sm:order-first` flip in `hero/marquee.tsx`.
+ */
+@media (width < 40rem) {
+  .marquee[data-exit-toward-cta] .marquee__copy {
+    animation-direction: reverse;
+  }
+}
+
 /* More specific than the variable default above, so these win. */
 .marquee:hover .marquee__copy,
 .marquee:focus-within .marquee__copy {

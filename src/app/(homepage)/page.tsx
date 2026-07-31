@@ -2,6 +2,11 @@ import { sortedPostsByDateDesc } from "@/data/content";
 import type { LatestPost, SystemStatus } from "@/data/identity";
 import { RecentPosts } from "@/features/blog/components/recent-posts";
 import { AboutSection } from "@/features/home/components/about-section";
+import {
+  CHAPTER_BAND,
+  CHAPTERS,
+  ChapterWithRail,
+} from "@/features/home/components/chapters";
 import { HeroSection } from "@/features/home/components/hero";
 import { SkillsSection } from "@/features/home/components/skills-section";
 import { TimelineSection } from "@/features/home/components/timeline";
@@ -34,9 +39,16 @@ export default function Home() {
   return (
     <div className="pt-0">
       <HeroSection posts={latestPosts} system={systemStatus} />
-      <AboutSection />
-      <SkillsSection />
-      <TimelineSection />
+
+      <AboutSection className={CHAPTER_BAND} />
+
+      <ChapterWithRail chapter={CHAPTERS.toolchain}>
+        <SkillsSection />
+      </ChapterWithRail>
+
+      <ChapterWithRail chapter={CHAPTERS.timeline}>
+        <TimelineSection className={CHAPTER_BAND} />
+      </ChapterWithRail>
 
       {/* TODO: Create some more meaningful full-stack projects */}
       {/* <section className="mx-auto bg-sky-600">

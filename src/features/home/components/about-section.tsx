@@ -72,13 +72,19 @@ const ScanlinePlane = () => (
   </div>
 );
 
-export const AboutSection = () => {
+export const AboutSection = ({
+  className,
+}: {
+  className?: string;
+} = {}) => {
   return (
     <section
       id={ABOUT_ANCHOR_ID}
-      className="bg-surface-section relative scroll-mt-0 border-b border-green-500/40"
+      className={cn(
+        "relative scroll-mt-0",
+        className,
+      )}
     >
-      {/* No border on top — the marquee's bottom border is already there. */}
       <ScanlinePlane />
 
       <div

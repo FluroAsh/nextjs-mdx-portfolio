@@ -84,8 +84,8 @@ export const skillsList = [
   },
   {
     name: "aws",
-    label: undefined,
-    icon: faIcon.FaAws,
+    label: "AWS",
+    icon: siIcon.SiAmazonwebservices,
     iconStyles: "fill-orange-500",
     containerStyles:
       "hover:bg-orange-500/10 hover:text-orange-500 hover:border-orange-500",
@@ -114,6 +114,6 @@ export const skillsList = [
     containerStyles:
       "hover:bg-gray-500/10 hover:text-black hover:text-white hover:border-black hover:border-white",
   },
-];
+] as const;
 
 export type Skill = (typeof skillsList)[number];
