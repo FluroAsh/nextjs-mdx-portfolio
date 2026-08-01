@@ -1,7 +1,6 @@
+import { BilingualLabel } from "@/components/bilingual-label";
 import { FIELD_LABELS, type FieldKey } from "@/data/identity";
 import { cn } from "@/utils/misc";
-
-import { BilingualLabel } from "../bilingual-label";
 
 type RecordFieldProps = {
   field: FieldKey;
@@ -10,11 +9,8 @@ type RecordFieldProps = {
   isCurrent?: boolean;
 };
 
-/**
- * One labelled row of a record. The label sits in a fixed gutter so every value
- * lines up in a shared column, which is what makes the block read as a readout
- * rather than a heading with subtext.
- */
+/** The fixed label gutter is what aligns every value into one column, which is
+ *  what makes the block read as a readout rather than a heading with subtext. */
 export const RecordField = ({
   field,
   children,
@@ -33,8 +29,8 @@ export const RecordField = ({
       />
     </dt>
 
-    {/* One step below the prose beside it: mono sets ~27% wider at the same
-        nominal size, so matching sizes made the table the loudest thing here. */}
+    {/* 13px, not 14: mono sets ~27% wider, so matching the prose size makes
+        the table the loudest thing on the record. */}
     <dd className="font-mono text-[13px] text-neutral-200">{children}</dd>
   </div>
 );

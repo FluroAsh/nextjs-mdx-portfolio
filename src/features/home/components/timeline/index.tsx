@@ -1,6 +1,6 @@
 import { cn, zeroPad } from "@/utils/misc";
 
-import { BilingualLabel } from "../bilingual-label";
+import { BilingualLabel } from "@/components/bilingual-label";
 import {
   EXPERIENCES,
   ExperienceBody,
@@ -8,7 +8,7 @@ import {
   TYPE_LABEL_ZH,
   formatPeriod,
 } from "./experiences";
-import { RecordField } from "./record-field";
+import { RecordField } from "@/components/record-field";
 import { RecordScale, groupBoundsFor, spacingAfter } from "./year-scale";
 
 const SECTION_MARKER = { zh: "記錄", en: "REC" } as const;

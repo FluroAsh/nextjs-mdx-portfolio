@@ -2,6 +2,8 @@
 
 import { motion as m } from "motion/react";
 
+import { BilingualLabel } from "@/components/bilingual-label";
+import { ScanlinePlane } from "@/components/scanline-plane";
 import {
   ABOUT_ANCHOR_ID,
   ABOUT_FIELDS,
@@ -12,7 +14,6 @@ import {
 import { cn } from "@/utils/misc";
 
 import { ENTER } from "../utils";
-import { BilingualLabel } from "./bilingual-label";
 
 const MetadataStrip = () => (
   <dl
@@ -40,38 +41,6 @@ const MetadataStrip = () => (
   </dl>
 );
 
-/**
- * Sits over the content to suggest you are looking at a screen.
- *
- * The scanlines are faded out before they reach any edge, or the effect stops
- * on a hard line at the section boundary. The darkened edges are what make it
- * look like a CRT, done with a gradient since blur isn't used anywhere here.
- */
-const EDGE_FADE =
-  "radial-gradient(115% 90% at 50% 50%, black 30%, transparent 88%)";
-
-const ScanlinePlane = () => (
-  <div aria-hidden className="pointer-events-none absolute inset-0 z-20">
-    <div
-      className="absolute inset-0"
-      style={{
-        backgroundImage:
-          "repeating-linear-gradient(to bottom, var(--scanline-color) 0px, var(--scanline-color) 1px, transparent 1px, transparent var(--scanline-pitch))",
-        maskImage: EDGE_FADE,
-        WebkitMaskImage: EDGE_FADE,
-      }}
-    />
-
-    <div
-      className="absolute inset-0"
-      style={{
-        backgroundImage:
-          "radial-gradient(120% 95% at 50% 50%, transparent 50%, rgba(0, 0, 0, 0.3) 100%)",
-      }}
-    />
-  </div>
-);
-
 export const AboutSection = ({
   className,
 }: {
@@ -80,12 +49,9 @@ export const AboutSection = ({
   return (
     <section
       id={ABOUT_ANCHOR_ID}
-      className={cn(
-        "relative scroll-mt-0",
-        className,
-      )}
+      className={cn("relative scroll-mt-0", className)}
     >
-      <ScanlinePlane />
+      <ScanlinePlane vignette={0.3} />
 
       <div
         className={cn(

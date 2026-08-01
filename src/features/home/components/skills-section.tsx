@@ -7,7 +7,7 @@ import { type Skill, skillsList } from "@/data/skills";
 import { cn, zeroPad } from "@/utils/misc";
 
 import { SETTLE } from "../utils";
-import { BilingualLabel } from "./bilingual-label";
+import { BilingualLabel } from "@/components/bilingual-label";
 
 /**
  * Toolchain — categorised field matrix on the page surface, with the ambient

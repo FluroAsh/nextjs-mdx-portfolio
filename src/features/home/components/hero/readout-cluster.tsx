@@ -9,7 +9,7 @@ import { formatMelbourneClock } from "@/utils/melbourne-time";
 import { cn } from "@/utils/misc";
 
 import { ENTER } from "../../utils";
-import { BilingualLabel } from "../bilingual-label";
+import { BilingualLabel } from "@/components/bilingual-label";
 
 /**
  * Background readouts, placed diagonally opposite the photo. One busy corner
