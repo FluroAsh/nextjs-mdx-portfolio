@@ -41,13 +41,16 @@ export const ScrollToTop = ({ isMobile }: { isMobile: boolean }) => {
           ? "opacity-100"
           : "pointer-events-none opacity-0",
         isMobile ? "right-4 bottom-20" : "right-4 bottom-4",
-        "fixed h-[44px] overflow-visible transition-opacity duration-300",
+        // Above the chapter rail (30) and scanline planes (20), below the
+        // nav and overlays (50).
+        "fixed z-40 size-12 overflow-visible transition-opacity duration-300",
       )}
       whileTap={{ scale: 0.9 }}
       transition={{ duration: 0.1 }}
     >
       <button
-        className="relative size-12 rounded-full"
+        // `isolate` keeps the ring's negative z-index inside the button.
+        className="relative isolate size-12 rounded-full"
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
         aria-label="Scroll to top"
       >
