@@ -4,10 +4,12 @@ import { slug } from "github-slugger";
 
 /**
  * Filter out posts based on a `tag` parameter.
- * Only posts with a matching tag, and is *not* a draft will be returned.
- * */
+ *
+ * Drafts go through `excludeDrafts` rather than a hard `!post.draft`, or the
+ * tag pages disagree with both `/blog` and the sidebar counts in development.
+ */
 export const filterByTag = (post: BlogContent, tag: string) =>
-  !post.draft && post.tags.map((t) => slug(t)).includes(tag);
+  excludeDrafts(post) && post.tags.map((t) => slug(t)).includes(tag);
 
 /**
  * Filter all series posts by the given series slug, returning only posts
