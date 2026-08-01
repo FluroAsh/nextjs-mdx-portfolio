@@ -51,8 +51,7 @@ export const RootLayoutWrapper = ({
   const isHomepage = pathname === "/";
 
   return (
-    // `reducedMotion="user"` drops transforms and keeps opacity, so nothing
-    // animates into place but everything still ends up visible.
+    // `reducedMotion="user"` drops transforms and keeps opacity, so nothing animates into place but everything still ends up visible.
     <MotionConfig reducedMotion="user">
       <CommandPalette>
         <div className="page-inner flex min-h-dvh flex-col">
@@ -62,8 +61,7 @@ export const RootLayoutWrapper = ({
           <main
             className={cn(
               "flex flex-1 grow justify-center pt-8 pb-16 sm:pt-0 [&>div]:w-full",
-              // The homepage sections carry their own padding and must run edge
-              // to edge into the footer.
+              // The homepage sections carry their own padding and must run edge to edge into the footer.
               isHomepage && "pt-0 pb-0",
             )}
           >

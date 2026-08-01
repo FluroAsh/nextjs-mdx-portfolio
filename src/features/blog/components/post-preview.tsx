@@ -13,7 +13,7 @@ import { paths } from "@/config/paths";
 import { cn, toRomanNumeral } from "@/utils/misc";
 
 import { cardImage, readMinutes, shortDate } from "../utils";
-import { card } from "./post-list";
+import { item } from "./post-list";
 
 const isSeries = (post: BlogContent): post is BlogSeries =>
   post.type === "BlogSeries";
@@ -68,7 +68,7 @@ const TagChips = ({ tags }: { tags: string[] }) => (
 
 export const PostPreview = ({ post }: { post: BlogContent }) => (
   <m.article
-    variants={card}
+    variants={item}
     className={cn(
       "group relative grid gap-x-4 border-b border-green-500/10 py-5 last:border-b-0",
       "md:grid-cols-[9rem_minmax(0,1fr)]",

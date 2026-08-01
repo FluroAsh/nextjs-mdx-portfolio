@@ -4,16 +4,16 @@ import { motion as m } from "motion/react";
 
 const list = {
   hidden: { opacity: 0 },
-  show: {
+  visible: {
     opacity: 1,
     transition: { type: "spring", stiffness: 100, staggerChildren: 0.08 },
   },
 };
 
 /** Labels must match `list` — renaming one silently drops the stagger. */
-export const card = {
+export const item = {
   hidden: { y: -10, opacity: 0 },
-  show: { y: 0, opacity: 1 },
+  visible: { y: 0, opacity: 1 },
 };
 
 export const PostList = ({ children }: { children: React.ReactNode }) => (
@@ -21,7 +21,7 @@ export const PostList = ({ children }: { children: React.ReactNode }) => (
     className="flex flex-col"
     variants={list}
     initial="hidden"
-    animate="show"
+    animate="visible"
   >
     {children}
   </m.div>
