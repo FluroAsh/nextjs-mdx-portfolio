@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 export type ChapterMeta = { index: string };
 
 export const CHAPTERS = {
-  /** 01 (About) is absent on purpose — the marquee's ABOUT button already marks that seam. */
+  /** No 01: the marquee's ABOUT button already marks that seam. */
   toolchain: { index: "02" },
   timeline: { index: "03" },
 } as const satisfies Record<string, ChapterMeta>;

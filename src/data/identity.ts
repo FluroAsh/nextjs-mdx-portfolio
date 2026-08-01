@@ -8,6 +8,10 @@ export const FIELD_LABELS = {
   period: { zh: "期間", en: "PERIOD" },
   org: { zh: "機構", en: "ORG" },
   focus: { zh: "專注", en: "FOCUS" },
+  date: { zh: "日期", en: "DATE" },
+  tags: { zh: "標籤", en: "TAGS" },
+  read: { zh: "閱讀", en: "READ" },
+  series: { zh: "系列", en: "SERIES" },
 } as const satisfies Record<string, BilingualPair>;
 
 export type FieldKey = keyof typeof FIELD_LABELS;

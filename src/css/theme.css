@@ -47,14 +47,16 @@
   --spacing-header: 55px;
   --spacing-mobile-nav: 68px;
 
-  /* Used top and bottom on every section, so the space between sections is
-     always bigger than the space inside one. */
+  /* Used top and bottom on every section, so the space between sections is always bigger than the space inside one. */
   --spacing-section: clamp(3.5rem, 7vw, 6rem);
 
-  /* `measure` limits the text width and sits *inside* `frame`; putting it on
-     the frame itself narrows the whole page. */
+  /* `measure` limits the text width and sits *inside* `frame`; putting it on the frame itself narrows the whole page. */
   --container-frame: 64rem;
   --container-measure: 38rem;
+
+  /* Not a device size — below this the records column loses too much width to
+     a second column and its prose stops holding a readable line length. */
+  --breakpoint-fold: 56.25rem;
 
   /* The only non-green accent, used just for the current role so it reads as a
      status rather than decoration. Not for general emphasis.

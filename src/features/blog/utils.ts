@@ -29,3 +29,7 @@ export const sortByDateAsc = (a: BlogContent, b: BlogContent) =>
 /** Sorts posts by date in descending order (newest first). */
 export const sortBySeriesOrderDesc = (a: BlogSeries, b: BlogSeries) =>
   a.seriesOrder - b.seriesOrder;
+
+/** The lead tag stands for the post's topic; the rest are detail. */
+export const topicFor = (tags: readonly string[]) =>
+  tags[0]?.toUpperCase() ?? null;

@@ -1,93 +1,190 @@
-import Image from "next/image";
 import Link from "next/link";
 
 import { type BlogContent } from "contentlayer/utils";
-import { LucideTags } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
-import { SectionGradientHeading } from "@/components/section-gradient-heading";
-import { sortedPostsByDateDesc } from "@/data/content";
+import { BilingualLabel } from "@/components/bilingual-label";
+import { RecordField } from "@/components/record-field";
+import { paths } from "@/config/paths";
+import { type BilingualPair } from "@/data/identity";
 import { formatDate } from "@/utils/dates";
-import { cn } from "@/utils/misc";
+import { cn, zeroPad } from "@/utils/misc";
 
-const Recentpost = ({ idx, post }: { idx: number; post: BlogContent }) => {
+import { topicFor } from "../utils";
+import { PostBackdrop, TileBrackets } from "./post-backdrop";
+
+const MARKER: BilingualPair = { zh: "日誌", en: "LOG" };
+const SERIES_LABEL: BilingualPair = { zh: "系列", en: "SERIES" };
+
+/** Says nothing about subject matter on purpose — anything describing the
+ *  current posts goes stale the first time the subject changes. */
+const INTRO = "Written when there's something worth writing down.";
+
+/** Fixed-width, so a column of dates stays a column. */
+const shortDate = (date: string) => formatDate(date, "dd.MM.yy");
+
+/** `readingTime` comes through Contentlayer as untyped JSON. */
+const readMinutes = (post: BlogContent) =>
+  Math.max(1, Math.round((post.readingTime as { minutes: number }).minutes));
+
+/** Hover brightens the green ramp rather than reaching for `--color-signal`,
+ *  which is reserved for state. */
+const HOVER_TEXT = "group-hover:text-green-300";
+const HOVER_LABEL =
+  "group-hover:[&_span>span:first-child]:text-green-300 group-hover:[&_span>span:last-child]:text-green-500";
+const HOVER_EASE = "transition-colors duration-150 ease-linear";
+
+const TagList = ({ tags }: { tags: string[] }) => (
+  <ul className="flex flex-wrap gap-x-2 gap-y-1.5">
+    {tags.map((tag) => (
+      <li
+        key={tag}
+        className={cn(
+          "border border-green-500/25 px-1.5 py-px font-mono text-[10px] tracking-wider text-neutral-300 uppercase",
+          "group-hover:border-green-400/50",
+          HOVER_EASE,
+        )}
+      >
+        {tag}
+      </li>
+    ))}
+  </ul>
+);
+
+/**
+ * One tile, two densities. Folded, the column is 17–20rem and prose would land
+ * near 40 characters, so the tile carries identity and coordinates only.
+ * Stacked, it has the full frame and takes the field table and excerpt too.
+ */
+const PostTile = ({ post, index }: { post: BlogContent; index: number }) => {
+  const topic = topicFor(post.tags);
+
   return (
-    <Link
-      className={cn("group flex", idx === 2 && "md:col-span-2 lg:col-span-1")}
-      href={post.url}
+    <li
+      className={cn(
+        "group relative isolate flex flex-col justify-end overflow-hidden",
+        "min-h-72 p-4",
+        "fold:min-h-32 fold:p-3",
+      )}
     >
-      <div className="border-input relative isolate w-full overflow-hidden rounded-md border p-4 ring-2 ring-transparent transition group-hover:ring-green-500">
-        <div className="mb-2 flex items-center gap-3">
-          <Image
-            className="size-14 rounded-full border border-neutral-600 transition-colors"
-            src="/static/images/ash-avatar.png"
-            alt="Picture of the author"
-            width={56}
-            height={56}
-          />
-
-          <div className="min-w-0">
-            <p className="text-xs font-bold text-neutral-300">
-              {formatDate(post.date)}
-            </p>
-            <h2 className="truncate text-lg">{post.title}</h2>
-          </div>
-
-          <Image
-            className="absolute inset-0 -z-[10] size-full object-cover shadow-lg brightness-[30%] transition duration-300 group-hover:brightness-40"
-            src={post.image as string}
-            alt={post.title}
-            width={400}
-            height={300}
-            unoptimized // force use absolute URL as it should already optimised as an image variant
-          />
-        </div>
-
-        <div className="mb-3 flex flex-wrap items-center gap-2">
-          <LucideTags
-            size={16}
-            className="text-neutral-100 transition-colors group-hover:text-green-500"
-          />
-          {post.tags.map((tag) => (
-            <span
-              key={tag}
-              className={cn(
-                "inline-flex items-center rounded-sm border bg-black/50 px-2 py-0.5 text-xs tracking-wide backdrop-blur transition",
-                "group-hover:border-green-700/40 group-hover:bg-green-900/20 group-hover:text-green-400",
-              )}
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-
-        <p className="text-neutral-300">{post.description}</p>
-      </div>
-    </Link>
-  );
-};
-
-const containerStyles = [
-  "grid-cols-1",
-  "grid-rows-2 md:grid-rows-1 grid-cols-1",
-  "grid-rows-2 md:grid-rows-1 grid-cols-1 md:grid-cols-2 lg:grid-cols-3",
-];
-
-// TODO: Add a cooler hover glow effect all posts
-// ie: Brightness mask on hover over cursor/image
-export const RecentPosts = () => {
-  const recentPosts = sortedPostsByDateDesc.slice(0, 3); // Max 3, but could be less
-
-  return (
-    <div className={`${recentPosts.length > 0 ? "" : "hidden"}`}>
-      <SectionGradientHeading title="Recent Posts" />
+      <PostBackdrop post={post} />
+      <TileBrackets />
 
       <div
-        className={`grid auto-rows-max gap-4 ${containerStyles[recentPosts.length - 1]}`}
+        className={cn(
+          "flex items-baseline gap-2 font-mono text-[10px] tracking-wider",
+          HOVER_LABEL,
+          HOVER_EASE,
+        )}
       >
-        {recentPosts.map((post, idx) => (
-          <Recentpost key={post._id} idx={idx} post={post} />
-        ))}
+        <span
+          className={cn(
+            "text-green-500/70 tabular-nums",
+            HOVER_TEXT,
+            HOVER_EASE,
+          )}
+        >
+          {zeroPad(index + 1)}
+        </span>
+
+        {/* Plain, not bilingual: glyphs label the system's own vocabulary, and
+            a tag is author-written content. */}
+        {topic && (
+          <span className="text-green-600 group-hover:text-green-500">
+            {topic}
+          </span>
+        )}
+
+        {/* Folded only — stacked, the field table names the series in full. */}
+        {post.type === "BlogSeries" && (
+          <BilingualLabel
+            {...SERIES_LABEL}
+            className="fold:inline ml-auto hidden"
+          />
+        )}
       </div>
-    </div>
+
+      {/* One link covering the tile, with the title as its accessible name. */}
+      <h3 className="fold:text-base mt-1.5 text-lg font-bold text-balance text-neutral-50">
+        <Link
+          href={post.url}
+          className={cn("after:absolute after:inset-0", HOVER_TEXT, HOVER_EASE)}
+        >
+          {post.title}
+        </Link>
+      </h3>
+
+      <div className="fold:flex mt-1 hidden items-baseline gap-x-2 font-mono text-[10px] tracking-wider text-neutral-300 tabular-nums">
+        <span>{shortDate(post.date)}</span>
+        <span className="text-green-500/40">·</span>
+        <span>{readMinutes(post)} MIN</span>
+      </div>
+
+      <div className="fold:hidden">
+        <dl className={cn("mt-2 space-y-1", HOVER_LABEL, HOVER_EASE)}>
+          <RecordField field="date">{shortDate(post.date)}</RecordField>
+
+          {post.type === "BlogSeries" && (
+            <RecordField field="series">
+              {post.seriesTitle} · {post.seriesOrder}
+            </RecordField>
+          )}
+
+          <RecordField field="read">{readMinutes(post)} MIN</RecordField>
+
+          <RecordField field="tags">
+            <TagList tags={post.tags} />
+          </RecordField>
+        </dl>
+
+        <p className="max-w-measure mt-3 line-clamp-3 text-sm text-neutral-300">
+          {post.description}
+        </p>
+      </div>
+    </li>
   );
 };
+
+/**
+ * The writing column. Owns no surface or spacing of its own, so the same
+ * component serves the folded sidebar and the stacked mobile section.
+ */
+export const RecentPosts = ({ posts }: { posts: BlogContent[] }) => (
+  <section className="fold:sticky fold:top-8 min-w-0 self-start">
+    <div
+      className={cn(
+        "flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2",
+        "border-b border-green-500/15 pb-3",
+        "font-mono text-[10px] tracking-wider text-green-500/70 uppercase",
+      )}
+    >
+      <span>
+        {posts.length} POSTS · LATEST {shortDate(posts[0].date)}
+      </span>
+      <BilingualLabel {...MARKER} />
+    </div>
+
+    {/* Subordinate when folded, a section in its own right when stacked. */}
+    <h2 className="fold:text-2xl mt-6 text-4xl font-bold tracking-tight text-neutral-50">
+      Writing
+    </h2>
+
+    <p className="max-w-measure fold:hidden mt-3 text-sm text-neutral-300 sm:text-base">
+      {INTRO}
+    </p>
+
+    <ol className="fold:space-y-3 mt-4 space-y-4">
+      {posts.map((post, index) => (
+        <PostTile key={post._id} post={post} index={index} />
+      ))}
+    </ol>
+
+    <Link
+      href={paths.blog.pathname}
+      className="mt-4 flex items-center justify-between border-t border-green-500/15 pt-4 font-mono text-[10px] tracking-wider text-green-500/70 uppercase hover:text-green-300"
+    >
+      <BilingualLabel zh="全部" en="ALL POSTS" />
+      <ArrowRight aria-hidden className="size-3.5" />
+    </Link>
+  </section>
+);
