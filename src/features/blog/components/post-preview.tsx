@@ -5,15 +5,14 @@ import Link from "next/link";
 
 import { type BlogSeries } from "contentlayer/generated";
 import { type BlogContent } from "contentlayer/utils";
-import { slug } from "github-slugger";
 import { motion as m } from "motion/react";
 
 import { BilingualLabel } from "@/components/bilingual-label";
-import { paths } from "@/config/paths";
 import { cn, toRomanNumeral } from "@/utils/misc";
 
 import { cardImage, readMinutes, shortDate } from "../utils";
 import { item } from "./post-list";
+import { TagChips } from "./tag-chips";
 
 const isSeries = (post: BlogContent): post is BlogSeries =>
   post.type === "BlogSeries";
@@ -49,21 +48,6 @@ const Thumbnail = ({ src }: { src: string }) => (
       className="absolute inset-0 bg-green-400/10 mix-blend-color transition-opacity duration-150 ease-linear group-hover:opacity-70 motion-reduce:transition-none"
     />
   </div>
-);
-
-const TagChips = ({ tags }: { tags: string[] }) => (
-  <ul className="mt-3 flex flex-wrap gap-x-2 gap-y-1.5">
-    {tags.map((tag) => (
-      <li key={tag}>
-        <Link
-          href={paths.tag.getPathname(slug(tag))}
-          className="relative z-10 block border border-green-500/25 px-1.5 py-px font-mono text-[10px] tracking-wider text-neutral-300 uppercase transition-colors duration-150 ease-linear hover:border-green-400/60 hover:text-green-300"
-        >
-          {tag}
-        </Link>
-      </li>
-    ))}
-  </ul>
 );
 
 export const PostPreview = ({ post }: { post: BlogContent }) => (
@@ -110,7 +94,7 @@ export const PostPreview = ({ post }: { post: BlogContent }) => (
         {post.description}
       </p>
 
-      <TagChips tags={post.tags} />
+      <TagChips tags={post.tags} className="mt-3" />
     </div>
   </m.article>
 );
