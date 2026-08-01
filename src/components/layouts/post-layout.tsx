@@ -1,19 +1,14 @@
 "use client";
 
-/**
- * TODO: Add a progress bar to the blog layout that shows how far the user has scrolled through the post
- * - Should be smoothly animated
- */
 import "remark-github-blockquote-alert/alert.css";
 
 import "@/css/shiki.css";
 import { MobileSeriesNavigation } from "@/features/blog/components/mobile-series";
 import { MobileTableOfContents } from "@/features/blog/components/mobile-toc";
-import { PostSidebar } from "@/features/blog/components/post-sidebar";
-import { ArticleDateTime } from "@/features/blog/components/reading-time";
+import { PostHeader } from "@/features/blog/components/post-header";
+import { PostPanel } from "@/features/blog/components/post-panel";
 import { usePostContext } from "@/lib/contexts/post-context";
-
-import { Separator } from "../ui/separator";
+import { cn } from "@/utils/misc";
 
 export default function PostLayout({
   children,
@@ -23,29 +18,22 @@ export default function PostLayout({
   const { post } = usePostContext();
 
   return (
-    <div className="lg:flex lg:flex-col">
-      <div className="mx-auto px-8">
-        <header className="text-center sm:pt-4">
-          <h1 className="text-3xl font-bold text-balance">{post.title}</h1>
-          <ArticleDateTime
-            date={post.date}
-            stats={post.readingTime}
-            className="pt-2"
-          />
-          <Separator
-            from="from-neutral-600/10"
-            via="via-neutral-600"
-            to="to-neutral-600/10"
-            className="mt-4"
-          />
-        </header>
+    <div className="w-full">
+      <PostHeader />
 
-        <div className="lg:flex">
-          <PostSidebar />
-          <article className="prose prose-base md:prose-lg prose-invert mx-auto pt-4">
-            {children}
-          </article>
-        </div>
+      {/* The single-column track is required: the article has `max-w-none`, so an implicit `auto` column sizes to its widest figure and overflows. */}
+      <div className="max-w-frame mx-auto grid grid-cols-[minmax(0,1fr)] gap-x-10 px-6 pt-8 lg:grid-cols-[16rem_minmax(0,1fr)]">
+        <PostPanel className="sticky top-8 hidden lg:flex" />
+
+        <article
+          className={cn(
+            "prose prose-invert prose-base max-w-none",
+            "prose-p:max-w-[34rem] prose-headings:max-w-[34rem]",
+            "prose-ul:max-w-[34rem] prose-ol:max-w-[34rem] prose-blockquote:max-w-[34rem]",
+          )}
+        >
+          {children}
+        </article>
       </div>
 
       <MobileTableOfContents headingContent={post.toc} className="lg:hidden" />
