@@ -13,21 +13,6 @@ const WIDE_SCRIM =
 const NARROW_SCRIM =
   "linear-gradient(to top, rgba(10,13,11,0.96) 0%, rgba(10,13,11,0.9) 55%, rgba(10,13,11,0.55) 100%)";
 
-const IMAGE = cn(
-  "object-cover grayscale-100 brightness-[0.6]",
-  // Stops short of full colour so a lit tile stays inside the one hue.
-  "group-hover:grayscale-[0.45] group-hover:brightness-95",
-  "transition-[filter] duration-150 ease-linear motion-reduce:transition-none",
-);
-
-/** Thins on hover, but never to zero — the excerpt still has to stay legible
- *  against a bright photograph. */
-const SCRIM_HOVER = cn(
-  "absolute inset-0",
-  "transition-opacity duration-150 ease-linear group-hover:opacity-85",
-  "motion-reduce:transition-none",
-);
-
 /**
  * Image, hue wash, and scrim. No CRT layer here — one plane covers the whole
  * section, and repeating it per tile double-exposes the texture.
@@ -39,7 +24,12 @@ export const PostBackdrop = ({ post }: { post: BlogContent }) => (
       alt=""
       fill
       sizes="(min-width: 900px) 20rem, 100vw"
-      className={IMAGE}
+      // Stops short of full colour so a lit tile stays inside the one hue.
+      className={cn(
+        "object-cover brightness-[0.6] grayscale-100",
+        "group-hover:brightness-95 group-hover:grayscale-[0.45]",
+        "transition-[filter] duration-150 ease-linear motion-reduce:transition-none",
+      )}
       unoptimized // Remote URLs are already served as optimised variants.
     />
 
@@ -51,12 +41,14 @@ export const PostBackdrop = ({ post }: { post: BlogContent }) => (
       )}
     />
 
+    {/* Thins on hover, never to zero — the excerpt still has to stay legible
+        against a bright photograph. */}
     <div
-      className={cn(SCRIM_HOVER, "fold:hidden")}
+      className="fold:hidden absolute inset-0 transition-opacity duration-150 ease-linear group-hover:opacity-85 motion-reduce:transition-none"
       style={{ backgroundImage: WIDE_SCRIM }}
     />
     <div
-      className={cn(SCRIM_HOVER, "fold:block hidden")}
+      className="fold:block absolute inset-0 hidden transition-opacity duration-150 ease-linear group-hover:opacity-85 motion-reduce:transition-none"
       style={{ backgroundImage: NARROW_SCRIM }}
     />
 

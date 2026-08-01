@@ -27,23 +27,12 @@ const shortDate = (date: string) => formatDate(date, "dd.MM.yy");
 const readMinutes = (post: BlogContent) =>
   Math.max(1, Math.round((post.readingTime as { minutes: number }).minutes));
 
-/** Hover brightens the green ramp rather than reaching for `--color-signal`,
- *  which is reserved for state. */
-const HOVER_TEXT = "group-hover:text-green-300";
-const HOVER_LABEL =
-  "group-hover:[&_span>span:first-child]:text-green-300 group-hover:[&_span>span:last-child]:text-green-500";
-const HOVER_EASE = "transition-colors duration-150 ease-linear";
-
 const TagList = ({ tags }: { tags: string[] }) => (
   <ul className="flex flex-wrap gap-x-2 gap-y-1.5">
     {tags.map((tag) => (
       <li
         key={tag}
-        className={cn(
-          "border border-green-500/25 px-1.5 py-px font-mono text-[10px] tracking-wider text-neutral-300 uppercase",
-          "group-hover:border-green-400/50",
-          HOVER_EASE,
-        )}
+        className="border border-green-500/25 px-1.5 py-px font-mono text-[10px] tracking-wider text-neutral-300 uppercase transition-colors duration-150 ease-linear group-hover:border-green-400/50"
       >
         {tag}
       </li>
@@ -70,20 +59,8 @@ const PostTile = ({ post, index }: { post: BlogContent; index: number }) => {
       <PostBackdrop post={post} />
       <TileBrackets />
 
-      <div
-        className={cn(
-          "flex items-baseline gap-2 font-mono text-[10px] tracking-wider",
-          HOVER_LABEL,
-          HOVER_EASE,
-        )}
-      >
-        <span
-          className={cn(
-            "text-green-500/70 tabular-nums",
-            HOVER_TEXT,
-            HOVER_EASE,
-          )}
-        >
+      <div className="flex items-baseline gap-2 font-mono text-[10px] tracking-wider">
+        <span className="text-green-500/70 tabular-nums transition-colors duration-150 ease-linear group-hover:text-green-300">
           {zeroPad(index + 1)}
         </span>
 
@@ -108,7 +85,7 @@ const PostTile = ({ post, index }: { post: BlogContent; index: number }) => {
       <h3 className="fold:text-base mt-1.5 text-lg font-bold text-balance text-neutral-50">
         <Link
           href={post.url}
-          className={cn("after:absolute after:inset-0", HOVER_TEXT, HOVER_EASE)}
+          className="transition-colors duration-150 ease-linear group-hover:text-green-300 after:absolute after:inset-0"
         >
           {post.title}
         </Link>
@@ -121,7 +98,7 @@ const PostTile = ({ post, index }: { post: BlogContent; index: number }) => {
       </div>
 
       <div className="fold:hidden">
-        <dl className={cn("mt-2 space-y-1", HOVER_LABEL, HOVER_EASE)}>
+        <dl className="mt-2 space-y-1">
           <RecordField field="date">{shortDate(post.date)}</RecordField>
 
           {post.type === "BlogSeries" && (

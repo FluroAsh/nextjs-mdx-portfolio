@@ -26,8 +26,10 @@ export const BilingualLabel = ({
     {zh && (
       <span
         className={cn(
-          "hidden sm:inline",
-          tone === "signal" ? "text-signal" : "text-green-400",
+          "hidden transition-colors duration-150 ease-linear sm:inline",
+          tone === "signal"
+            ? "text-signal"
+            : "text-green-400 group-hover:text-green-300",
         )}
       >
         {zh}
@@ -35,8 +37,11 @@ export const BilingualLabel = ({
     )}
     <span
       className={cn(
+        "transition-colors duration-150 ease-linear",
         zh && "sm:ml-1.5",
-        tone === "signal" ? "text-signal-dim" : "text-green-600",
+        tone === "signal"
+          ? "text-signal-dim"
+          : "text-green-600 group-hover:text-green-500",
       )}
     >
       {en}

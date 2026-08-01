@@ -2,12 +2,12 @@
 
 import { motion as m, useReducedMotion } from "motion/react";
 
+import { BilingualLabel } from "@/components/bilingual-label";
 import { Marquee } from "@/components/marquee";
 import { type Skill, skillsList } from "@/data/skills";
 import { cn, zeroPad } from "@/utils/misc";
 
 import { SETTLE } from "../utils";
-import { BilingualLabel } from "@/components/bilingual-label";
 
 /**
  * Toolchain — categorised field matrix on the page surface, with the ambient
@@ -83,10 +83,7 @@ const FieldPass = ({ skills }: { skills: Skill[] }) => (
   </div>
 );
 
-/**
- * The shared Marquee has no reduced-motion gate, so rows swap to static here
- * when the preference is set.
- */
+/** The shared Marquee has no reduced-motion gate, so rows swap to static here when the preference is set. */
 const GlyphField = () => {
   const prefersReducedMotion = useReducedMotion();
 
@@ -126,9 +123,9 @@ const GlyphField = () => {
 /** Quiet hover — structure takes the signal accent; content stays put. */
 const Brackets = () => (
   <span aria-hidden className="pointer-events-none absolute inset-0">
-    <span className="group-hover:border-green-300/70 absolute top-0 left-0 size-2.5 border-t border-l border-green-500/50 transition-colors duration-75" />
-    <span className="group-hover:border-green-300/70 absolute top-0 right-0 size-2.5 border-t border-r border-green-500/50 transition-colors duration-75" />
-    <span className="group-hover:border-green-300/70 absolute bottom-0 left-0 size-2.5 border-b border-l border-green-500/50 transition-colors duration-75" />
+    <span className="absolute top-0 left-0 size-2.5 border-t border-l border-green-500/50 transition-colors duration-75 group-hover:border-green-300/70" />
+    <span className="absolute top-0 right-0 size-2.5 border-t border-r border-green-500/50 transition-colors duration-75 group-hover:border-green-300/70" />
+    <span className="absolute bottom-0 left-0 size-2.5 border-b border-l border-green-500/50 transition-colors duration-75 group-hover:border-green-300/70" />
   </span>
 );
 
@@ -145,12 +142,12 @@ const LayerPanel = ({ layer }: { layer: Layer }) => {
     >
       <Brackets />
 
-      <div className="group-hover:border-green-400/30 flex items-baseline justify-between gap-3 border-b border-green-500/15 pb-2 transition-colors duration-75">
-        <h3 className="group-hover:[&_span>span:first-child]:text-green-300 group-hover:[&_span>span:last-child]:text-green-500 [&_span>span]:transition-colors [&_span>span]:duration-75">
+      <div className="flex items-baseline justify-between gap-3 border-b border-green-500/15 pb-2 transition-colors duration-75 group-hover:border-green-400/30">
+        <h3>
           <BilingualLabel zh={layer.zh} en={layer.en} />
         </h3>
         {/* Fraction, not a bare count — a lone number here reads as a row index. */}
-        <span className="group-hover:text-green-300 font-mono text-[10px] tracking-wider text-green-500/70 tabular-nums transition-colors duration-75">
+        <span className="font-mono text-[10px] tracking-wider text-green-500/70 tabular-nums transition-colors duration-75 group-hover:text-green-300">
           {zeroPad(skills.length)}
           <span className="text-green-500/40">/</span>
           {zeroPad(ITEM_COUNT)}
@@ -166,13 +163,13 @@ const LayerPanel = ({ layer }: { layer: Layer }) => {
               key={skill.name}
               className="grid grid-cols-[1.25rem_1.25rem_1fr] items-center gap-x-2.5 font-mono text-[13px]"
             >
-              <span className="group-hover:text-green-300 text-[10px] tracking-wider text-green-500/70 tabular-nums transition-colors duration-75">
+              <span className="text-[10px] tracking-wider text-green-500/70 tabular-nums transition-colors duration-75 group-hover:text-green-300">
                 {zeroPad(index + 1)}
               </span>
 
               <Icon
                 aria-hidden
-                className="group-hover:text-green-300/80 size-4 justify-self-center text-green-500/60 transition-colors duration-75"
+                className="size-4 justify-self-center text-green-500/60 transition-colors duration-75 group-hover:text-green-300/80"
               />
 
               <span className="text-neutral-200">{skill.label}</span>
