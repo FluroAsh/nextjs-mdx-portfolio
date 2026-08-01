@@ -9,18 +9,23 @@ const isProduction = process.env.NODE_ENV === "production";
 
 export type BlogContent = Blog | BlogSeries;
 
-/** Count the occurrences of all tags across blog posts & store output in a `.json` file. */
+/**
+ * Count the occurrences of all tags across blog posts & store output in a `.json` file.
+ *
+ * `label` keeps the author's casing because it can't be recovered from the
+ * slug — reconstructing `year-in-review` gives "Year In Review".
+ */
 export function createTagCount(allBlogs: BlogContent[]) {
-  const tagCount: Record<string, number> = {};
+  const tagCount: Record<string, { label: string; count: number }> = {};
 
   allBlogs.forEach((file) => {
     if (file.tags && (!isProduction || !file.draft)) {
       file.tags.forEach((tag: string) => {
         const formattedTag = slug(tag);
         if (formattedTag in tagCount) {
-          tagCount[formattedTag] += 1;
+          tagCount[formattedTag].count += 1;
         } else {
-          tagCount[formattedTag] = 1;
+          tagCount[formattedTag] = { label: tag, count: 1 };
         }
       });
     }

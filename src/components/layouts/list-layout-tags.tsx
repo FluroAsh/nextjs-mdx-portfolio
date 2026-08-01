@@ -1,31 +1,13 @@
-import { slug } from "github-slugger";
-import { title } from "radash";
-
 import { Pagination, type PaginationProps } from "@/components/pagination";
-import tags from "@/data/tag-data.json";
+import {
+  ExplorerColumn,
+  type ExplorerCounts,
+  ExplorerSelect,
+} from "@/features/blog/components/content-explorer";
 import { MotionPostsContainer } from "@/features/blog/components/post-preview";
-import { MobileSelectNavigation } from "@/features/blog/components/select-tags";
-import { TagsSidebar } from "@/features/blog/components/tags-sidebar";
 import { cn } from "@/utils/misc";
 
-// TODO: Move this to a utility function
-const mobileLinks = [
-  {
-    title: "All Posts",
-    slug: "all-posts",
-  },
-].concat(
-  Object.keys(tags).map((tag) => ({
-    title: tag === "mdx" ? tag.toUpperCase() : title(slug(tag)),
-    slug: slug(tag),
-  })),
-);
-
-const MobileHeading = ({ title }: { title: string }) => (
-  <h1 className="block text-center text-3xl font-bold sm:hidden">{title}</h1>
-);
-
-type ListLayoutTagsProps = {
+type ListLayoutTagsProps = ExplorerCounts & {
   mobileTitle: string;
   children: React.ReactNode;
   paginationProps: PaginationProps;
@@ -35,23 +17,28 @@ export const ListLayoutTags = ({
   mobileTitle,
   children,
   paginationProps,
-}: ListLayoutTagsProps) => {
-  return (
-    <div
-      className={cn(
-        "mx-auto grid max-w-5xl grid-cols-1 grid-rows-[1fr_auto] gap-x-8 gap-y-8 px-8 pb-8 sm:pt-8 lg:gap-x-16",
-        "sm:grid-cols-[200px_minmax(0,auto)]",
-      )}
-    >
-      <TagsSidebar />
+  resultCount,
+  totalPosts,
+}: ListLayoutTagsProps) => (
+  <div
+    className={cn(
+      "max-w-frame mx-auto grid w-full grid-cols-1 grid-rows-[1fr_auto]",
+      "gap-x-8 gap-y-8 px-6 pb-8 sm:pt-8 lg:gap-x-16",
+      "md:grid-cols-[200px_minmax(0,auto)]", // Not `sm:` — at 640px the post column drops to ~38 characters.
+    )}
+  >
+    <ExplorerColumn resultCount={resultCount} totalPosts={totalPosts} />
 
-      <div className="flex flex-col gap-4">
-        <MobileHeading title={mobileTitle} />
-        <MobileSelectNavigation items={mobileLinks} />
-        <MotionPostsContainer>{children}</MotionPostsContainer>
-      </div>
+    <div className="flex flex-col gap-4">
+      <h1 className="text-center text-3xl font-bold md:hidden">
+        {mobileTitle}
+      </h1>
 
-      <Pagination {...paginationProps} />
+      <ExplorerSelect resultCount={resultCount} totalPosts={totalPosts} />
+
+      <MotionPostsContainer>{children}</MotionPostsContainer>
     </div>
-  );
-};
+
+    <Pagination {...paginationProps} />
+  </div>
+);

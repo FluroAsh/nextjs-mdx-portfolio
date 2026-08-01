@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation";
 
 import { ListLayoutTags } from "@/components/layouts/list-layout-tags";
-import { allBlogContent } from "@/data/content";
+import { allBlogContent, sortedPostsByDateDesc } from "@/data/content";
+import { labelForTag } from "@/data/tags";
 import { PostPreview } from "@/features/blog/components/post-preview";
 import { filterByTag, sortByDateAsc } from "@/features/blog/utils";
 import { getPaginatedPosts } from "@/lib/helpers";
@@ -31,7 +32,12 @@ export default async function Page(props: {
   };
 
   return (
-    <ListLayoutTags mobileTitle={`#${tag}`} paginationProps={paginationProps}>
+    <ListLayoutTags
+      mobileTitle={labelForTag(tag)}
+      paginationProps={paginationProps}
+      resultCount={filteredPosts.length}
+      totalPosts={sortedPostsByDateDesc.length}
+    >
       {paginatedTagPosts.map((post) => (
         <PostPreview key={post._id} post={post} />
       ))}

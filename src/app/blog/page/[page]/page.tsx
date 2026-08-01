@@ -26,7 +26,12 @@ export default async function Page(props: {
   };
 
   return (
-    <ListLayoutTags mobileTitle="All Posts" paginationProps={paginationProps}>
+    <ListLayoutTags
+      mobileTitle="All Posts"
+      paginationProps={paginationProps}
+      resultCount={sortedPostsByDateDesc.length}
+      totalPosts={sortedPostsByDateDesc.length}
+    >
       {paginatedBlogPosts.map((post) => (
         <PostPreview key={post._id} post={post} />
       ))}

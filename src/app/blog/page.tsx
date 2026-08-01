@@ -28,7 +28,12 @@ export default function Page() {
   };
 
   return (
-    <ListLayoutTags mobileTitle="All Posts" paginationProps={paginationProps}>
+    <ListLayoutTags
+      mobileTitle="All Posts"
+      paginationProps={paginationProps}
+      resultCount={sortedPostsByDateDesc.length}
+      totalPosts={sortedPostsByDateDesc.length}
+    >
       {paginatedPosts.map((post) => (
         <PostPreview key={post._id} post={post} />
       ))}
