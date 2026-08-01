@@ -61,8 +61,10 @@ export const RootLayoutWrapper = ({
           <NavigationHeader />
           <main
             className={cn(
-              "flex flex-1 grow justify-center pt-8 sm:pt-0 [&>div]:w-full",
-              isHomepage && "pt-0",
+              "flex flex-1 grow justify-center pt-8 pb-16 sm:pt-0 [&>div]:w-full",
+              // The homepage sections carry their own padding and must run edge
+              // to edge into the footer.
+              isHomepage && "pt-0 pb-0",
             )}
           >
             {children}
