@@ -4,7 +4,7 @@ import {
   type ExplorerCounts,
   ExplorerSelect,
 } from "@/features/blog/components/content-explorer";
-import { MotionPostsContainer } from "@/features/blog/components/post-preview";
+import { PostList } from "@/features/blog/components/post-list";
 import { cn } from "@/utils/misc";
 
 type ListLayoutTagsProps = ExplorerCounts & {
@@ -36,7 +36,7 @@ export const ListLayoutTags = ({
 
       <ExplorerSelect resultCount={resultCount} totalPosts={totalPosts} />
 
-      <MotionPostsContainer>{children}</MotionPostsContainer>
+      <PostList>{children}</PostList>
     </div>
 
     <Pagination {...paginationProps} />

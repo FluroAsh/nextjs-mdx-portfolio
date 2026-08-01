@@ -1,137 +1,116 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useRef } from "react";
 
+import { type BlogSeries } from "contentlayer/generated";
 import { type BlogContent } from "contentlayer/utils";
 import { slug } from "github-slugger";
-import { LucideHash } from "lucide-react";
 import { motion as m } from "motion/react";
 
+import { BilingualLabel } from "@/components/bilingual-label";
 import { paths } from "@/config/paths";
-import { cn } from "@/utils/misc";
+import { cn, toRomanNumeral } from "@/utils/misc";
 
-import { PublicationDate } from "./reading-time";
-import { SeriesBadge } from "./series-badge";
+import { cardImage, readMinutes, shortDate } from "../utils";
+import { card } from "./post-list";
 
-const Description = ({
-  text,
-  characterLimit,
-}: {
-  text: string;
-  characterLimit: number;
-}) => {
-  return (
-    <p className="line-clamp-3 text-neutral-300">
-      {text.length > characterLimit
-        ? `${text.slice(0, characterLimit)}...`
-        : text}
-    </p>
-  );
-};
+const isSeries = (post: BlogContent): post is BlogSeries =>
+  post.type === "BlogSeries";
 
-const Tag = ({ tag }: { tag: string }) => (
-  <li>
-    <Link
-      href={paths.tag.getPathname(slug(tag))}
+const Thumbnail = ({ src }: { src: string }) => (
+  <div className="relative hidden h-full w-36 overflow-hidden border border-green-500/20 md:block">
+    {/* Cross-faded copies: animating the filter instead re-rasterises the downscaled bitmap every frame and crawls. */}
+    <Image
+      src={src}
+      alt=""
+      fill
+      sizes="144px"
+      className="object-cover brightness-[0.6] grayscale-100"
+      unoptimized // Pre-sized CDN variant
+    />
+
+    <Image
+      src={src}
+      alt=""
+      fill
+      sizes="144px"
+      aria-hidden
       className={cn(
-        "z-10 flex items-center justify-center gap-1 rounded-md bg-neutral-800/50 px-2 py-1 text-sm text-neutral-300 hover:bg-green-900/30",
-        "transition-colors duration-200 hover:text-green-400",
+        "object-cover brightness-90 grayscale-[0.55]",
+        "opacity-0 transition-opacity duration-150 ease-linear group-hover:opacity-100",
+        "motion-reduce:transition-none",
       )}
-    >
-      <LucideHash className="size-3 [&_path]:fill-neutral-800" />
-      <span className="mt-0.5">{tag}</span>
-    </Link>
-  </li>
+      unoptimized
+    />
+
+    <div
+      aria-hidden
+      className="absolute inset-0 bg-green-400/10 mix-blend-color transition-opacity duration-150 ease-linear group-hover:opacity-70 motion-reduce:transition-none"
+    />
+  </div>
 );
 
-const Tags = ({ items }: { items: React.ReactNode }) => (
-  <ul className="z-10 flex flex-wrap gap-2 py-3">{items}</ul>
+const TagChips = ({ tags }: { tags: string[] }) => (
+  <ul className="mt-3 flex flex-wrap gap-x-2 gap-y-1.5">
+    {tags.map((tag) => (
+      <li key={tag}>
+        <Link
+          href={paths.tag.getPathname(slug(tag))}
+          className="relative z-10 block border border-green-500/25 px-1.5 py-px font-mono text-[10px] tracking-wider text-neutral-300 uppercase transition-colors duration-150 ease-linear hover:border-green-400/60 hover:text-green-300"
+        >
+          {tag}
+        </Link>
+      </li>
+    ))}
+  </ul>
 );
 
-const Heading = ({ title }: { title: string }) => (
-  <h3 className="mb-2 text-2xl font-bold tracking-tight text-white">{title}</h3>
-);
-
-const container = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      type: "spring",
-      stiffness: 100,
-      staggerChildren: 0.08,
-      ease: [0.17, 0.67, 0.83, 0.67],
-    },
-  },
-};
-
-const item = {
-  hidden: { y: -10, opacity: 0 },
-  show: { y: 0, opacity: 1 },
-};
-
-export const MotionPostsContainer = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => (
-  <m.div
-    className="flex h-full flex-col justify-between"
-    variants={container}
-    initial="hidden"
-    animate="show"
+export const PostPreview = ({ post }: { post: BlogContent }) => (
+  <m.article
+    variants={card}
+    className={cn(
+      "group relative grid gap-x-4 border-b border-green-500/10 py-5 last:border-b-0",
+      "md:grid-cols-[9rem_minmax(0,1fr)]",
+    )}
   >
-    <div className="flex flex-col gap-4">{children}</div>
-  </m.div>
-);
+    <Thumbnail src={cardImage(post.image)} />
 
-export const PostPreview = ({ post }: { post: BlogContent }) => {
-  const articleRef = useRef<HTMLElement>(null);
-  const router = useRouter();
+    <div>
+      <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1 font-mono text-[10px] tracking-wider uppercase">
+        <span className="text-green-500/70 tabular-nums">
+          {shortDate(post.date)}
+        </span>
+        <span className="text-green-500/40">·</span>
+        <span className="text-neutral-400 tabular-nums">
+          {readMinutes(post)} MIN
+        </span>
 
-  const handleContainerClick = (e: React.MouseEvent) => {
-    // Don't navigate if clicking on a tag or any other link
-    if (!(e.target as HTMLElement).closest("a")) {
-      router.push(post.url);
-    }
-  };
-
-  return (
-    <m.article
-      ref={articleRef}
-      className="group relative w-full cursor-pointer border-b border-neutral-800/50 p-4"
-      variants={item}
-      onClick={handleContainerClick}
-    >
-      <div className="absolute top-0 bottom-0 left-0 mb-4 w-1 rounded-l-full bg-green-500 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
-
-      <div className="p-2 pl-0 transition-all duration-200 group-hover:pl-2 sm:pl-4 sm:group-hover:pl-6">
-        <div className="flex w-full items-center justify-between gap-2 pb-2 text-sm text-neutral-400">
-          <PublicationDate date={post.date} />
-          {post.type === "BlogSeries" && (
-            <SeriesBadge
-              seriesTitle={post.seriesTitle}
-              seriesOrder={post.seriesOrder}
-              className="max-w-full overflow-hidden"
-            />
-          )}
-        </div>
-
-        <Heading title={post.title} />
-        <Description text={post.description} characterLimit={180} />
-
-        <Tags
-          items={post.tags.map((tag) => (
-            <Tag key={tag} tag={tag} />
-          ))}
-        />
+        {isSeries(post) && (
+          <span className="ml-auto flex items-baseline gap-1.5">
+            <BilingualLabel zh="系列" en="SERIES" />
+            <span className="text-green-500/70">
+              {toRomanNumeral(post.seriesOrder)}
+            </span>
+          </span>
+        )}
       </div>
 
-      <Link href={post.url}>
-        <span className="sr-only">{post.title}</span>
-      </Link>
-    </m.article>
-  );
-};
+      {/* `after` covers the row, so the card is clickable via one real link. */}
+      <h3 className="mt-1.5 text-2xl font-bold tracking-tight text-neutral-50">
+        <Link
+          href={post.url}
+          className="transition-colors duration-150 ease-linear group-hover:text-green-300 after:absolute after:inset-0"
+        >
+          {post.title}
+        </Link>
+      </h3>
+
+      <p className="max-w-measure mt-2 line-clamp-2 text-sm text-neutral-300">
+        {post.description}
+      </p>
+
+      <TagChips tags={post.tags} />
+    </div>
+  </m.article>
+);

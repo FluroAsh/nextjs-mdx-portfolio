@@ -7,25 +7,15 @@ import { BilingualLabel } from "@/components/bilingual-label";
 import { RecordField } from "@/components/record-field";
 import { paths } from "@/config/paths";
 import { type BilingualPair } from "@/data/identity";
-import { formatDate } from "@/utils/dates";
 import { cn, zeroPad } from "@/utils/misc";
 
-import { topicFor } from "../utils";
+import { readMinutes, shortDate, topicFor } from "../utils";
 import { PostBackdrop, TileBrackets } from "./post-backdrop";
 
 const MARKER: BilingualPair = { zh: "日誌", en: "LOG" };
 const SERIES_LABEL: BilingualPair = { zh: "系列", en: "SERIES" };
 
-/** Says nothing about subject matter on purpose — anything describing the
- *  current posts goes stale the first time the subject changes. */
 const INTRO = "Written when there's something worth writing down.";
-
-/** Fixed-width, so a column of dates stays a column. */
-const shortDate = (date: string) => formatDate(date, "dd.MM.yy");
-
-/** `readingTime` comes through Contentlayer as untyped JSON. */
-const readMinutes = (post: BlogContent) =>
-  Math.max(1, Math.round((post.readingTime as { minutes: number }).minutes));
 
 const TagList = ({ tags }: { tags: string[] }) => (
   <ul className="flex flex-wrap gap-x-2 gap-y-1.5">

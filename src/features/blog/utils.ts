@@ -2,6 +2,8 @@ import { BlogSeries } from "contentlayer/generated";
 import { type BlogContent } from "contentlayer/utils";
 import { slug } from "github-slugger";
 
+import { formatDate } from "@/utils/dates";
+
 /**
  * Filter out posts based on a `tag` parameter.
  *
@@ -35,3 +37,15 @@ export const sortBySeriesOrderDesc = (a: BlogSeries, b: BlogSeries) =>
 /** The lead tag stands for the post's topic; the rest are detail. */
 export const topicFor = (tags: readonly string[]) =>
   tags[0]?.toUpperCase() ?? null;
+
+/** Fixed-width, so a column of dates stays a column. */
+export const shortDate = (date: string) => formatDate(date, "dd.MM.yy");
+
+/** `readingTime` comes through Contentlayer as untyped JSON. */
+export const readMinutes = (post: BlogContent) =>
+  Math.max(1, Math.round((post.readingTime as { minutes: number }).minutes));
+
+/** The CDN has no resizing API, only pre-generated variants, and `medium_` is
+ *  the one present on every asset — `small_` and `thumbnail_` are not. */
+export const cardImage = (url: string) =>
+  url.replace(/\/large_([^/]+)$/, "/medium_$1");
