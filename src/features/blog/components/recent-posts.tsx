@@ -31,7 +31,7 @@ const TagList = ({ tags }: { tags: string[] }) => (
 );
 
 /**
- * One tile, two densities. Folded, the column is 17–20rem and prose would land
+ * One tile, two densities. Folded, the column is 272–320px and prose would land
  * near 40 characters, so the tile carries identity and coordinates only.
  * Stacked, it has the full frame and takes the field table and excerpt too.
  */

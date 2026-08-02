@@ -23,7 +23,7 @@ export const PostBackdrop = ({ post }: { post: BlogContent }) => (
       src={post.image}
       alt=""
       fill
-      sizes="(min-width: 900px) 20rem, 100vw"
+      sizes="(min-width: 900px) 320px, 100vw"
       // Stops short of full colour so a lit tile stays inside the one hue.
       className={cn(
         "object-cover brightness-[0.6] grayscale-100",
@@ -41,8 +41,7 @@ export const PostBackdrop = ({ post }: { post: BlogContent }) => (
       )}
     />
 
-    {/* Thins on hover, never to zero — the excerpt still has to stay legible
-        against a bright photograph. */}
+    {/* Thins on hover, never to zero — the excerpt still has to stay legible against a bright photograph. */}
     <div
       className="fold:hidden absolute inset-0 transition-opacity duration-150 ease-linear group-hover:opacity-85 motion-reduce:transition-none"
       style={{ backgroundImage: WIDE_SCRIM }}
@@ -52,8 +51,7 @@ export const PostBackdrop = ({ post }: { post: BlogContent }) => (
       style={{ backgroundImage: NARROW_SCRIM }}
     />
 
-    {/* Stacked, the chrome row runs past where the horizontal scrim has thinned
-        out, so the top band needs darkening separately. */}
+    {/* Stacked, the chrome row runs past where the horizontal scrim has thinned out, so the top band needs darkening separately. */}
     <div
       className="fold:hidden absolute inset-x-0 top-0 h-24"
       style={{

@@ -55,7 +55,7 @@ export const PostPreview = ({ post }: { post: BlogContent }) => (
     variants={item}
     className={cn(
       "group relative grid gap-x-4 border-b border-green-500/10 py-5 last:border-b-0",
-      "md:grid-cols-[9rem_minmax(0,1fr)]",
+      "md:grid-cols-[144px_minmax(0,1fr)]",
     )}
   >
     <Thumbnail src={cardImage(post.image)} />

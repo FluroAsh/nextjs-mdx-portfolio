@@ -19,7 +19,7 @@ export const RecordField = ({
   <div
     className={cn(
       "grid items-baseline gap-x-3",
-      "grid-cols-[3.25rem_1fr] sm:grid-cols-[5.5rem_1fr]",
+      "grid-cols-[52px_1fr] sm:grid-cols-[88px_1fr]",
     )}
   >
     <dt>

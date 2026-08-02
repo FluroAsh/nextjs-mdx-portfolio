@@ -80,7 +80,7 @@ const Row = ({
 }) => (
   <div
     className={cn(
-      "grid grid-cols-[2.75rem_1fr] gap-x-3 sm:grid-cols-[3.5rem_1fr]",
+      "grid grid-cols-[44px_1fr] gap-x-3 sm:grid-cols-[56px_1fr]",
       className,
     )}
   >

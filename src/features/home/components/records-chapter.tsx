@@ -22,9 +22,9 @@ export const RecordsChapter = ({
     <ScanlinePlane />
 
     <div className="max-w-frame py-section relative z-10 mx-auto w-full px-6">
-      {/* 17rem between the fold and `lg` keeps the records column above 500px,
+      {/* 272px between the fold and `lg` keeps the records column above 500px,
           which is where its prose stops holding a readable line length. */}
-      <div className="fold:grid-cols-[minmax(0,1fr)_17rem] grid gap-x-10 gap-y-12 lg:grid-cols-[minmax(0,1fr)_20rem]">
+      <div className="fold:grid-cols-[minmax(0,1fr)_272px] grid gap-x-10 gap-y-12 lg:grid-cols-[minmax(0,1fr)_320px]">
         {/* Divider hangs off the taller column so it never stops partway down. */}
         <TimelineSection className="fold:border-r fold:border-green-500/15 fold:pr-10" />
 

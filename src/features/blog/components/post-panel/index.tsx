@@ -89,7 +89,7 @@ export const PostPanel = ({ className }: { className?: string }) => {
     // base one as a conflict.
     <aside
       className={cn(
-        "clip-chamfer max-h-[calc(100dvh-4rem)] flex-col self-start bg-green-500/25 p-px",
+        "clip-chamfer max-h-[calc(100dvh-64px)] flex-col self-start bg-green-500/25 p-px",
         className,
       )}
     >

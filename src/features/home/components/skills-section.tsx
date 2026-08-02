@@ -161,7 +161,7 @@ const LayerPanel = ({ layer }: { layer: Layer }) => {
           return (
             <li
               key={skill.name}
-              className="grid grid-cols-[1.25rem_1.25rem_1fr] items-center gap-x-2.5 font-mono text-[13px]"
+              className="grid grid-cols-[20px_20px_1fr] items-center gap-x-2.5 font-mono text-[13px]"
             >
               <span className="text-[10px] tracking-wider text-green-500/70 tabular-nums transition-colors duration-75 group-hover:text-green-300">
                 {zeroPad(index + 1)}

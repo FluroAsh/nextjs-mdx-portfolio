@@ -86,8 +86,8 @@ const useTrackIndicator = (activeId: string) => {
 
 /** A mask, not a gradient overlay — the panel fill is not a flat colour. */
 const fadeMask = ({ top, bottom }: { top: boolean; bottom: boolean }) => {
-  const start = top ? "2rem" : "0px";
-  const end = bottom ? "2rem" : "0px";
+  const start = top ? "32px" : "0px";
+  const end = bottom ? "32px" : "0px";
 
   return `linear-gradient(to bottom, transparent 0, black ${start}, black calc(100% - ${end}), transparent 100%)`;
 };

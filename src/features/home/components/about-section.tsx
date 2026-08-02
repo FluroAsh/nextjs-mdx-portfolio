@@ -57,7 +57,7 @@ export const AboutSection = ({
         className={cn(
           "max-w-frame py-section relative z-10 mx-auto grid w-full px-6",
           "grid-cols-1 gap-x-10",
-          "md:grid-cols-[8rem_1fr]",
+          "md:grid-cols-[128px_1fr]",
         )}
       >
         {/* Full height, with a small tick at the bottom so the line ends deliberately rather than trailing off. */}

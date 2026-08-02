@@ -44,18 +44,23 @@
   --color-grey: #afafaf;
   --color-grey-dark: #454545;
 
+  /* Drives every spacing utility as `calc(var(--spacing) * n)`. In px, so the scale reads directly: `p-4` is 16px, `size-12` is 48px. */
+  --spacing: 4px;
+
   --spacing-header: 55px;
   --spacing-mobile-nav: 68px;
 
   /* Used top and bottom on every section, so the space between sections is always bigger than the space inside one. */
-  --spacing-section: clamp(3.5rem, 7vw, 6rem);
+  --spacing-section: clamp(56px, 7vw, 96px);
 
   /* `measure` limits the text width and sits *inside* `frame`; putting it on the frame itself narrows the whole page. */
-  --container-frame: 64rem;
+  --container-frame: 1024px;
+
+  /* rem, not px — this is a character count, not a width. At a larger root font
+     size the box has to grow too or the line stops holding ~70 characters. */
   --container-measure: 38rem;
 
-  /* Not a device size — below this the records column loses too much width to
-     a second column and its prose stops holding a readable line length. */
+  /* Below this the records column loses too much width and its prose stops holding a readable line length. */
   --breakpoint-fold: 56.25rem;
 
   /* The only non-green accent, used just for the current role so it reads as a
