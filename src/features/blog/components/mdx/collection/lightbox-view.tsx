@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 import { useLightboxDimensions } from "@/hooks/use-lightbox-dimensions";
-import { cn } from "@/utils/misc";
+import { cn, zeroPad } from "@/utils/misc";
 
 import { Lightbox } from "../lightbox";
 import { LightboxTrigger } from "../lightbox-trigger";
@@ -85,12 +85,13 @@ export const LightboxView = ({
             className={cn(
               "absolute left-1/2 z-10 -translate-x-1/2",
               "bottom-4 sm:top-6 sm:bottom-auto",
-              "rounded-full border border-neutral-800 bg-black/80 px-4 py-2 backdrop-blur-xs",
+              "bg-surface-page/85 px-3 py-1.5 backdrop-blur-sm",
             )}
           >
-            <span className="text-sm font-semibold tracking-wide text-green-500">
-              {index + 1} <span className="mx-1 text-neutral-200">of</span>{" "}
-              {slides.length}
+            <span className="font-mono text-[11px] tracking-wider text-green-400 tabular-nums">
+              {zeroPad(index + 1)}
+              <span className="mx-1 text-green-600">/</span>
+              {zeroPad(slides.length)}
             </span>
           </div>
         )}

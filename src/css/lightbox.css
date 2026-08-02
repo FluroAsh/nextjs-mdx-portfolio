@@ -1,0 +1,19 @@
+/* yet-another-react-lightbox ships neutral chrome. Its own custom properties are
+   the supported hook, so prefer them over overriding `.yarl__*` classes, which
+   are internal and change between majors. */
+.yarl__root {
+  --yarl__color_button: var(--color-green-400);
+  --yarl__color_button_active: var(--color-green-300);
+  --yarl__color_button_disabled: color-mix(
+    in oklab,
+    var(--color-green-400) 30%,
+    transparent
+  );
+}
+
+/* Square, to match the plate language the article images now use. */
+.yarl__button:focus-visible {
+  border-radius: 0;
+  outline: 1px solid var(--color-green-400);
+  outline-offset: 2px;
+}

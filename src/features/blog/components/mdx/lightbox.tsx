@@ -56,7 +56,8 @@ export const Lightbox = ({
     animation={{ zoom: 200, fade: 200 }}
     styles={{
       container: {
-        backgroundColor: "hsla(0, 0%, 0%, 0.75)",
+        backgroundColor:
+          "color-mix(in oklab, var(--surface-page) 88%, transparent)",
         backdropFilter: "blur(8px)",
       },
     }}

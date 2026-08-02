@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Catamaran, Fira_Sans } from "next/font/google";
 
-import "yet-another-react-lightbox/styles.css";
-
 import { RootLayoutWrapper } from "@/components/layouts/root-layout-wrapper";
 import "@/css/globals.css";
 import { siteMetaData } from "@/data/site-metadata";
