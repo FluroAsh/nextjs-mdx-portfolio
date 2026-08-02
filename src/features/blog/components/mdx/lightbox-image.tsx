@@ -6,6 +6,7 @@ import { ExpandIconHover } from "@/components/icons/expand-hover";
 import { useLightboxDimensions } from "@/hooks/use-lightbox-dimensions";
 import { altToFilename } from "@/utils/image";
 
+import { ImageCaption } from "./image-caption";
 import { Lightbox } from "./lightbox";
 import { LightboxTrigger } from "./lightbox-trigger";
 
@@ -69,7 +70,7 @@ export const LightboxImage = ({
           <ExpandIconHover />
         </LightboxTrigger>
 
-        {caption && <figcaption>{caption}</figcaption>}
+        {caption && <ImageCaption caption={caption} className="rounded-b-md" />}
       </figure>
     </>
   );

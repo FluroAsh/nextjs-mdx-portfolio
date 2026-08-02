@@ -2,9 +2,9 @@ import { ExpandIconHover } from "@/components/icons/expand-hover";
 import { IMAGE_SIZE } from "@/types";
 import { cn } from "@/utils/misc";
 
+import { ImageCaption } from "../image-caption";
 import { ResponsiveImage } from "../responsive-image";
 import { type ImageProps } from "./collection.types";
-import { ImageCaption } from "./image-caption";
 
 type ImageTileProps = ImageProps & {
   className?: string;
@@ -29,7 +29,7 @@ export const ImageTile = ({
       <div className="relative overflow-hidden rounded-[5.5px] hover:cursor-pointer">
         <ResponsiveImage src={newSrc} alt={alt} />
         {caption && (
-          <ImageCaption caption={caption} isFixed className="rounded-b-sm" />
+          <ImageCaption caption={caption} overlay className="rounded-b-sm" />
         )}
       </div>
       <ExpandIconHover />
