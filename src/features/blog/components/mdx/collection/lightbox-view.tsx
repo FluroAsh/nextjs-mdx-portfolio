@@ -6,6 +6,7 @@ import { useLightboxDimensions } from "@/hooks/use-lightbox-dimensions";
 import { cn } from "@/utils/misc";
 
 import { Lightbox } from "../lightbox";
+import { LightboxTrigger } from "../lightbox-trigger";
 import { CollectionVariant } from "./lightbox-collection";
 
 type LightboxViewProps = {
@@ -62,13 +63,14 @@ export const LightboxView = ({
         )}
       >
         {images.map((serverImage, i) => (
-          // Wrap RSC images to handle click event on the client-side (trigger lightbox)
-          <div
+          // Wraps the RSC image so the click can be handled on the client.
+          <LightboxTrigger
             key={`${variant}-wrapper-${i + 1}`}
-            onClick={() => handleClick(i)}
+            onOpen={() => handleClick(i)}
+            label={`Expand image ${i + 1} of ${slides.length}${slides[i]?.alt ? `: ${slides[i].alt}` : ""}`}
           >
             {serverImage}
-          </div>
+          </LightboxTrigger>
         ))}
       </div>
 
@@ -79,7 +81,13 @@ export const LightboxView = ({
         slides={slidesWithDimensions}
         on={{ view: ({ index }) => setIndex(index) }} // Syncs state
         controls={() => (
-          <div className="absolute bottom-4 left-1/2 z-10 -translate-x-1/2 rounded-full border border-neutral-800 bg-black/80 px-4 py-2 backdrop-blur-xs sm:top-6 sm:bottom-auto">
+          <div
+            className={cn(
+              "absolute left-1/2 z-10 -translate-x-1/2",
+              "bottom-4 sm:top-6 sm:bottom-auto",
+              "rounded-full border border-neutral-800 bg-black/80 px-4 py-2 backdrop-blur-xs",
+            )}
+          >
             <span className="text-sm font-semibold tracking-wide text-green-500">
               {index + 1} <span className="mx-1 text-neutral-200">of</span>{" "}
               {slides.length}

@@ -7,6 +7,7 @@ import { useLightboxDimensions } from "@/hooks/use-lightbox-dimensions";
 import { altToFilename } from "@/utils/image";
 
 import { Lightbox } from "./lightbox";
+import { LightboxTrigger } from "./lightbox-trigger";
 
 type LightBoxImageProps = {
   src?: string;
@@ -58,14 +59,17 @@ export const LightboxImage = ({
         carousel={{ finite: true }}
       />
 
-      <figure
-        ref={containerRef}
-        onClick={() => setIsOpen(true)}
-        className="group relative mx-auto max-h-full w-fit hover:cursor-pointer"
-      >
-        {serverImage}
+      <figure ref={containerRef} className="mx-auto w-fit">
+        <LightboxTrigger
+          onOpen={() => setIsOpen(true)}
+          label={`Expand image: ${alt}`}
+          className="relative block"
+        >
+          {serverImage}
+          <ExpandIconHover />
+        </LightboxTrigger>
+
         {caption && <figcaption>{caption}</figcaption>}
-        <ExpandIconHover />
       </figure>
     </>
   );
