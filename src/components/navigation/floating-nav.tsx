@@ -39,7 +39,7 @@ export const FloatingNav = ({
 
   return (
     <m.nav
-      className="fixed left-1/2 z-20 hidden sm:block"
+      className="fixed left-1/2 z-50 hidden sm:block"
       style={{ x: "-50%" }}
       initial={{ y: isMobile ? 10 : -100 }}
       animate={{ y: shouldBeVisible ? 10 : -100 }}
