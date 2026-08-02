@@ -1,8 +1,7 @@
 import { useState } from "react";
 
-import { LucideBookmark } from "lucide-react";
+import { LucideList } from "lucide-react";
 import { useScroll } from "motion/react";
-import { useMedia } from "react-use";
 
 import {
   Drawer,
@@ -13,23 +12,21 @@ import {
 } from "@/components/ui/drawer";
 import { useRangeScroll } from "@/hooks/use-range-scroll";
 import { type TocItem } from "@/lib/plugins/extract-headings";
-import { cn } from "@/utils/misc";
+import { cn, zeroPad } from "@/utils/misc";
 
-type Props = {
-  headingContent: TocItem[];
-  className?: string;
-};
+import { DRAWER_SHELL, DrawerMarker } from "./mobile-drawer";
+
+/** Explicit per depth — an interpolated `pl-` class is never generated. */
+const INDENT: Record<number, string> = { 3: "pl-6", 4: "pl-9", 5: "pl-12" };
 
 export const MobileTableOfContents = ({
   headingContent,
-
   className,
-}: Props) => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const isTablet = useMedia(
-    "(min-width: 768px) and (max-width: 1024px)",
-    false,
-  );
+}: {
+  headingContent: TocItem[];
+  className?: string;
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
 
   const { scrollY } = useScroll();
   const { shouldBeVisible, lastScrollY } = useRangeScroll(
@@ -47,45 +44,42 @@ export const MobileTableOfContents = ({
             lastScrollY >= 200 && shouldBeVisible
               ? "opacity-100"
               : "pointer-events-none opacity-0",
-            "fixed z-10 mr-2 size-12 -translate-x-full transition-opacity duration-300",
-            isTablet ? "right-4 bottom-3" : "right-4 bottom-19",
+            // One button-width inboard of the scroll-to-top control.
+            "fixed right-19 bottom-20 z-40 size-12 sm:bottom-4",
+            "clip-chamfer bg-green-500/25 p-px transition-opacity duration-300",
             className,
           )}
           aria-label="Open Table of Contents"
         >
-          <div className="absolute inset-0 z-10 flex items-center justify-center rounded-full border-2 border-neutral-700 bg-gradient-to-b from-neutral-800 to-neutral-900">
-            <LucideBookmark size={20} className="stroke-neutral-400" />
-          </div>
+          <span className="clip-chamfer bg-surface-page flex size-full items-center justify-center">
+            <LucideList size={18} className="stroke-green-400" />
+          </span>
         </button>
       </DrawerTrigger>
 
-      <DrawerContent>
-        <DrawerHeader>
-          <DrawerTitle className="text-center text-2xl text-neutral-100">
-            Table of Contents
-          </DrawerTitle>
+      <DrawerContent className={DRAWER_SHELL}>
+        <DrawerHeader className="p-0">
+          <DrawerMarker
+            zh="目錄"
+            en="CONTENTS"
+            readout={zeroPad(headingContent.length)}
+          />
+          <DrawerTitle className="sr-only">Table of Contents</DrawerTitle>
         </DrawerHeader>
 
-        <div className="px-4 pb-6">
-          <ul className="max-h-[50dvh] list-none overflow-x-hidden overflow-y-scroll">
+        {/* Track on the list, padding on the wrapper — on the list itself the
+            border lands on the drawer edge and disappears. */}
+        <div className="max-h-[55dvh] overflow-y-auto px-4 py-4">
+          <ul className="border-l border-green-500/20">
             {headingContent.map((heading) => (
-              <li
-                key={heading.value}
-                data-depth={heading.depth}
-                className={cn(
-                  "relative",
-                  heading.depth === 2 && "my-2 text-lg font-bold",
-                  heading.depth === 2
-                    ? "text-neutral-100"
-                    : "text-sm text-neutral-400",
-                  heading.depth > 2 &&
-                    `ml-${heading.depth * 2} before:absolute before:top-0 before:left-0 before:block before:h-full before:w-px before:bg-green-500 before:content-['']`,
-                )}
-              >
+              <li key={heading.url}>
                 <a
                   href={heading.url}
                   onClick={() => setIsOpen(false)}
-                  className="ml-2 block max-w-fit truncate rounded-md px-2 py-1 transition-colors duration-75 hover:bg-neutral-300/10 hover:text-green-500"
+                  className={cn(
+                    "block py-2 pl-3 font-mono text-[13px] tracking-wide text-neutral-300 transition-colors duration-150 ease-linear active:text-green-300",
+                    INDENT[heading.depth],
+                  )}
                 >
                   {heading.value}
                 </a>

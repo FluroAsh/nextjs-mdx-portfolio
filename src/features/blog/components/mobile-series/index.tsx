@@ -7,6 +7,7 @@ import { getSeriesPosts, isBlogSeries } from "@/data/content";
 import { useRangeScroll } from "@/hooks/use-range-scroll";
 import { usePostContext } from "@/lib/contexts/post-context";
 
+import { DRAWER_SHELL } from "../mobile-drawer";
 import { MobileSeriesButton } from "./button";
 import { MobileSeriesFooter } from "./footer";
 import { MobileSeriesHeader } from "./header";
@@ -45,28 +46,27 @@ export const MobileSeriesNavigation = ({
         className={className}
       />
 
-      <DrawerContent>
+      <DrawerContent className={DRAWER_SHELL}>
         <MobileSeriesHeader
           seriesTitle={post.seriesTitle}
           currentIndex={currentIndex}
           totalPosts={currentSeriesPosts.length}
         />
 
-        <div className="px-4 pb-6">
-          <div className="mb-4 max-h-[50dvh] overflow-x-hidden overflow-y-scroll">
-            <div className="space-y-2">
-              {currentSeriesPosts.map((seriesPost, index) => (
+        <div className="px-4 pt-4 pb-6">
+          <ol className="mb-4 max-h-[50dvh] space-y-1 overflow-y-auto">
+            {currentSeriesPosts.map((seriesPost, index) => (
+              <li key={seriesPost.slug}>
                 <MobileSeriesItem
-                  key={seriesPost.slug}
                   title={seriesPost.title}
                   url={seriesPost.url}
                   index={index}
                   isCurrent={seriesPost.slug === post.slug}
                   onItemClick={() => setIsOpen(false)}
                 />
-              ))}
-            </div>
-          </div>
+              </li>
+            ))}
+          </ol>
 
           <MobileSeriesFooter onFooterClick={() => setIsOpen(false)} />
         </div>

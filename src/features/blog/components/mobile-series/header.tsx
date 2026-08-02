@@ -1,22 +1,26 @@
 import { DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
+import { zeroPad } from "@/utils/misc";
 
-interface MobileSeriesHeaderProps {
-  seriesTitle: string;
-  currentIndex: number;
-  totalPosts: number;
-}
+import { DrawerMarker } from "../mobile-drawer";
 
 export const MobileSeriesHeader = ({
   seriesTitle,
   currentIndex,
   totalPosts,
-}: MobileSeriesHeaderProps) => (
-  <DrawerHeader>
-    <DrawerTitle className="text-center text-2xl text-neutral-100">
+}: {
+  seriesTitle: string;
+  currentIndex: number;
+  totalPosts: number;
+}) => (
+  <DrawerHeader className="gap-0 p-0">
+    <DrawerMarker
+      zh="系列"
+      en="SERIES"
+      readout={`${zeroPad(currentIndex + 1)}/${zeroPad(totalPosts)}`}
+    />
+
+    <DrawerTitle className="px-4 pt-4 font-mono text-[13px] font-normal text-neutral-400">
       {seriesTitle}
     </DrawerTitle>
-    <p className="text-center text-sm text-neutral-400">
-      Part {currentIndex + 1} of {totalPosts}
-    </p>
   </DrawerHeader>
 );

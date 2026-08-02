@@ -111,7 +111,9 @@
    two stacked clipped layers: the outer is the border, the inner the fill. The
    fill must be opaque, or the border layer shows through all of it. */
 @utility clip-chamfer {
-  --chamfer: 0.875rem;
+  /* Proportional so it reads the same on a 48px button and a 256px panel. The
+     cap is 16px because panel content sits at `p-4` — a deeper cut crowds it. */
+  --chamfer: min(16px, 14%);
 
   clip-path: polygon(
     var(--chamfer) 0,

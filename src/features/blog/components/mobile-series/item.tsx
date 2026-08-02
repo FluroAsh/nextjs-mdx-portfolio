@@ -1,14 +1,6 @@
 import Link from "next/link";
 
-import { cn } from "@/utils/misc";
-
-type MobileSeriesItemProps = {
-  title: string;
-  url: string;
-  index: number;
-  isCurrent: boolean;
-  onItemClick: () => void;
-};
+import { cn, toRomanNumeral } from "@/utils/misc";
 
 export const MobileSeriesItem = ({
   title,
@@ -16,43 +8,47 @@ export const MobileSeriesItem = ({
   index,
   isCurrent,
   onItemClick,
-}: MobileSeriesItemProps) => {
+}: {
+  title: string;
+  url: string;
+  index: number;
+  isCurrent: boolean;
+  onItemClick: () => void;
+}) => {
   const content = (
-    <div className="flex items-center gap-3">
+    <>
+      {/* Fixed width — roman numerals vary, so the titles need a track. */}
       <span
         className={cn(
-          "flex size-6 shrink-0 items-center justify-center rounded-full text-sm font-bold",
-          isCurrent
-            ? "bg-green-500 text-black"
-            : "bg-neutral-700 text-neutral-300",
+          "w-7 shrink-0 text-right font-mono text-[11px]",
+          isCurrent ? "text-green-400" : "text-green-600/60",
         )}
       >
-        {index + 1}
+        {toRomanNumeral(index + 1)}
       </span>
+
       <span
         className={cn(
-          "line-clamp-2 text-base leading-tight font-semibold",
-          isCurrent ? "text-green-400" : "text-neutral-300",
+          "border-l-2 py-1 pl-3 font-mono text-[13px] leading-snug",
+          isCurrent
+            ? "border-green-400 text-green-300"
+            : "border-transparent text-neutral-300",
         )}
       >
         {title}
       </span>
-    </div>
+    </>
   );
 
   if (isCurrent) {
-    return (
-      <div className="rounded-md border border-green-500/30 bg-green-900/20 px-3 py-3">
-        {content}
-      </div>
-    );
+    return <div className="flex items-baseline gap-2">{content}</div>;
   }
 
   return (
     <Link
       href={url}
       onClick={onItemClick}
-      className="block rounded-md px-3 py-3 transition-colors duration-75 hover:bg-neutral-800/30"
+      className="flex items-baseline gap-2 active:[&>span:last-child]:text-green-300"
     >
       {content}
     </Link>

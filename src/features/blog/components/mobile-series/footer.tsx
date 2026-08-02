@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { LucideChevronLeft } from "lucide-react";
 
+import { BilingualLabel } from "@/components/bilingual-label";
 import { paths } from "@/config/paths";
 
 export const MobileSeriesFooter = ({
@@ -9,14 +10,14 @@ export const MobileSeriesFooter = ({
 }: {
   onFooterClick: () => void;
 }) => (
-  <div className="border-t border-neutral-700/50 pt-4">
+  <div className="border-t border-green-500/15 pt-4">
     <Link
       href={paths.blog}
       onClick={onFooterClick}
-      className="inline-flex items-center gap-2 rounded-md px-3 py-2 text-neutral-400 transition-colors duration-75 hover:text-green-500"
+      className="inline-flex items-center gap-1.5"
     >
-      <LucideChevronLeft className="size-4" />
-      <span>All Posts</span>
+      <LucideChevronLeft className="size-3.5 text-green-600" />
+      <BilingualLabel zh="返回" en="INDEX" />
     </Link>
   </div>
 );
