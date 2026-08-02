@@ -4,13 +4,16 @@ import YARLightbox, {
 } from "yet-another-react-lightbox";
 import Download from "yet-another-react-lightbox/plugins/download";
 import Zoom from "yet-another-react-lightbox/plugins/zoom";
+import "yet-another-react-lightbox/styles.css";
+
+import "@/css/lightbox.css";
 
 const LightboxSlide = ({ slide }: { slide: SlideImage }) => (
   // eslint-disable-next-line @next/next/no-img-element
   <img
     src={slide.src}
     alt={slide.alt}
-    className="max-h-full rounded-lg"
+    className="max-h-full rounded-none"
     draggable={false}
   />
 );
