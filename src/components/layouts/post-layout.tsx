@@ -21,9 +21,9 @@ export default function PostLayout({
     <div className="w-full">
       <PostHeader />
 
-      {/* The single-column track is required: the article has `max-w-none`, so an implicit `auto` column sizes to its widest figure and overflows. */}
-      <div className="max-w-frame mx-auto grid grid-cols-[minmax(0,1fr)] gap-x-10 px-6 pt-8 lg:grid-cols-[16rem_minmax(0,1fr)]">
-        <PostPanel className="sticky top-8 hidden lg:flex" />
+      {/* The single-column track is required — the article is `max-w-none`, so an `auto` column sizes to its widest figure and overflows. */}
+      <div className="max-w-frame fold:grid-cols-[256px_minmax(0,1fr)] mx-auto grid grid-cols-[minmax(0,1fr)] gap-x-10 px-6 pt-8">
+        <PostPanel className="fold:flex sticky top-8 hidden" />
 
         <article
           className={cn(
@@ -36,8 +36,11 @@ export default function PostLayout({
         </article>
       </div>
 
-      <MobileTableOfContents headingContent={post.toc} className="lg:hidden" />
-      <MobileSeriesNavigation className="lg:hidden" />
+      <MobileTableOfContents
+        headingContent={post.toc}
+        className="fold:hidden"
+      />
+      <MobileSeriesNavigation className="fold:hidden" />
     </div>
   );
 }
