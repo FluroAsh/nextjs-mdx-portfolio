@@ -14,19 +14,13 @@ import { MobileNav } from "../navigation/mobile-nav";
 import { NavigationHeader } from "../navigation/navigation-header";
 
 /**
- * The page texture. Three things keep it visible, and getting any of them wrong
- * makes it disappear completely rather than just look faint:
- *
- * - `soft-light`, not `overlay` — overlay flattens to nothing on a dark page.
- * - Tiled at its real size of 256px; scaling it down averages the pattern away.
- * - No opacity. The blend mode already softens it, so the strength is set in
- *   the image itself (a 90–170 range around mid-grey).
+ * Any of these three will make the texture vanish entirely: `overlay` instead
+ * of `soft-light` (flattens on a dark page), tiling below its real 256px
+ * (averages the pattern away), or adding opacity (strength lives in the image).
  */
 export const BackgroundOverlay = () => (
-  // Paints the background colour here and isolates, so the texture has
-  // something to blend with. A background on `body` gets handed to the canvas,
-  // outside every stacking context, leaving a blended child with nothing under
-  // it.
+  // The background sits here, not on `body` — there it goes to the canvas,
+  // outside every stacking context, leaving the blended child nothing to mix with.
   <div
     id="background-overlay"
     aria-hidden
@@ -51,7 +45,8 @@ export const RootLayoutWrapper = ({
   const isHomepage = pathname === "/";
 
   return (
-    // `reducedMotion="user"` drops transforms and keeps opacity, so nothing animates into place but everything still ends up visible.
+    // `reducedMotion="user"` keeps opacity but drops transforms, so nothing
+    // animates into place yet everything still ends up visible.
     <MotionConfig reducedMotion="user">
       <CommandPalette>
         <div className="page-inner flex min-h-dvh flex-col">
@@ -60,9 +55,9 @@ export const RootLayoutWrapper = ({
           <NavigationHeader />
           <main
             className={cn(
-              "flex flex-1 grow justify-center pt-8 pb-16 sm:pt-0 [&>div]:w-full",
+              "flex flex-1 grow justify-center pb-16 [&>div]:w-full",
               // The homepage sections carry their own padding and must run edge to edge into the footer.
-              isHomepage && "pt-0 pb-0",
+              isHomepage && "pb-0",
             )}
           >
             {children}

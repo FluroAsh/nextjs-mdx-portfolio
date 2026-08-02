@@ -23,7 +23,7 @@ export const ListLayoutTags = ({
   <div
     className={cn(
       "max-w-frame mx-auto grid w-full grid-cols-1 grid-rows-[1fr_auto]",
-      "gap-x-8 gap-y-8 px-6 pb-8 sm:pt-8 lg:gap-x-16",
+      "gap-x-8 gap-y-8 px-6 py-8 lg:gap-x-16",
       "md:grid-cols-[200px_minmax(0,auto)]", // Not `sm:` — at 640px the post column drops to ~38 characters.
     )}
   >
