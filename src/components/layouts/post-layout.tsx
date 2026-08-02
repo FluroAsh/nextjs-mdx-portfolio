@@ -25,11 +25,15 @@ export default function PostLayout({
       <div className="max-w-frame fold:grid-cols-[256px_minmax(0,1fr)] mx-auto grid grid-cols-[minmax(0,1fr)] gap-x-10 px-6 pt-8">
         <PostPanel className="fold:flex sticky top-8 hidden" />
 
+        {/* Capped and centred; figures keep the full column. Filling runs 88 characters a line. */}
         <article
           className={cn(
             "prose prose-invert prose-base max-w-none",
-            "prose-p:max-w-[34rem] prose-headings:max-w-[34rem]",
-            "prose-ul:max-w-[34rem] prose-ol:max-w-[34rem] prose-blockquote:max-w-[34rem]",
+            "prose-p:mx-auto prose-p:max-w-[34rem]",
+            "prose-headings:mx-auto prose-headings:max-w-[34rem]",
+            "prose-ul:mx-auto prose-ul:max-w-[34rem]",
+            "prose-ol:mx-auto prose-ol:max-w-[34rem]",
+            "prose-blockquote:mx-auto prose-blockquote:max-w-[34rem]",
           )}
         >
           {children}
