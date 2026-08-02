@@ -23,14 +23,12 @@ export const ImageTile = ({
 
   return (
     <div
-      className={cn("group relative overflow-hidden", className)}
+      className={cn("group relative", className)}
       data-type="image-collection"
     >
-      <div className="relative overflow-hidden rounded-[5.5px] hover:cursor-pointer">
+      <div className="relative overflow-hidden hover:cursor-pointer">
         <ResponsiveImage src={newSrc} alt={alt} />
-        {caption && (
-          <ImageCaption caption={caption} overlay className="rounded-b-sm" />
-        )}
+        {caption && <ImageCaption caption={caption} />}
       </div>
       <ExpandIconHover />
     </div>

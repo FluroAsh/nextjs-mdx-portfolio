@@ -16,7 +16,7 @@ type ResponsiveImageProps = {
 export const ResponsiveImage = async ({
   src,
   alt,
-  className = "rounded-sm",
+  className = "rounded-none",
   isLightboxImage = false,
   ...props
 }: ResponsiveImageProps) => {

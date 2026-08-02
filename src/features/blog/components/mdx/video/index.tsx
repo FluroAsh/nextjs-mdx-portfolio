@@ -59,7 +59,7 @@ export const Video = ({
     <div className="flex max-w-full justify-center">
       <div
         className={cn(
-          "group relative my-4",
+          "plate-ticks group relative isolate my-4",
           // Make the container dimensions static: video fits the container for reduced CLS
           type === "landscape"
             ? "aspect-[16/9] w-[640px]"
@@ -67,7 +67,7 @@ export const Video = ({
         )}
       >
         {!hasLoaded && (
-          <div className="absolute inset-0 grid animate-pulse place-items-center rounded-md bg-neutral-800/50">
+          <div className="absolute inset-0 grid animate-pulse place-items-center bg-neutral-800/50">
             <Loader2 className="size-8 animate-spin stroke-neutral-600" />
           </div>
         )}
@@ -75,7 +75,7 @@ export const Video = ({
         <video
           ref={videoRef}
           className={cn(
-            "my-0! size-full rounded-md opacity-0 transition-opacity duration-300 hover:cursor-pointer",
+            "my-0! size-full opacity-0 transition-opacity duration-300 hover:cursor-pointer",
             hasLoaded && "opacity-100",
             className,
           )}

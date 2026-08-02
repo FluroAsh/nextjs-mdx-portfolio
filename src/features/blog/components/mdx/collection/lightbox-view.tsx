@@ -56,8 +56,10 @@ export const LightboxView = ({
     <div className="space-y-2">
       <div
         ref={containerRef}
+        // Ticks mark the collection as one plate. Per tile they multiply into
+        // noise, which is the whole reason the marks read as an instrument.
         className={cn(
-          "relative grid gap-1",
+          "plate-ticks relative isolate grid gap-1",
           variantLayoutClasses[variant],
           className,
         )}

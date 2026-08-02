@@ -60,7 +60,10 @@ export const LightboxImage = ({
         carousel={{ finite: true }}
       />
 
-      <figure ref={containerRef} className="mx-auto w-fit">
+      <figure
+        ref={containerRef}
+        className="plate-ticks relative isolate mx-auto w-fit"
+      >
         <LightboxTrigger
           onOpen={() => setIsOpen(true)}
           label={`Expand image: ${alt}`}
@@ -70,7 +73,7 @@ export const LightboxImage = ({
           <ExpandIconHover />
         </LightboxTrigger>
 
-        {caption && <ImageCaption caption={caption} className="rounded-b-md" />}
+        {caption && <ImageCaption caption={caption} />}
       </figure>
     </>
   );

@@ -112,7 +112,11 @@
    fill must be opaque, or the border layer shows through all of it. */
 @utility clip-chamfer {
   /* Proportional so it reads the same on a 48px button and a 256px panel. The
-     cap is 16px because panel content sits at `p-4` — a deeper cut crowds it. */
+     cap is 16px because panel content sits at `p-4` — a deeper cut crowds it.
+
+     Only holds on a roughly square box: the percentage resolves against width
+     for x and height for y, so a wide, short element gets a stretched shave
+     rather than a 45° cut. */
   --chamfer: min(16px, 14%);
 
   clip-path: polygon(
@@ -123,6 +127,40 @@
     0 100%,
     0 var(--chamfer)
   );
+}
+
+/* Corner marks borrowed from print alignment guides. Implies the plate without
+   drawing a full frame, so the photograph keeps every edge. The caller has to be
+   positioned, and must not clip its overflow at the default offset. */
+@utility plate-ticks {
+  --tick-offset: -3px;
+  --tick-length: 14px;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    z-index: 20;
+    width: var(--tick-length);
+    height: var(--tick-length);
+    pointer-events: none;
+  }
+
+  /* Colour belongs in each shorthand — a bare `border-top: 1px solid` resets
+     the colour to `currentColor` and the marks inherit the prose grey. */
+  &::before {
+    top: var(--tick-offset);
+    left: var(--tick-offset);
+    border-top: 1px solid var(--color-green-500);
+    border-left: 1px solid var(--color-green-500);
+  }
+
+  &::after {
+    right: var(--tick-offset);
+    bottom: var(--tick-offset);
+    border-right: 1px solid var(--color-green-500);
+    border-bottom: 1px solid var(--color-green-500);
+  }
 }
 
 /* Prose styles override/reset */

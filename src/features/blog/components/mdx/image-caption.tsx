@@ -2,30 +2,16 @@ import { cn } from "@/utils/misc";
 
 type ImageCaptionProps = {
   caption: string;
-  /**
-   * Lays the caption over the bottom of the image instead of below it, for grid
-   * tiles where the cell height is fixed and there is no room underneath.
-   */
-  overlay?: boolean;
   className?: string;
 };
 
-export const ImageCaption = ({
-  caption,
-  overlay = false,
-  className,
-}: ImageCaptionProps) => (
+export const ImageCaption = ({ caption, className }: ImageCaptionProps) => (
   <figcaption
-    title={overlay ? caption : undefined}
+    title={caption}
     className={cn(
-      // `mt-0!` beats prose's own figcaption margin, which would otherwise float the bar away from the image it sits under.
-      "mt-0! block px-2",
-      "bg-gradient-to-t from-neutral-900 to-neutral-800",
-      "text-center text-neutral-400 italic",
-      // Tiles size their caption from the grid cell, so the font size is left to cascade from the tile rather than set here.
-      overlay
-        ? "absolute bottom-0 left-0 w-full truncate py-1 whitespace-nowrap"
-        : "py-2 text-xs tracking-wider",
+      "clip-chamfer absolute bottom-2 left-2 z-20 max-w-[calc(100%-16px)]",
+      "truncate px-2.5 py-1 backdrop-blur-sm",
+      "bg-surface-page/85 font-mono text-[10px] tracking-wider text-green-400 uppercase",
       className,
     )}
   >

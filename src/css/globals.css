@@ -139,13 +139,7 @@ article figure {
 
 article figure picture,
 article figure img {
-  @apply mb-0 rounded-md;
-}
-
-/** Without a caption the image owns its own bottom corners. */
-article figure:has(figcaption) picture,
-article figure:has(figcaption) img {
-  @apply rounded-b-none;
+  @apply mb-0 rounded-none;
 }
 
 /* Portrait/Square Images */
