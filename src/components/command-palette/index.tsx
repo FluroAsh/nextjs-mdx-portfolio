@@ -14,11 +14,15 @@ import {
   Title as DialogTitle,
 } from "@radix-ui/react-dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { Command } from "cmdk";
+import { Command, useCommandState } from "cmdk";
 
-import { cn } from "@/utils/misc";
+import { BilingualLabel } from "@/components/bilingual-label";
+import { ScanlinePlane } from "@/components/scanline-plane";
+import type { BilingualPair } from "@/data/identity";
+import { cn, zeroPad } from "@/utils/misc";
 
-import { BLOG_ACTIONS, type CommandAction, PAGE_ACTIONS } from "./actions";
+import { COMMAND_GROUPS, type CommandAction } from "./actions";
+import { ExitIcon, KeyHint, NavIcons, OpenIcon } from "./key-hint";
 import { useCommandShortcuts } from "./use-command-shortcuts";
 
 type CommandPaletteContextValue = {
@@ -43,63 +47,57 @@ export const useCommandPalette = () => {
   return context;
 };
 
-type CommandPaletteItemProps = {
-  action: CommandAction;
-  onSelect: (action: CommandAction) => void;
+/** Has to be a child of `Command` — `useCommandState` reads the store by context. */
+const ResultCount = () => {
+  const count = useCommandState((state) => state.filtered.count);
+
+  return (
+    <span className="shrink-0 font-mono text-[10px] tracking-wider text-green-600 tabular-nums">
+      {zeroPad(count)}
+    </span>
+  );
 };
 
-const CommandPaletteItem = ({ action, onSelect }: CommandPaletteItemProps) => (
+const CommandPaletteItem = ({
+  action,
+  onSelect,
+}: {
+  action: CommandAction;
+  onSelect: (action: CommandAction) => void;
+}) => (
   <Command.Item
     value={action.name}
     keywords={action.keywords}
     onSelect={() => onSelect(action)}
     className={cn(
-      "group flex cursor-pointer items-center justify-between rounded-md px-4 py-2.5 text-neutral-400 transition-colors",
-      "data-[selected=true]:bg-neutral-800/80 data-[selected=true]:text-neutral-100",
-      "data-[selected=false]:hover:bg-neutral-900/80",
+      // `py-3` is the 44px minimum touch target; a pointer doesn't need it.
+      "group flex cursor-pointer items-center gap-3 px-4 py-3 sm:py-1.5",
+      "border-l-2 border-transparent text-neutral-400",
+      "data-[selected=true]:border-green-400 data-[selected=true]:bg-green-400/15",
+      "data-[selected=true]:text-neutral-100",
     )}
   >
-    <div className="flex min-w-0 items-center gap-3">
-      {action.icon && (
-        <div className="flex shrink-0 items-center justify-center text-neutral-500 group-data-[selected=true]:text-green-400 [&_svg]:size-5">
-          {action.icon}
-        </div>
-      )}
-      <div className="min-w-0">
-        <span>{action.name}</span>
-        {action.subtitle && (
-          <div className="line-clamp-1 text-sm text-neutral-600">
-            {action.subtitle}
-          </div>
-        )}
-      </div>
-    </div>
-
+    <span className="min-w-0 flex-1 truncate text-sm">{action.name}</span>
     {action.shortcut && (
-      <kbd
-        aria-hidden
-        className="flex size-6 shrink-0 items-center justify-center rounded border border-neutral-800 bg-neutral-900 text-xs font-medium text-neutral-500"
-      >
+      <span className="hidden shrink-0 font-mono text-[10px] tracking-wider text-green-600 uppercase group-data-[selected=true]:text-green-400 sm:inline">
         {action.shortcut}
-      </kbd>
+      </span>
     )}
   </Command.Item>
 );
 
-type CommandPaletteGroupProps = {
-  heading: string;
-  actions: CommandAction[];
-  onSelect: (action: CommandAction) => void;
-};
-
 const CommandPaletteGroup = ({
-  heading,
+  marker,
   actions,
   onSelect,
-}: CommandPaletteGroupProps) => (
+}: {
+  marker: BilingualPair;
+  actions: CommandAction[];
+  onSelect: (action: CommandAction) => void;
+}) => (
   <Command.Group
-    heading={heading}
-    className="[&_[cmdk-group-heading]]:block [&_[cmdk-group-heading]]:border-t [&_[cmdk-group-heading]]:border-green-900/30 [&_[cmdk-group-heading]]:px-4 [&_[cmdk-group-heading]]:pt-6 [&_[cmdk-group-heading]]:pb-2 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-semibold [&_[cmdk-group-heading]]:text-green-500/70 [&_[cmdk-group-heading]]:uppercase"
+    heading={<BilingualLabel {...marker} />}
+    className="[&_[cmdk-group-heading]]:px-4 [&_[cmdk-group-heading]]:pt-4 [&_[cmdk-group-heading]]:pb-1.5"
   >
     {actions.map((action) => (
       <CommandPaletteItem key={action.id} action={action} onSelect={onSelect} />
@@ -134,8 +132,21 @@ export const CommandPalette = ({ children }: { children: React.ReactNode }) => {
         open={open}
         onOpenChange={setOpen}
         label="Command Palette"
-        overlayClassName="fixed inset-0 z-50 backdrop-blur-xl backdrop-filter"
-        contentClassName="fixed top-[10vh] left-1/2 z-50 min-h-fit w-full max-w-xl -translate-x-1/2 overflow-hidden rounded-xl border border-green-900/30 bg-black/80 p-4 shadow-lg shadow-black/30"
+        overlayClassName="fixed inset-0 z-50 bg-surface-page/60 backdrop-blur-md"
+        contentClassName={cn(
+          "fixed left-1/2 z-50 -translate-x-1/2",
+          // Centred by translate, so `w-full` would run edge to edge on a phone.
+          "w-[calc(100%-32px)] max-w-xl",
+          // Top-anchored: the panel is content-sized, so centring it vertically
+          // moves the whole box on every keystroke as results filter.
+          "top-4 max-h-[calc(100dvh-32px)]",
+          "sm:top-[10vh] sm:max-h-[80vh]",
+          "clip-chamfer flex flex-col bg-green-500/25 p-px",
+          "shadow-[0_24px_60px_-12px_rgb(0_0_0/0.9)]",
+        )}
+        // Every box between the capped dialog and the list needs `min-h-0`, or a
+        // flex child refuses to shrink below its content and the cap does nothing.
+        className="flex min-h-0 flex-1 flex-col"
       >
         <VisuallyHidden asChild>
           <DialogTitle>Command Palette</DialogTitle>
@@ -146,37 +157,56 @@ export const CommandPalette = ({ children }: { children: React.ReactNode }) => {
             keyboard shortcut.
           </DialogDescription>
         </VisuallyHidden>
-        <div className="[&:has(+div)]:pb-4">
-          <div className="flex items-center space-x-4 rounded-lg border border-green-800/20 bg-neutral-900/70 p-3">
+
+        <div
+          className="clip-chamfer relative isolate flex min-h-0 flex-1 flex-col"
+          style={
+            {
+              /** Must stay opaque, or the border layer beneath shows through the whole panel. */
+              background:
+                "color-mix(in oklab, white 3.5%, var(--surface-page))",
+              /** The section value is tuned for a much taller plane; over a box this size it disappears. */
+              "--scanline-color": "rgba(74, 222, 128, 0.1)",
+            } as React.CSSProperties
+          }
+        >
+          <ScanlinePlane vignette={0.18} />
+
+          <div className="flex items-center gap-3 border-b border-green-500/15 px-4 py-3">
+            <BilingualLabel zh="檢索" en="SEARCH" className="shrink-0" />
             <Command.Input
               autoFocus
-              placeholder="Search pages, posts..."
-              className="h-8 w-full bg-transparent text-neutral-100 placeholder-neutral-500 focus:outline-none"
+              placeholder="Type to filter..."
+              className={cn(
+                "h-6 min-w-0 flex-1 bg-transparent",
+                "text-sm text-neutral-100",
+                "placeholder:text-neutral-600 focus:outline-none",
+              )}
             />
-            <kbd className="inline-flex items-center justify-center rounded border border-green-800/30 bg-neutral-800/80 px-1.5 py-0.5 text-xs font-medium tracking-wide text-green-400/80">
-              ESC
-            </kbd>
+            <ResultCount />
+          </div>
+
+          <Command.List className="scrollbar-slim min-h-0 flex-1 overflow-y-auto pb-3">
+            <Command.Empty className="px-4 py-6 text-center font-mono text-[11px] tracking-wider text-green-600 uppercase">
+              No results
+            </Command.Empty>
+
+            {COMMAND_GROUPS.map((group) => (
+              <CommandPaletteGroup
+                key={group.marker.en}
+                marker={group.marker}
+                actions={group.actions}
+                onSelect={selectAction}
+              />
+            ))}
+          </Command.List>
+
+          <div className="hidden items-center gap-4 border-t border-green-500/15 px-4 py-2 sm:flex">
+            <KeyHint icon={NavIcons} label="Nav" />
+            <KeyHint icon={OpenIcon} label="Open" />
+            <KeyHint icon={ExitIcon} label="Exit" />
           </div>
         </div>
-        <Command.List className="max-h-[70vh] overflow-y-auto pt-2">
-          <Command.Empty className="px-4 py-6 text-center text-sm text-neutral-500">
-            No results found.
-          </Command.Empty>
-          {/*
-            Pages sit first so their shortcuts stay above the fold on an empty
-            search; cmdk re-orders groups by match score once you start typing.
-          */}
-          <CommandPaletteGroup
-            heading="Page"
-            actions={PAGE_ACTIONS}
-            onSelect={selectAction}
-          />
-          <CommandPaletteGroup
-            heading="Blog Posts"
-            actions={BLOG_ACTIONS}
-            onSelect={selectAction}
-          />
-        </Command.List>
       </Command.Dialog>
       {children}
     </CommandPaletteContext.Provider>

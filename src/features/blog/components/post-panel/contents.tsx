@@ -121,14 +121,9 @@ export const ContentsBlock = () => {
     >
       <div
         ref={ref}
-        className={cn(
-          "min-h-0 flex-1 overflow-y-auto px-4 pb-4",
-          "[&::-webkit-scrollbar-thumb]:rounded-none [&::-webkit-scrollbar-thumb]:bg-green-500/30",
-          "[&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent",
-        )}
-        // `stable` stops rows reflowing when the bar appears.
+        className="scrollbar-slim min-h-0 flex-1 overflow-y-auto px-4 pb-4"
         style={{
-          scrollbarGutter: "stable",
+          scrollbarGutter: "stable", // `stable` stops rows reflowing when the bar appears.
           maskImage: fadeMask(edges),
           WebkitMaskImage: fadeMask(edges),
         }}

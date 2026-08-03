@@ -1,6 +1,7 @@
 import { LucideBookOpen, LucideCamera, LucideHome } from "lucide-react";
 
 import { allBlogContent } from "@/data/content";
+import type { BilingualPair } from "@/data/identity";
 import { getCoreContent } from "@/lib/helpers";
 
 /**
@@ -59,3 +60,11 @@ export const BLOG_ACTIONS: CommandAction[] = getCoreContent(allBlogContent).map(
 );
 
 export const COMMAND_ACTIONS = [...PAGE_ACTIONS, ...BLOG_ACTIONS];
+
+export const COMMAND_GROUPS: {
+  marker: BilingualPair;
+  actions: CommandAction[];
+}[] = [
+  { marker: { zh: "頁面", en: "PAGE" }, actions: PAGE_ACTIONS },
+  { marker: { zh: "文章", en: "LOG" }, actions: BLOG_ACTIONS },
+];

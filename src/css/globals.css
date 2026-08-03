@@ -121,6 +121,21 @@ h3 {
   @apply h-10 rounded-full bg-green-800 hover:bg-green-700;
 }
 
+/* Must stay unlayered next to the rules it overrides — an `@utility` lands in
+   `@layer utilities`, and any layer loses to unlayered CSS however specific. */
+.scrollbar-slim::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+.scrollbar-slim::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-slim::-webkit-scrollbar-thumb {
+  @apply rounded-none bg-green-500/30;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
