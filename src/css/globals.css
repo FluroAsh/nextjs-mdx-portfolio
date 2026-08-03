@@ -80,8 +80,10 @@ h3 {
   @apply absolute top-0 bottom-0 left-0 flex h-full -translate-x-full items-center;
 }
 
+/* Sits in the gutter left of the heading, which is only the article's 24px
+   padding on mobile — `1.15em` of an h2 overflows it and clips off-screen. */
 .content-header .content-header-link > svg {
-  @apply size-[max(1.15em,24px)];
+  @apply size-5 sm:size-[max(1.15em,24px)];
 }
 
 /* ---- Prose Overrides ---- */
