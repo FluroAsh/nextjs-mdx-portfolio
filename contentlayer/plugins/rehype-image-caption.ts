@@ -22,11 +22,30 @@ import { visit } from "unist-util-visit";
  *   <figcaption>Caption text</figcaption>
  * </figure>
  */
+
+const isImage = (node: Element) =>
+  node.tagName === "img" || node.tagName === "picture";
+
 export function rehypeImageCaption() {
   return (tree: Root) => {
     visit(tree, "element", (node, index, parent) => {
+      if (!parent || index === undefined) return;
+
+      // An uncaptioned image never enters the branch below — `rehypeUnwrapImages`
+      // leaves it as a direct child of the root. Wrap it so it gets the same
+      // plate; an image still inside a paragraph is inline and must be left be.
+      if (isImage(node) && parent.type === "root") {
+        parent.children[index] = {
+          type: "element",
+          tagName: "figure",
+          properties: { class: "plate-ticks relative mx-auto max-w-fit" },
+          children: [node],
+        };
+        return;
+      }
+
       // Only process container paragraph elements
-      if (node.tagName !== "p" || !parent || index === undefined) {
+      if (node.tagName !== "p") {
         return;
       }
 
@@ -36,9 +55,7 @@ export function rehypeImageCaption() {
       if (hasImageWithCaption) {
         // Find the image and caption elements
         const imageIndex = node.children.findIndex(
-          (child) =>
-            child.type === "element" &&
-            (child.tagName === "img" || child.tagName === "picture"),
+          (child) => child.type === "element" && isImage(child),
         );
 
         const captionIndex = node.children.findIndex(
@@ -49,19 +66,17 @@ export function rehypeImageCaption() {
           const imageElement = node.children[imageIndex] as Element;
           const captionElement = node.children[captionIndex] as Element;
 
-          // Create figure element
+          // `.image-caption` is defined once in globals.css — see the note there before changing it here.
           const figure: Element = {
             type: "element",
             tagName: "figure",
-            properties: {
-              class: "mx-auto max-w-fit",
-            },
+            properties: { class: "plate-ticks relative mx-auto max-w-fit" },
             children: [
               imageElement,
               {
                 type: "element",
                 tagName: "figcaption",
-                properties: {},
+                properties: { class: "image-caption" },
                 children: captionElement.children,
               },
             ],

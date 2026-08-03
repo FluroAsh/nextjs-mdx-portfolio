@@ -159,8 +159,11 @@ article figure img {
   @apply mb-0 rounded-none;
 }
 
-/* Portrait/Square Images */
-article figure:has(picture.w-\[400px\]) figcaption {
-  max-width: 400px;
-  margin: 0 auto;
+/* The one definition of a caption. `rehypeImageCaption` emits bare HTML at build
+   time and cannot import the React component, so the look lives here and both
+   sides reference it — this keeps them from drifting out of sync. */
+.image-caption {
+  @apply clip-chamfer absolute bottom-2 left-2 z-20 max-w-[calc(100%-16px)];
+  @apply truncate px-2.5 py-1 backdrop-blur-sm;
+  @apply bg-surface-page/85 font-mono text-[10px] tracking-wider text-green-400 uppercase;
 }
