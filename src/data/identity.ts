@@ -35,8 +35,8 @@ export const SYSTEM_MARKER: BilingualPair = { zh: "系統", en: "SYSTEM" };
 
 /** Only what the hero does not already state. */
 export const ABOUT_FIELDS = [
-  { ...FIELD_LABELS.org, value: "Myer" },
-  { ...FIELD_LABELS.period, value: "Since 2022" },
+  { ...FIELD_LABELS.org, value: "Megaport" },
+  { ...FIELD_LABELS.period, value: "Since 2026" },
   { ...FIELD_LABELS.focus, value: "React · Next.js" },
 ] as const;
 
@@ -44,7 +44,7 @@ export const ABOUT_HEADING = "Hey. I'm Ash";
 
 export const ABOUT_PROSE = [
   "I came into engineering through a full-stack bootcamp and a Business Information Systems degree. That combination shaped how I work — I start from what a change is meant to achieve, not what it gets built with.",
-  "For the past four years I've been a frontend engineer on one of Australia's largest e-commerce platforms, mostly in React and TypeScript. I've shipped features across legacy and modern architectures, and the experimentation work taught me to pay attention to what success actually looks like once something's live. That business background means I'm thinking about outcomes while I'm writing the code — not just whether it works, but whether it mattered.",
+  "I'm now a frontend software engineer at Megaport. Before that, I spent four years as a frontend engineer on one of Australia's largest e-commerce platforms, mostly in React and TypeScript. I've shipped features across legacy and modern architectures, and the experimentation work taught me to pay attention to what success actually looks like once something's live. That business background means I'm thinking about outcomes while I'm writing the code — not just whether it works, but whether it mattered.",
 ] as const;
 
 /** Melbourne CBD (Bourke Street Mall). Real coordinates for the same place the
