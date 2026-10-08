@@ -29,7 +29,16 @@ const LAYERS: Layer[] = [
     id: "frontend",
     zh: "前端",
     en: "FRONTEND",
-    names: ["react", "typescript", "nextjs", "tailwind", "emotioncss", "scss"],
+    names: [
+      "vue",
+      "vite",
+      "typescript",
+      "react",
+      "nextjs",
+      "tailwind",
+      "emotioncss",
+      "scss",
+    ],
   },
   {
     id: "backend",

@@ -3,6 +3,22 @@ import * as siIcon from "react-icons/si";
 
 export const skillsList = [
   {
+    name: "vue",
+    label: "Vue",
+    icon: siIcon.SiVuedotjs,
+    iconStyles: "fill-emerald-500",
+    containerStyles:
+      "hover:bg-emerald-500/10 hover:text-emerald-500 hover:border-emerald-500",
+  },
+  {
+    name: "vite",
+    label: "Vite",
+    icon: siIcon.SiVite,
+    iconStyles: "fill-violet-500",
+    containerStyles:
+      "hover:bg-violet-500/10 hover:text-violet-500 hover:border-violet-500",
+  },
+  {
     name: "react",
     label: "React",
     icon: faIcon.FaReact,

@@ -48,7 +48,7 @@ export const EXPERIENCES: Experience[] = [
     end: null,
     role: "Frontend Software Engineer",
     content:
-      "Frontend software engineer at Megaport, a global Network-as-a-Service provider, building the customer-facing interfaces used to provision and manage connectivity between data centres, clouds, and enterprise networks.",
+      "Frontend software engineer at Megaport, a global Network-as-a-Service provider, building the customer-facing interfaces, in Vue 3 and Vite, used to provision and manage connectivity between data centres, clouds, and enterprise networks.",
     location: "Melbourne, Australia",
     type: "work",
   },
