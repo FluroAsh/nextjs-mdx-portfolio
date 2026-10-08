@@ -43,9 +43,19 @@ export const formatPeriod = ({
 
 export const EXPERIENCES: Experience[] = [
   {
+    title: "MEGAPORT",
+    start: 2026,
+    end: null,
+    role: "Frontend Software Engineer",
+    content:
+      "Frontend software engineer at Megaport, a global Network-as-a-Service provider, building the customer-facing interfaces, in Vue 3 and Vite, used to provision and manage connectivity between data centres, clouds, and enterprise networks.",
+    location: "Melbourne, Australia",
+    type: "work",
+  },
+  {
     title: "MYER",
     start: 2022,
-    end: null,
+    end: 2026,
     role: "Frontend Engineer",
     content: [
       "Frontend engineer on one of Australia's largest e-commerce platforms, shipping customer-facing features across legacy and micro-frontend architectures. Led the Minibag pre-checkout experience — $50,000 in additional revenue within 4.5 days of launch — and migrated search recommendations to a headless Dynamic Yield integration, setting the pattern the team now uses for all future DY-driven features.",
