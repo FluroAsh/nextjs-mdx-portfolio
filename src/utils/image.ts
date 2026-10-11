@@ -147,19 +147,14 @@ export const srcSetCandidates = (
     width: Math.round(bound * scale),
   }));
 
-  // A flat original's width is known, so an equal-width sibling is kept and
-  // the original only joins when it is wider than every sibling.
-  const isFlatOriginal = parsed.layout === "flat" && !parsed.variant;
-  const siblings = fitted.filter((candidate) =>
-    isFlatOriginal ? candidate.width <= width : candidate.width < width,
-  );
-
-  // Other originals with siblings are left out: they are the lightbox's file.
+  // `large` is the inline ceiling: an original or full-size file with sized
+  // siblings is left out, since it is the lightbox's file. It keeps a sibling
+  // as wide as itself so that width is still offered.
   const isSized = variants.some(([variant]) => variant === parsed.variant);
-  const widest = fitted.at(-1)!.width;
-  const offersSelf =
-    isSized || !siblings.length || (isFlatOriginal && width > widest);
-  return offersSelf ? [...siblings, self] : siblings;
+  const siblings = fitted.filter((candidate) =>
+    isSized ? candidate.width < width : candidate.width <= width,
+  );
+  return isSized || !siblings.length ? [...siblings, self] : siblings;
 };
 
 export const formatSrcSet = (candidates: SrcSetCandidate[]) =>
