@@ -3,6 +3,8 @@
 import { getPlaiceholder } from "plaiceholder";
 import probe from "probe-image-size";
 
+import type { ProbedSize } from "@/utils/image";
+
 type Orientation = "landscape" | "portrait" | "square";
 
 const calculateOrientation = (
@@ -34,7 +36,18 @@ const fetchPlaceholder = async (src: string) => {
   return await getPlaiceholder(buffer);
 };
 
-export const getImagePlaceholder = async (imageSrc: string) => {
+type ImagePlaceholder = ProbedSize & {
+  /** Base64 blur placeholder; `""` when it could not be generated. */
+  base64: string;
+  /** Shape of the image; `undefined` only for non-numeric sizes. */
+  orientation: Orientation | undefined;
+  /** Width over height to two decimals. */
+  aspectRatio: string;
+};
+
+export const getImagePlaceholder = async (
+  imageSrc: string,
+): Promise<ImagePlaceholder> => {
   try {
     const { width, height } = await probe(imageSrc);
     const { base64 } = await fetchPlaceholder(imageSrc);
@@ -44,6 +57,7 @@ export const getImagePlaceholder = async (imageSrc: string) => {
     return {
       width,
       height,
+      measured: true,
       base64,
       orientation,
       aspectRatio,
@@ -54,8 +68,9 @@ export const getImagePlaceholder = async (imageSrc: string) => {
     return {
       width: 1200,
       height: 800,
+      measured: false,
       base64: "",
-      orientation: "landscape" as Orientation,
+      orientation: "landscape",
       aspectRatio: "1.50",
     };
   }

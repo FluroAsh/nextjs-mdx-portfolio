@@ -2,18 +2,33 @@
 
 import { useEffect, useRef } from "react";
 
-import { imageSizes, imageSrcSet } from "@/utils/image";
+import {
+  FIXED_COLUMN_WIDTH,
+  type SrcSetCandidate,
+  formatSrcSet,
+  imageSizes,
+} from "@/utils/image";
 import { cn } from "@/utils/misc";
 
 type ClientImageProps = {
+  /** Unique DOM id of the `<img>`, generated on the server so hydration matches. */
   imageId: string;
+  /** URL of the image shown and opened by the lightbox. */
   src: string;
+  /** Alternative text for the image. */
   alt: string;
+  /** Intrinsic width of `src` in pixels. */
   width: number;
+  /** Intrinsic height of `src` in pixels. */
   height: number;
+  /** `landscape`, `portrait` or `square`; portrait and square use the fixed column. */
   orientation: string;
+  /** Classes for the wrapping `<picture>`. */
   className: string;
+  /** Base64 blur placeholder shown until the image loads. */
   blurDataURL: string;
+  /** Files the browser may choose from, narrowest first; empty for no `srcset`. */
+  candidates: SrcSetCandidate[];
 };
 
 export const ClientImage = ({
@@ -25,6 +40,7 @@ export const ClientImage = ({
   orientation,
   className,
   blurDataURL,
+  candidates,
   ...props
 }: ClientImageProps) => {
   const imgRef = useRef<HTMLImageElement>(null);
@@ -50,17 +66,18 @@ export const ClientImage = ({
     return () => img.removeEventListener("load", handleLoad);
   }, []);
 
-  // The 400px column below and `imageSizes` describe the same slot.
   const isFixedWidth = /portrait|square/.test(orientation);
 
   return (
     // "my-0" override prevents prose margin from being applied to picture element
     <picture className={cn("relative my-0! overflow-hidden", className)}>
-      <source
-        srcSet={imageSrcSet(src, width, height)}
-        sizes={imageSizes(isFixedWidth)}
-        type="image/webp"
-      />
+      {candidates.length > 0 && (
+        <source
+          srcSet={formatSrcSet(candidates)}
+          sizes={imageSizes(isFixedWidth)}
+          type="image/webp"
+        />
+      )}
 
       <img
         ref={imgRef}
@@ -74,8 +91,8 @@ export const ClientImage = ({
         className={cn(
           "mx-auto max-w-full transition-opacity duration-300",
           "data-[loaded=false]:opacity-0 data-[loaded=true]:opacity-100",
-          isFixedWidth && "w-[400px]",
         )}
+        style={isFixedWidth ? { width: FIXED_COLUMN_WIDTH } : undefined}
         {...props}
       />
 
