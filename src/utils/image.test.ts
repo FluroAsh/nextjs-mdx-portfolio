@@ -210,13 +210,12 @@ describe("srcSetCandidates", () => {
     ]);
   });
 
-  it("ends a flat landscape original with the original at its probed width", () => {
+  it("stops at large for a flat landscape original, leaving the original to the lightbox", () => {
     const original = `${CDN}/legacy/DSC_1963_f6f8bf29c4.webp`;
     expect(srcSetCandidates(original, measured(2160, 1440))).toEqual([
       { url: `${CDN}/legacy/small_DSC_1963_f6f8bf29c4.webp`, width: 500 },
       { url: `${CDN}/legacy/medium_DSC_1963_f6f8bf29c4.webp`, width: 750 },
       { url: `${CDN}/legacy/large_DSC_1963_f6f8bf29c4.webp`, width: 1000 },
-      { url: original, width: 2160 },
     ]);
   });
 
@@ -235,7 +234,6 @@ describe("srcSetCandidates", () => {
         url: `${CDN}/legacy/large_friendship_garden_pce_b4f7d9fd16.webp`,
         width: 667,
       },
-      { url: original, width: 1080 },
     ]);
   });
 
