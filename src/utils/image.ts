@@ -6,15 +6,21 @@ const VARIANTS = [
   "large",
 ] as const;
 
+/** Variant prefixes a stored image key can carry. */
 export type ImageVariant = (typeof VARIANTS)[number];
 
 export type ParsedImageUrl = {
+  /** `nested`: `{folder}/{name}/{variant}_{name}.webp`. `flat`: `{folder}/{variant}_{name}.webp`. */
   layout: "nested" | "flat";
+  /** Scheme and host, e.g. `https://example.com`; `""` for a root-relative path. */
   origin: string;
+  /** Path the image set lives under, without leading or trailing slash; `""` at the root. */
   folder: string;
+  /** Base name without variant prefix or extension; for flat keys it includes the hash. */
   name: string;
   /** `null` is the un-prefixed original. */
   variant: ImageVariant | null;
+  /** File extension including the dot, e.g. `.webp`. */
   extension: string;
   /** Trailing `?query` and/or `#hash`, carried through unchanged. */
   suffix: string;
