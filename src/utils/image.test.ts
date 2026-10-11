@@ -1,4 +1,10 @@
-import { downsizedUrl, parseImageUrl, variantUrl } from "./image";
+import {
+  downsizedUrl,
+  imageSizes,
+  imageSrcSet,
+  parseImageUrl,
+  variantUrl,
+} from "./image";
 
 const CDN = "https://images.ashmatrix.com";
 
@@ -71,6 +77,16 @@ describe("parseImageUrl", () => {
     ],
   ])("parses %s", (_, url, expected) => {
     expect(parseImageUrl(url)).toMatchObject(expected);
+  });
+
+  it("parses the lossless variant the upload service now writes", () => {
+    expect(
+      parseImageUrl(`${CDN}/content-store/buff-rick/lossless_buff-rick.webp`),
+    ).toMatchObject({
+      layout: "nested",
+      name: "buff-rick",
+      variant: "lossless",
+    });
   });
 
   it("returns null for something that is not an image URL", () => {
@@ -159,5 +175,78 @@ describe("downsizedUrl", () => {
     ],
   ])("%s", (_, url, expected) => {
     expect(downsizedUrl(url)).toBe(expected);
+  });
+});
+
+describe("imageSrcSet", () => {
+  const KYOTO = `${CDN}/japan-2025/kyoto/kyoto-13`;
+
+  it("offers the medium sibling of a nested large image", () => {
+    expect(imageSrcSet(`${KYOTO}/large_kyoto-13.webp`, 1440, 1080)).toBe(
+      `${KYOTO}/medium_kyoto-13.webp 800w, ${KYOTO}/large_kyoto-13.webp 1440w`,
+    );
+  });
+
+  it("drops a nested sibling that is no narrower than the image itself", () => {
+    const large = `${CDN}/content-store/buff-rick/large_buff-rick.webp`;
+    expect(imageSrcSet(large, 800, 450)).toBe(`${large} 800w`);
+  });
+
+  it("offers nothing wider than the image that was asked for", () => {
+    const medium = `${KYOTO}/medium_kyoto-13.webp`;
+    expect(imageSrcSet(medium, 800, 600)).toBe(`${medium} 800w`);
+  });
+
+  it("offers the small, medium and large siblings of a flat original, not the original", () => {
+    expect(
+      imageSrcSet(`${CDN}/legacy/DSC_1963_f6f8bf29c4.webp`, 2160, 1440),
+    ).toBe(
+      [
+        `${CDN}/legacy/small_DSC_1963_f6f8bf29c4.webp 500w`,
+        `${CDN}/legacy/medium_DSC_1963_f6f8bf29c4.webp 750w`,
+        `${CDN}/legacy/large_DSC_1963_f6f8bf29c4.webp 1000w`,
+      ].join(", "),
+    );
+  });
+
+  it("labels the siblings of a flat portrait with their widths, not their longest edge", () => {
+    expect(
+      imageSrcSet(
+        `${CDN}/legacy/friendship_garden_pce_b4f7d9fd16.webp`,
+        1080,
+        1620,
+      ),
+    ).toBe(
+      [
+        `${CDN}/legacy/small_friendship_garden_pce_b4f7d9fd16.webp 333w`,
+        `${CDN}/legacy/medium_friendship_garden_pce_b4f7d9fd16.webp 500w`,
+        `${CDN}/legacy/large_friendship_garden_pce_b4f7d9fd16.webp 667w`,
+      ].join(", "),
+    );
+  });
+
+  it("offers no siblings for a flat image outside the legacy folder", () => {
+    const gif =
+      "https://media3.giphy.com/media/v1.abc/14cAD9mBjofP5m/giphy.gif";
+    expect(imageSrcSet(gif, 480, 270)).toBe(`${gif} 480w`);
+  });
+
+  it("offers a flat original that is smaller than every sibling size", () => {
+    const original = `${CDN}/legacy/tiny_icon_0a1b2c3d4e.webp`;
+    expect(imageSrcSet(original, 400, 300)).toBe(`${original} 400w`);
+  });
+});
+
+describe("imageSizes", () => {
+  it("follows the article column: 48px of gutters, a 296px panel from 900px, a 1024px frame", () => {
+    expect(imageSizes(false)).toBe(
+      "(min-width: 1024px) 680px, (min-width: 900px) calc(100vw - 344px), calc(100vw - 48px)",
+    );
+  });
+
+  it("is the fixed 400px column for portrait and square images, until the viewport is narrower", () => {
+    expect(imageSizes(true)).toBe(
+      "(min-width: 448px) 400px, calc(100vw - 48px)",
+    );
   });
 });

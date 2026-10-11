@@ -6,7 +6,6 @@ import { ClientImage } from "./client-image";
 // takes a URL, which it probes on the server.
 type ResponsiveImageProps = {
   src?: string;
-  isLightboxImage?: boolean;
 } & Omit<React.ComponentProps<"img">, "src">;
 
 /**
@@ -17,14 +16,12 @@ export const ResponsiveImage = async ({
   src,
   alt,
   className = "rounded-none",
-  isLightboxImage = false,
   ...props
 }: ResponsiveImageProps) => {
   if (!src || !alt)
     throw new Error("Images must include src and alt attributes");
 
   // TODO: Placeholders should be pre-generated ideally, will come back to this... probably.
-  // Get placeholder data for blur effect
   const {
     orientation = "",
     width: probedWidth,
@@ -46,7 +43,6 @@ export const ResponsiveImage = async ({
       width={probedWidth}
       height={probedHeight}
       orientation={orientation}
-      isLightboxImage={isLightboxImage}
       className={className}
       blurDataURL={base64}
       {...newProps}

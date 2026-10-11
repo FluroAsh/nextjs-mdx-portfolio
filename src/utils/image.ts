@@ -1,9 +1,10 @@
-const VARIANTS = [
+export const VARIANTS = [
   "placeholder",
   "thumbnail",
   "small",
   "medium",
   "large",
+  "lossless",
 ] as const;
 
 /** Variant prefixes a stored image key can carry. */
@@ -73,6 +74,57 @@ export const downsizedUrl = (url: string) => {
   const parsed = parseImageUrl(url);
   return parsed?.variant === "large" ? variantUrl(parsed, "medium") : url;
 };
+
+/**
+ * Stopgap until manifests carry real sizes: the pixel bound each display
+ * variant was fitted to, smallest first. Only variants every set of a layout
+ * has are listed, since a missing key is a 403.
+ */
+const SIZED_VARIANTS: Record<
+  ParsedImageUrl["layout"],
+  [variant: ImageVariant, bound: number][]
+> = {
+  flat: [
+    ["small", 500],
+    ["medium", 750],
+    ["large", 1000],
+  ],
+  nested: [
+    ["medium", 800],
+    ["large", 1440],
+  ],
+};
+
+/**
+ * `width` and `height` are the intrinsic size of `src`. Only narrower siblings
+ * are offered, so a caller that downsized gets nothing larger back.
+ */
+export const imageSrcSet = (src: string, width: number, height: number) => {
+  const parsed = parseImageUrl(src);
+  const own = `${src} ${width}w`;
+  // Any other flat URL (a GIF host, a file in /public) has no sized siblings.
+  const isForeign = parsed?.layout === "flat" && parsed.folder !== "legacy";
+  if (!parsed || isForeign) return own;
+
+  const sized = SIZED_VARIANTS[parsed.layout];
+  // Flat sets were fitted to the longest edge, nested ones to the width.
+  const scale = parsed.layout === "flat" ? Math.min(1, width / height) : 1;
+  const siblings = sized
+    .map(([variant, bound]) => [variant, Math.round(bound * scale)] as const)
+    .filter(([, sibling]) => sibling < width)
+    .map(([variant, sibling]) => `${variantUrl(parsed, variant)} ${sibling}w`);
+
+  // An original with siblings is left out: it is the lightbox's file.
+  const isSized = sized.some(([variant]) => variant === parsed.variant);
+  const offersOwn = isSized || !siblings.length;
+  return [...siblings, ...(offersOwn ? [own] : [])].join(", ");
+};
+
+/** Mirrors the post layout's article column; change them together. */
+export const imageSizes = (isFixedWidth: boolean) =>
+  isFixedWidth
+    ? "(min-width: 448px) 400px, calc(100vw - 48px)"
+    : "(min-width: 1024px) 680px, (min-width: 900px) calc(100vw - 344px), calc(100vw - 48px)";
 
 export const getFileNameFromUrl = (url: string) => {
   const newURL = new URL(url);
