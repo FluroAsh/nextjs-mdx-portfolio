@@ -16,9 +16,11 @@ export type ParsedImageUrl = {
   /** `null` is the un-prefixed original. */
   variant: ImageVariant | null;
   extension: string;
+  /** Trailing `?query` and/or `#hash`, carried through unchanged. */
+  suffix: string;
 };
 
-const IMAGE_URL = /^(https?:\/\/[^/]+)?\/(?:(.+)\/)?([^/]+?)(\.\w+)$/;
+const IMAGE_URL = /^(https?:\/\/[^/]+)?\/(?:(.+)\/)?([^/]+?)(\.\w+)([?#].*)?$/;
 const VARIANT_PREFIX = new RegExp(`^(${VARIANTS.join("|")})_(.+)$`);
 
 /**
@@ -29,7 +31,7 @@ export const parseImageUrl = (url: string): ParsedImageUrl | null => {
   const match = IMAGE_URL.exec(url);
   if (!match) return null;
 
-  const [, origin = "", dir = "", stem, extension] = match;
+  const [, origin = "", dir = "", stem, extension, suffix = ""] = match;
   const [, prefix, rest] = VARIANT_PREFIX.exec(stem) ?? [];
   const parent = dir.split("/").at(-1);
 
@@ -46,16 +48,17 @@ export const parseImageUrl = (url: string): ParsedImageUrl | null => {
     name,
     variant: isOriginal ? null : (prefix as ImageVariant),
     extension,
+    suffix,
   };
 };
 
 export const variantUrl = (
-  { layout, origin, folder, name, extension }: ParsedImageUrl,
+  { layout, origin, folder, name, extension, suffix }: ParsedImageUrl,
   variant: ImageVariant | null,
 ) => {
   const file = `${variant ? `${variant}_` : ""}${name}${extension}`;
   const path = [folder, layout === "nested" && name, file].filter(Boolean);
-  return `${origin}/${path.join("/")}`;
+  return `${origin}/${path.join("/")}${suffix}`;
 };
 
 /** The CDN has no resizing API, only pre-generated variants, and `medium_` is

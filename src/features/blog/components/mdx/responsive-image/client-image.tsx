@@ -54,8 +54,6 @@ export const ClientImage = ({
     return () => img.removeEventListener("load", handleLoad);
   }, []);
 
-  // TODO: Should take into account orientations
-  // Need to review how to better set this up, currently not all portrait images have the same widths... So this is a bit hacky.
   const srcSet = [`${downsizedUrl(src)} 640w`, `${src} 1200w`].join(", ");
 
   return (

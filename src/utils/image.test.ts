@@ -137,6 +137,26 @@ describe("downsizedUrl", () => {
       `${CDN}/japan-2025/kyoto/kyoto-13/medium_kyoto-13.webp`,
     ],
     ["leaves an unparseable source alone", "not a url", "not a url"],
+    [
+      "leaves a path without a leading slash alone",
+      "img/large_x.webp",
+      "img/large_x.webp",
+    ],
+    [
+      "keeps a query string",
+      `${CDN}/a/b/large_b.webp?download`,
+      `${CDN}/a/b/medium_b.webp?download`,
+    ],
+    [
+      "keeps a hash",
+      `${CDN}/a/b/large_b.webp#top`,
+      `${CDN}/a/b/medium_b.webp#top`,
+    ],
+    [
+      "keeps a query string and hash",
+      `${CDN}/a/b/large_b.webp?w=1&x=2#top`,
+      `${CDN}/a/b/medium_b.webp?w=1&x=2#top`,
+    ],
   ])("%s", (_, url, expected) => {
     expect(downsizedUrl(url)).toBe(expected);
   });
