@@ -1,8 +1,9 @@
 import {
   downsizedUrl,
+  formatSrcSet,
   imageSizes,
-  imageSrcSet,
   parseImageUrl,
+  srcSetCandidates,
   variantUrl,
 } from "./image";
 
@@ -178,62 +179,121 @@ describe("downsizedUrl", () => {
   });
 });
 
-describe("imageSrcSet", () => {
+describe("srcSetCandidates", () => {
   const KYOTO = `${CDN}/japan-2025/kyoto/kyoto-13`;
+  const measured = (width: number, height: number) => ({
+    width,
+    height,
+    measured: true,
+  });
 
   it("offers the medium sibling of a nested large image", () => {
-    expect(imageSrcSet(`${KYOTO}/large_kyoto-13.webp`, 1440, 1080)).toBe(
-      `${KYOTO}/medium_kyoto-13.webp 800w, ${KYOTO}/large_kyoto-13.webp 1440w`,
-    );
+    expect(
+      srcSetCandidates(`${KYOTO}/large_kyoto-13.webp`, measured(1440, 1080)),
+    ).toEqual([
+      { url: `${KYOTO}/medium_kyoto-13.webp`, width: 800 },
+      { url: `${KYOTO}/large_kyoto-13.webp`, width: 1440 },
+    ]);
   });
 
   it("drops a nested sibling that is no narrower than the image itself", () => {
     const large = `${CDN}/content-store/buff-rick/large_buff-rick.webp`;
-    expect(imageSrcSet(large, 800, 450)).toBe(`${large} 800w`);
+    expect(srcSetCandidates(large, measured(800, 450))).toEqual([
+      { url: large, width: 800 },
+    ]);
   });
 
   it("offers nothing wider than the image that was asked for", () => {
     const medium = `${KYOTO}/medium_kyoto-13.webp`;
-    expect(imageSrcSet(medium, 800, 600)).toBe(`${medium} 800w`);
+    expect(srcSetCandidates(medium, measured(800, 600))).toEqual([
+      { url: medium, width: 800 },
+    ]);
   });
 
-  it("offers the small, medium and large siblings of a flat original, not the original", () => {
-    expect(
-      imageSrcSet(`${CDN}/legacy/DSC_1963_f6f8bf29c4.webp`, 2160, 1440),
-    ).toBe(
-      [
-        `${CDN}/legacy/small_DSC_1963_f6f8bf29c4.webp 500w`,
-        `${CDN}/legacy/medium_DSC_1963_f6f8bf29c4.webp 750w`,
-        `${CDN}/legacy/large_DSC_1963_f6f8bf29c4.webp 1000w`,
-      ].join(", "),
-    );
+  it("ends a flat landscape original with the original at its probed width", () => {
+    const original = `${CDN}/legacy/DSC_1963_f6f8bf29c4.webp`;
+    expect(srcSetCandidates(original, measured(2160, 1440))).toEqual([
+      { url: `${CDN}/legacy/small_DSC_1963_f6f8bf29c4.webp`, width: 500 },
+      { url: `${CDN}/legacy/medium_DSC_1963_f6f8bf29c4.webp`, width: 750 },
+      { url: `${CDN}/legacy/large_DSC_1963_f6f8bf29c4.webp`, width: 1000 },
+      { url: original, width: 2160 },
+    ]);
   });
 
   it("labels the siblings of a flat portrait with their widths, not their longest edge", () => {
-    expect(
-      imageSrcSet(
-        `${CDN}/legacy/friendship_garden_pce_b4f7d9fd16.webp`,
-        1080,
-        1620,
-      ),
-    ).toBe(
-      [
-        `${CDN}/legacy/small_friendship_garden_pce_b4f7d9fd16.webp 333w`,
-        `${CDN}/legacy/medium_friendship_garden_pce_b4f7d9fd16.webp 500w`,
-        `${CDN}/legacy/large_friendship_garden_pce_b4f7d9fd16.webp 667w`,
-      ].join(", "),
+    const original = `${CDN}/legacy/friendship_garden_pce_b4f7d9fd16.webp`;
+    expect(srcSetCandidates(original, measured(1080, 1620))).toEqual([
+      {
+        url: `${CDN}/legacy/small_friendship_garden_pce_b4f7d9fd16.webp`,
+        width: 333,
+      },
+      {
+        url: `${CDN}/legacy/medium_friendship_garden_pce_b4f7d9fd16.webp`,
+        width: 500,
+      },
+      {
+        url: `${CDN}/legacy/large_friendship_garden_pce_b4f7d9fd16.webp`,
+        width: 667,
+      },
+      { url: original, width: 1080 },
+    ]);
+  });
+
+  it("does not repeat a width when a flat original is as wide as its large sibling", () => {
+    const original = `${CDN}/legacy/square_0a1b2c3d4e.webp`;
+    const widths = srcSetCandidates(original, measured(1000, 667)).map(
+      (candidate) => candidate.width,
     );
+    expect(widths).toEqual([500, 750, 1000]);
+  });
+
+  it("does not add the original for a flat variant, whose original width is unknown", () => {
+    const large = `${CDN}/legacy/large_DSC_1963_f6f8bf29c4.webp`;
+    expect(srcSetCandidates(large, measured(1000, 667))).toEqual([
+      { url: `${CDN}/legacy/small_DSC_1963_f6f8bf29c4.webp`, width: 500 },
+      { url: `${CDN}/legacy/medium_DSC_1963_f6f8bf29c4.webp`, width: 750 },
+      { url: large, width: 1000 },
+    ]);
   });
 
   it("offers no siblings for a flat image outside the legacy folder", () => {
     const gif =
       "https://media3.giphy.com/media/v1.abc/14cAD9mBjofP5m/giphy.gif";
-    expect(imageSrcSet(gif, 480, 270)).toBe(`${gif} 480w`);
+    expect(srcSetCandidates(gif, measured(480, 270))).toEqual([
+      { url: gif, width: 480 },
+    ]);
   });
 
   it("offers a flat original that is smaller than every sibling size", () => {
     const original = `${CDN}/legacy/tiny_icon_0a1b2c3d4e.webp`;
-    expect(imageSrcSet(original, 400, 300)).toBe(`${original} 400w`);
+    expect(srcSetCandidates(original, measured(400, 300))).toEqual([
+      { url: original, width: 400 },
+    ]);
+  });
+
+  it("offers nothing when the size was not measured", () => {
+    expect(
+      srcSetCandidates(`${CDN}/legacy/DSC_1963_f6f8bf29c4.webp`, {
+        width: 1200,
+        height: 800,
+        measured: false,
+      }),
+    ).toEqual([]);
+  });
+});
+
+describe("formatSrcSet", () => {
+  it("joins candidates as url and width descriptors", () => {
+    expect(
+      formatSrcSet([
+        { url: "/a.webp", width: 500 },
+        { url: "/b.webp", width: 750 },
+      ]),
+    ).toBe("/a.webp 500w, /b.webp 750w");
+  });
+
+  it("is empty for no candidates", () => {
+    expect(formatSrcSet([])).toBe("");
   });
 });
 

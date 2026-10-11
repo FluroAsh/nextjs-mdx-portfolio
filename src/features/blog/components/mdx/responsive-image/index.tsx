@@ -1,4 +1,5 @@
 import { getImagePlaceholder } from "@/server/image";
+import { srcSetCandidates } from "@/utils/image";
 
 import { ClientImage } from "./client-image";
 
@@ -21,16 +22,15 @@ export const ResponsiveImage = async ({
   if (!src || !alt)
     throw new Error("Images must include src and alt attributes");
 
-  // TODO: Placeholders should be pre-generated ideally, will come back to this... probably.
   const {
     orientation = "",
     width: probedWidth,
     height: probedHeight,
+    measured,
     base64,
   } = await getImagePlaceholder(src);
 
-  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  const { width, height, ...newProps } = props; // removes unused width/height props
+  const { width, height, ...newProps } = props;
 
   // This needs to be generated on the server so it does not change when hydrating
   const imageId = crypto.randomUUID();
@@ -43,6 +43,11 @@ export const ResponsiveImage = async ({
       width={probedWidth}
       height={probedHeight}
       orientation={orientation}
+      candidates={srcSetCandidates(src, {
+        width: probedWidth,
+        height: probedHeight,
+        measured,
+      })}
       className={className}
       blurDataURL={base64}
       {...newProps}
