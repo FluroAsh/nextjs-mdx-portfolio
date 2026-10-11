@@ -16,7 +16,7 @@ export const components: MDXComponents = {
   img: ResponsiveImage,
   LightboxImage: (props) => (
     <LightboxImage src={props.src} alt={props.alt} caption={props.caption}>
-      <ResponsiveImage {...props} isLightboxImage />
+      <ResponsiveImage {...props} />
     </LightboxImage>
   ),
   /** Static markdown images in `/public` */

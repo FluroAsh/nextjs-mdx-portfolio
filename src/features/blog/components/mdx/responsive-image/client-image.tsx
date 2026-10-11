@@ -2,13 +2,12 @@
 
 import { useEffect, useRef } from "react";
 
-import { downsizedUrl } from "@/utils/image";
+import { imageSizes, imageSrcSet } from "@/utils/image";
 import { cn } from "@/utils/misc";
 
 type ClientImageProps = {
   imageId: string;
   src: string;
-  isLightboxImage: boolean;
   alt: string;
   width: number;
   height: number;
@@ -20,7 +19,6 @@ type ClientImageProps = {
 export const ClientImage = ({
   imageId,
   src,
-  isLightboxImage,
   alt,
   width,
   height,
@@ -36,14 +34,12 @@ export const ClientImage = ({
     const img = imgRef.current;
     if (!img) return;
 
-    // Check if image has already loaded on component mount
     if (img.complete && img.naturalHeight > 0) {
       img.setAttribute("data-loaded", "true");
       img.style.opacity = "1";
       return;
     }
 
-    // Not loaded yet - set up load listener
     const handleLoad = () => {
       img.setAttribute("data-loaded", "true");
       img.style.opacity = "1";
@@ -54,14 +50,15 @@ export const ClientImage = ({
     return () => img.removeEventListener("load", handleLoad);
   }, []);
 
-  const srcSet = [`${downsizedUrl(src)} 640w`, `${src} 1200w`].join(", ");
+  // The 400px column below and `imageSizes` describe the same slot.
+  const isFixedWidth = /portrait|square/.test(orientation);
 
   return (
     // "my-0" override prevents prose margin from being applied to picture element
     <picture className={cn("relative my-0! overflow-hidden", className)}>
       <source
-        srcSet={srcSet}
-        sizes={isLightboxImage ? "100vw" : "(width <= 768px) 640px, 1200px"}
+        srcSet={imageSrcSet(src, width, height)}
+        sizes={imageSizes(isFixedWidth)}
         type="image/webp"
       />
 
@@ -77,7 +74,7 @@ export const ClientImage = ({
         className={cn(
           "mx-auto max-w-full transition-opacity duration-300",
           "data-[loaded=false]:opacity-0 data-[loaded=true]:opacity-100",
-          /portrait|square/.test(orientation) && "w-[400px]",
+          isFixedWidth && "w-[400px]",
         )}
         {...props}
       />
