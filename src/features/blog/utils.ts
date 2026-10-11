@@ -44,8 +44,3 @@ export const shortDate = (date: string) => formatDate(date, "dd.MM.yy");
 /** `readingTime` comes through Contentlayer as untyped JSON. */
 export const readMinutes = (post: BlogContent) =>
   Math.max(1, Math.round((post.readingTime as { minutes: number }).minutes));
-
-/** The CDN has no resizing API, only pre-generated variants, and `medium_` is
- *  the one present on every asset — `small_` and `thumbnail_` are not. */
-export const cardImage = (url: string) =>
-  url.replace(/\/large_([^/]+)$/, "/medium_$1");
