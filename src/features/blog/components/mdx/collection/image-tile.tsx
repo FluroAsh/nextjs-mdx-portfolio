@@ -1,5 +1,5 @@
 import { ExpandIconHover } from "@/components/icons/expand-hover";
-import { IMAGE_SIZE } from "@/types";
+import { downsizedUrl } from "@/utils/image";
 import { cn } from "@/utils/misc";
 
 import { ImageCaption } from "../image-caption";
@@ -17,9 +17,7 @@ export const ImageTile = ({
   useLowerRes = false,
   className,
 }: ImageTileProps) => {
-  const newSrc = useLowerRes
-    ? src.replace(IMAGE_SIZE.LARGE, IMAGE_SIZE.MEDIUM)
-    : src;
+  const newSrc = useLowerRes ? downsizedUrl(src) : src;
 
   return (
     <div

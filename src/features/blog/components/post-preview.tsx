@@ -8,9 +8,10 @@ import { type BlogContent } from "contentlayer/utils";
 import { motion as m } from "motion/react";
 
 import { BilingualLabel } from "@/components/bilingual-label";
+import { downsizedUrl } from "@/utils/image";
 import { cn, toRomanNumeral } from "@/utils/misc";
 
-import { cardImage, readMinutes, shortDate } from "../utils";
+import { readMinutes, shortDate } from "../utils";
 import { item } from "./post-list";
 import { TagChips } from "./tag-chips";
 
@@ -58,7 +59,7 @@ export const PostPreview = ({ post }: { post: BlogContent }) => (
       "md:grid-cols-[144px_minmax(0,1fr)]",
     )}
   >
-    <Thumbnail src={cardImage(post.image)} />
+    <Thumbnail src={downsizedUrl(post.image)} />
 
     <div>
       <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1 font-mono text-[10px] tracking-wider uppercase">

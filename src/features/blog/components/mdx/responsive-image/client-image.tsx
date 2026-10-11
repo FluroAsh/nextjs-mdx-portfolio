@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 
+import { downsizedUrl } from "@/utils/image";
 import { cn } from "@/utils/misc";
 
 type ClientImageProps = {
@@ -55,11 +56,7 @@ export const ClientImage = ({
 
   // TODO: Should take into account orientations
   // Need to review how to better set this up, currently not all portrait images have the same widths... So this is a bit hacky.
-  const srcSet = [
-    // `${src.replace("large_", "small_")} 320w`,
-    `${src.replace("large_", "medium_")} 640w`,
-    `${src} 1200w`,
-  ].join(", ");
+  const srcSet = [`${downsizedUrl(src)} 640w`, `${src} 1200w`].join(", ");
 
   return (
     // "my-0" override prevents prose margin from being applied to picture element
