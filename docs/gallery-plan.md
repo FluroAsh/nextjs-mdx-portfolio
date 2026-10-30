@@ -41,6 +41,114 @@ than albums.
   disagree with albums (Kamakura sits in `tokyo/day-4`), and date or distance
   clustering misfiles day trips and layovers.
 
+## Contract with the image service
+
+Everything the gallery needs from s3-image-upload-thing, in one place. The site
+reads it over the public CDN at build time, with no credentials. A change to
+anything in this section is a change on both sides.
+
+### URLs
+
+| What          | URL                                                  | Exists                    |
+| ------------- | ---------------------------------------------------- | ------------------------- |
+| Set manifest  | `https://{host}/{folder}/{name}/manifest.json`       | after uploader #30        |
+| Variant       | same folder + last path segment of `variants[v].key` | yes                       |
+| Gallery index | `https://{host}/gallery/index.json`                  | no (phase 4)              |
+| Download      | `{variant URL}?download`, fetched from the browser   | yes; needs CORS on images |
+
+`{host}` is `NEXT_PUBLIC_S3_HOSTNAME`. Flat legacy sets have no manifest URL
+until they are migrated into set folders.
+
+### Manifest schema 2
+
+Additive over schema 1 (`shared/types/manifest.ts` in the uploader). Every new
+field is required in the JSON, with `null` meaning "looked, found nothing", so
+a reader can tell a missing value from an old writer.
+
+```ts
+// `Manifest` is schema 1, from the uploader's `shared/types/manifest.ts`.
+type ManifestV2 = Omit<Manifest, "schema"> & {
+  schema: 2;
+  /** EXIF `DateTimeOriginal` + `OffsetTimeOriginal` as ISO 8601, e.g. `2025-03-14T21:42:00+09:00`. No offset in the file → no `Z` is invented; the value ends at the seconds. */
+  takenAt: string | null;
+  /** Camera settings; `null` when the file had no EXIF. Units match `PhotoExif` in `src/features/gallery/types.ts`. */
+  exif: {
+    camera: string | null; // Make + Model, de-duplicated ("NIKON Z 6", not "NIKON CORPORATION NIKON Z 6")
+    lens: string | null; // LensModel
+    focalLength: number | null; // millimetres
+    aperture: number | null; // FNumber, e.g. 2.8
+    exposureTime: number | null; // seconds, e.g. 0.0166
+    iso: number | null;
+  } | null;
+  /** Rounded to 3 decimal places before it is stored; `null` unless the upload opted in. */
+  geo: { latitude: number; longitude: number } | null;
+  /** Album slug, `^[a-z0-9]+(-[a-z0-9]+)*$`; `null` keeps the set out of the gallery. */
+  album: string | null;
+  /** Typed at upload; YAML in this repo overrides both. */
+  alt: string | null;
+  caption: string | null;
+};
+```
+
+### Gallery index
+
+```ts
+type GalleryIndex = {
+  schema: 1;
+  /** ISO 8601 time the index was written. */
+  generatedAt: string;
+  /** Every schema 2 manifest whose `album` is not null, in full, so the site parses one shape. */
+  sets: ManifestV2[];
+};
+```
+
+### Invariants the site relies on
+
+- **A set's identity is its set path**, `{folder}/{name}`. The site uses it to
+  merge the index with YAML and as the `?photo=` deep-link id. Renaming or
+  moving a folder breaks both, so the uploader must treat folders as permanent
+  once a set has an album.
+- **A manifest exists only after every variant is stored** (uploader #21, on
+  `main`). The site never checks variants individually.
+- **Public variants carry no EXIF.** Everything the site shows comes from the
+  manifest.
+- **An unknown `schema` means "no manifest".** The site falls back to the probe
+  for that set, so a new schema never breaks a build, but it does slow it down.
+- **The index is derived.** It always equals "all manifests with an album", and
+  the uploader can rebuild it from the bucket. The site never writes to it.
+- **The index changes trigger a deploy.** The site does not poll; without the
+  deploy hook, new uploads appear at the next unrelated deploy.
+
+### Deploy order
+
+1. Site accepts schema 2 (2.2).
+2. Uploader writes schema 2 (3.1). Reversing these two puts every new upload on
+   the probe path.
+3. Uploader writes the index and calls the deploy hook (4.x). The site must treat
+   a missing index (404) as "no automatic sets", so either side can go first.
+
+## What in this PR is coupled to that contract
+
+The UI is not coupled: components only see `GalleryPhoto` and `GalleryAlbum`.
+The coupling is in the data layer, and each piece below is replaced rather than
+edited.
+
+| File                                                             | Today                                                   | Becomes                                                                                              | Needs              |
+| ---------------------------------------------------------------- | ------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ------------------ |
+| `src/features/gallery/data/photos.ts`                            | Hand-written fixture, sample EXIF on 4 photos           | Deleted                                                                                              | 5.3                |
+| `src/features/gallery/data/albums.ts`                            | Three hard-coded albums                                 | `content/gallery/*.yaml` (Contentlayer)                                                              | 5.1                |
+| `src/features/gallery/server/get-gallery.ts`                     | Fixture + `getImagePlaceholder` (downloads every image) | Index + YAML merged by set path; per-set manifest for YAML-only sets                                 | 2.1, 2.2, 4.1, 5.1 |
+| `GalleryPhoto.id`                                                | Set **name** (`nkon-tokyo-d1-14`), unique only by luck  | Set **path**; names repeat across folders                                                            | 5.3                |
+| `GalleryPhoto.candidates`, `width`, `height`, `placeholder`      | Probe + the width table in `utils/image.ts`             | Manifest `variants` and `placeholder`                                                                | 2.1                |
+| `GalleryPhoto.src` (lightbox)                                    | `large` variant                                         | Largest real variant                                                                                 | 2.3 (#9)           |
+| `GalleryPhoto.takenAt`, `exif`, `location.geo`                   | Fixture, `isSample: true`                               | Manifest schema 2; `isSample` and its notice in `details-panel.tsx` deleted                          | 2.2, 3.1, 3.2      |
+| `GalleryPhoto.title`, `caption`, `alt`, `tags`, `location.label` | Fixture                                                 | YAML, falling back to manifest `alt`/`caption`                                                       | 5.1, 3.5           |
+| `GalleryPhoto.frame`                                             | Fixture order                                           | Merged order (YAML first, then `takenAt`); shifts when photos are added, which is why links use `id` | 5.3                |
+
+Formatters in `src/features/gallery/utils.ts` already expect the schema 2
+formats above (`takenAt` with offset, `exposureTime` in seconds, `aperture` as a
+number), and are unit-tested against them.
+
 ## Two ways a photo joins an album
 
 Both name a photo by its **set path**, `{folder}/{name}`, for example

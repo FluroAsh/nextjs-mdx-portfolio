@@ -49,8 +49,12 @@ export const formatTakenAt = (takenAt: string) => {
   if (!match) return null;
 
   const [, date, time, offset] = match;
-  const zone =
-    !offset || offset === "Z" ? "UTC" : `UTC${offset.replace(/:00$/, "")}`;
+  // Cameras without a time zone setting record no offset; calling that UTC would be a guess.
+  const zone = !offset
+    ? null
+    : offset === "Z"
+      ? "UTC"
+      : `UTC${offset.replace(/:00$/, "")}`;
 
   return { date, time, zone };
 };

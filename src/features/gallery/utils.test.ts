@@ -47,6 +47,7 @@ describe("formatTakenAt", () => {
       { date: "2025-03-14", time: "21:42", zone: "UTC+05:30" },
     ],
     ["2025-03-14T21:42Z", { date: "2025-03-14", time: "21:42", zone: "UTC" }],
+    ["2025-03-14T21:42:00", { date: "2025-03-14", time: "21:42", zone: null }],
   ])("keeps the local wall-clock time of %s", (input, expected) => {
     expect(formatTakenAt(input)).toEqual(expected);
   });
