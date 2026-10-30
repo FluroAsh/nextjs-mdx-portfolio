@@ -29,23 +29,76 @@ requests #24 (backfill write mode) and #30 (manifests inside set folders).
 That last point makes EXIF extraction the most time-sensitive item here, more
 than albums.
 
-## Decision: where albums live
+## Decisions
 
-| Option                                                  | Good                                                                                   | Bad                                                                                                    |
-| ------------------------------------------------------- | -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| **A. Data files in this repo** (recommended)            | Versioned with the posts that link to them; no uploader work; the build validates them | Editing YAML by hand; set paths typed or pasted                                                        |
-| B. Album files in the bucket, edited in the uploader UI | Pick photos visually in the explorer; assign an album at upload                        | A small CMS to build; the site needs a rebuild hook on every edit; editorial text away from the posts  |
-| C. Folder = album                                       | No data at all                                                                         | Breaks already: Kamakura sits in `tokyo/day-4`; no titles or order; renaming a folder breaks every URL |
+- **Two ways into an album.** Automatic: an album is chosen in the upload modal
+  and written into the set's manifest. Manual: YAML in this repo assigns or
+  overrides album membership and adds editorial text.
+- **EXIF goes into the manifest only.** Public image files stay stripped, as
+  they are today. A downloaded file never carries the camera serial, exact
+  timestamp or GPS.
+- **Folder paths and EXIF clustering do not decide albums.** Folders already
+  disagree with albums (Kamakura sits in `tokyo/day-4`), and date or distance
+  clustering misfiles day trips and layovers.
 
-**Start with A, keyed so B can replace it without touching the site.** Every
-album entry names a photo by its **set path**: `{folder}/{name}`, for example
-`japan-2025/tokyo/day-1/nkon-tokyo-d1-14`. That is the identity the manifest
-already carries (`folder` + `name`), so if albums later move into the bucket,
-only the loader's source changes.
+## Two ways a photo joins an album
 
-Move to B only when hand-editing is the bottleneck, for example more than about
-five albums, or uploads you want to file into an album straight away. Building
-an album editor before then is a CMS for three lists.
+Both name a photo by its **set path**, `{folder}/{name}`, for example
+`japan-2025/tokyo/day-1/nkon-tokyo-d1-14`. That is the identity a manifest
+already carries, so the two sources can be merged on it.
+
+### Automatic: album chosen at upload
+
+The upload modal gets an optional **Album** field, with suggestions from
+albums already in use. It applies to every file in that upload, and the slug
+is written into each set's manifest (`album: "tokyo"`).
+
+An album field left empty means "not in the gallery". The gallery stays
+curated by default, so blog screenshots and food shots never appear unless
+they are filed into an album.
+
+### Manual: YAML in this repo
+
+One YAML file per album in `content/gallery/`, as a Contentlayer data type. It
+does three jobs:
+
+- **Defines the album**: title, series, linked post, cover. The upload modal
+  only knows a slug.
+- **Associates sets by hand**: photos uploaded before the album field existed,
+  or whose album should change, without re-uploading.
+- **Adds editorial text**: title, place and tags, which no file can supply,
+  and alt text or a caption where none was typed at upload.
+
+```yaml
+# content/gallery/tokyo.yaml
+title: Tokyo
+series: Japan 2025 # albums in a series are offered as related
+post: japan-2025/tokyo # must be an existing post slug, checked at build
+cover: japan-2025/tokyo/day-3/nkon-tokyo-d3-19
+photos: # optional; also sets display order for the sets listed
+  - set: japan-2025/tokyo/day-1/nkon-tokyo-d1-14 # joins this album, whatever the manifest says
+    alt: Akihabara Station
+    caption: … # optional
+    place: Akihabara, Tokyo # optional
+    tags: [street, station]
+  - set: japan-2025/tokyo/day-1/t-hotel
+    hidden: true # in the album at upload, kept out of the gallery
+```
+
+### How the two combine
+
+| Field                            | Comes from                                        | When both exist                                                                            |
+| -------------------------------- | ------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| album membership                 | manifest `album`, or a YAML `photos` entry        | YAML wins                                                                                  |
+| album title, series, post, cover | YAML                                              | n/a; a slug with no YAML file is titled from the slug and logged at build                  |
+| order                            | YAML order first, then capture time, newest first | n/a                                                                                        |
+| size, blur, variants             | manifest                                          | n/a                                                                                        |
+| capture time, EXIF, GPS          | manifest (schema 2)                               | n/a; never written by hand                                                                 |
+| alt, caption                     | manifest (typed at upload), or YAML               | YAML wins; a set with no alt text is left out of the gallery and listed in a build warning |
+| title, place, tags               | YAML                                              | n/a                                                                                        |
+
+The build also fails when a `set` is listed in two albums' YAML, or when `post`
+or `cover` do not resolve.
 
 ### Albums and tags are different things
 
@@ -55,31 +108,34 @@ an album editor before then is a CMS for three lists.
 - **Tag**: what it shows, cross-cutting (`night`, `street`, `temple`). Use tags
   for anything that would make you want a photo in two albums.
 
-### Album file shape
+## How the site finds automatic sets
 
-One YAML file per album in `content/gallery/`, as a Contentlayer data type:
+The site has no bucket credentials, and should not get them, so it cannot list
+the bucket to find sets with an `album`. The uploader publishes a **gallery
+index** instead: `gallery/index.json`, one entry per set that has an album,
+holding that set's manifest fields the gallery uses.
 
-```yaml
-# content/gallery/tokyo.yaml
-slug: tokyo # optional; defaults to the file name
-title: Tokyo
-series: Japan 2025 # albums in a series are offered as related
-post: japan-2025/tokyo # must be an existing post slug, checked at build
-cover: japan-2025/tokyo/day-3/nkon-tokyo-d3-19
-photos: # display order
-  - set: japan-2025/tokyo/day-1/nkon-tokyo-d1-14
-    alt: Akihabara Station
-    title: Akihabara Station # optional, defaults to alt
-    caption: … # optional
-    place: Akihabara, Tokyo # optional
-    tags: [street, station]
-```
+- It is derived, never edited: written after each upload that sets an album,
+  and rebuildable from the manifests by a script.
+- One fetch at build replaces one per photo.
+- The uploader calls a Vercel deploy hook after writing it, so a new upload
+  appears without a manual deploy.
 
-Machine facts (size, blur, variants, and later capture time, EXIF and GPS) are
-never written here. They come from the manifest.
+Manual-only sets are not in the index, so the site fetches their manifests
+individually.
 
-The build fails when a `set` appears in two albums, when `post` or `cover` do
-not resolve, or when a set has neither a manifest nor a probe-able image.
+## EXIF and GPS
+
+- Read at upload from the in-memory file, before encoding, with
+  `sharp().metadata().exif` and `exif-reader`. Written to the manifest as
+  `takenAt` (with UTC offset) and `exif` (camera, lens, focal length, aperture,
+  shutter, ISO).
+- GPS is a per-upload **Include location** checkbox, off by default and
+  remembered per folder in the browser. When on, coordinates are rounded to 3
+  decimal places (about 100 m) before they are stored.
+- Variants keep being stripped. This is the current behaviour, now a decision.
+- Existing sets have no original to read. A one-off script reads your local
+  originals, matches them to sets by file name, and patches their manifests.
 
 ## Phases
 
@@ -96,57 +152,57 @@ not resolve, or when a set has neither a manifest nor a probe-able image.
 | #   | Repo      | Work                                                                                                                                                                       | Depends on |
 | --- | --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
 | 2.1 | portfolio | **Rewrite #8** for the #30 layout: the manifest is `manifest.json` beside the image, variants resolve by file name, no `pathPrefix`. Keep the probe fallback for flat sets | 1.1        |
-| 2.2 | portfolio | #9 lightbox uses the largest real size                                                                                                                                     | 2.1        |
-| 2.3 | portfolio | #10 delete the probe, once every set has a manifest                                                                                                                        | 1.3, 2.1   |
+| 2.2 | portfolio | Accept manifest schema 2 alongside 1, reading `takenAt`, `exif`, `geo` and `album` when present                                                                            | 2.1        |
+| 2.3 | portfolio | #9 lightbox uses the largest real size                                                                                                                                     | 2.1        |
+| 2.4 | portfolio | #10 delete the probe, once every set has a manifest                                                                                                                        | 1.3, 2.1   |
 
-Posts benefit from 2.1 too, so it is worth doing before any gallery work.
+2.2 must deploy before the uploader writes schema 2. Readers treat an unknown
+schema as "no manifest", so posts would otherwise fall back to the probe for
+every new upload.
 
-### 3. Albums v1 (this repo, no image-service changes)
+### 3. Schema 2: EXIF and album at upload (image service)
 
-| #   | Repo      | Work                                                                                                                                                       | Depends on |
-| --- | --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
-| 3.1 | portfolio | Add the `GalleryAlbum` data type to Contentlayer. Today `contentDirPath` is `blog`, so the content root moves up a level and posts get a `blog/**` pattern | —          |
-| 3.2 | portfolio | Build-time validation: one album per set, `post` and `cover` resolve                                                                                       | 3.1        |
-| 3.3 | portfolio | Seed script: generate album YAML from a post's image components (src, alt, caption) as a starting point to prune by hand                                   | 3.1        |
-| 3.4 | portfolio | Gallery loader reads albums, fetches each set's manifest through the #8 helper, and builds `GalleryPhoto`. Delete the fixture and the `isSample` flag      | 2.1, 3.1   |
-| 3.5 | portfolio | Merge the prototype UI (PR #14) with the loader                                                                                                            | 3.4        |
+Start this alongside phase 1: every upload until 3.1 ships loses its EXIF.
 
-The gallery can ship at the end of this phase, without capture dates or EXIF.
-The UI already hides fields that are missing.
+| #   | Repo     | Work                                                                                                | Depends on |
+| --- | -------- | --------------------------------------------------------------------------------------------------- | ---------- |
+| 3.1 | uploader | Extract EXIF at upload into the manifest (`takenAt`, `exif`); bump to schema 2                      | 1.1, 2.2   |
+| 3.2 | uploader | **Include location** checkbox; GPS rounded to 3 decimals, omitted when unchecked                    | 3.1        |
+| 3.3 | uploader | **Album** field in the upload modal, written to each set's manifest; suggestions from albums in use | 3.1        |
+| 3.4 | uploader | Script: patch existing manifests with EXIF from local originals, matched by file name               | 3.1        |
+| 3.5 | uploader | Optional alt text and caption per file in the upload modal, written to the manifest                 | 3.1        |
 
-### 4. EXIF in the manifest (image service)
+### 4. Gallery index (image service)
 
-Do 4.1 as early as possible: until it ships, every upload loses its EXIF.
+| #   | Repo     | Work                                                                                                   | Depends on |
+| --- | -------- | ------------------------------------------------------------------------------------------------------ | ---------- |
+| 4.1 | uploader | Write `gallery/index.json` after an upload that sets an album; script to rebuild it from all manifests | 3.3        |
+| 4.2 | uploader | Call a Vercel deploy hook (URL from env) after the index changes                                       | 4.1        |
 
-| #   | Repo      | Work                                                                                                                                                                      | Depends on |
-| --- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
-| 4.1 | uploader  | Read EXIF from the upload buffer before encoding (`sharp().metadata().exif` + `exif-reader`) and add `takenAt` (with offset) and `exif` to the manifest. Bump to schema 2 | 1.1        |
-| 4.2 | uploader  | GPS: round to 3 decimals (about 100 m) before it is stored, and omit it for folders marked private. Default to omitted until a folder opts in                             | 4.1        |
-| 4.3 | uploader  | One-off script that reads EXIF from local originals, matches them to sets by file name, and patches existing manifests                                                    | 4.1        |
-| 4.4 | portfolio | Accept schema 2; read `takenAt`, `exif` and `geo` from the manifest                                                                                                       | 2.1, 4.1   |
+### 5. Gallery on real data (this repo)
 
-Schema 2 is additive, and readers treat unknown schemas as "no manifest", so 4.4
-has to deploy before the uploader writes schema 2. Otherwise the site falls back
-to the probe for every new upload.
+| #   | Repo      | Work                                                                                                                                                   | Depends on |
+| --- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------- |
+| 5.1 | portfolio | Add the album YAML data type to Contentlayer. Today `contentDirPath` is `blog`, so the content root moves up a level and posts get a `blog/**` pattern | —          |
+| 5.2 | portfolio | Seed script: draft album YAML from a post's image components (src, alt, caption), to prune by hand                                                     | 5.1        |
+| 5.3 | portfolio | Loader: merge the gallery index and the YAML by set path, per the table above; build-time validation                                                   | 2.2, 5.1   |
+| 5.4 | portfolio | Replace the fixture and the `isSample` flag with the loader, and merge the prototype UI (PR #14)                                                       | 5.3        |
 
-Whether to start keeping originals under `src/` is a separate question. It would
-make re-extraction possible, but it stores full-resolution files with exact GPS
-and roughly doubles storage.
+5.1 to 5.3 do not have to wait for phase 4. With no index yet, the loader runs
+on YAML alone, so the gallery can ship on manual albums first and pick up
+automatic ones when the index exists.
 
-### 5. Albums in the image service (only if v1 hurts)
+### Later, if it is needed
 
-| #   | Repo      | Work                                                                                                |
-| --- | --------- | --------------------------------------------------------------------------------------------------- |
-| 5.1 | uploader  | Store albums as `albums/{slug}.json` in the bucket, in the YAML shape above                         |
-| 5.2 | uploader  | Explorer: multi-select sets → "Add to album"; an album field in the upload modal                    |
-| 5.3 | uploader  | Call a Vercel deploy hook after an album is saved                                                   |
-| 5.4 | portfolio | Loader reads `albums/*.json` from the CDN instead of `content/gallery/`; the YAML files are retired |
+- Explorer action: change the album of selected sets after upload, rewriting
+  their manifests and the index. Until then, YAML covers it.
 
 ## Open questions
 
-- Is the gallery curated, or every photo in every post? This plan assumes
-  curated: food and screenshots stay in posts.
 - Place names: written by hand (accurate, one more field per photo), or reverse
   geocoded at upload from GPS?
 - Legacy photos have file names as alt text (`DSC_2346.webp`). They need real
-  alt text before they appear, which 3.3's seed script will make obvious.
+  alt text before they appear, which 5.2's seed script will make obvious.
+- Should the uploader start keeping originals under `src/`? It would make
+  re-extraction possible, but stores full-resolution files with exact GPS and
+  roughly doubles storage.
