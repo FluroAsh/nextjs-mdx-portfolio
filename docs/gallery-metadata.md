@@ -18,17 +18,17 @@ sets the source is itself a stripped WebP, so that data is gone for good.
 
 ## What the design needs
 
-| Field                                | Shown in              | Source                                         | Exists       |
-| ------------------------------------ | --------------------- | ---------------------------------------------- | ------------ |
-| width, height, blur, srcset          | tile, lightbox        | manifest                                       | yes (#8)     |
-| largest real size                    | lightbox, download    | manifest                                       | yes (#9)     |
-| capture time + UTC offset            | tile, details         | EXIF `DateTimeOriginal` + `OffsetTimeOriginal` | no           |
-| camera, lens, focal, f, shutter, ISO | details               | EXIF                                           | no           |
-| GPS                                  | details (map link)    | EXIF GPS, rounded                              | no           |
-| title, caption, alt                  | tile, details         | editorial                                      | alt in posts |
-| place name                           | tile overlay, details | editorial (or reverse geocode)                 | no           |
-| tags                                 | details               | editorial                                      | no           |
-| album membership                     | filter, related       | editorial                                      | no           |
+| Field                                | Shown in              | Source                                         | Exists                                  |
+| ------------------------------------ | --------------------- | ---------------------------------------------- | --------------------------------------- |
+| width, height, blur, srcset          | tile, lightbox        | manifest                                       | in manifest; read by site once #8 lands |
+| largest real size                    | lightbox, download    | manifest                                       | in manifest; used once #9 lands         |
+| capture time + UTC offset            | tile, details         | EXIF `DateTimeOriginal` + `OffsetTimeOriginal` | no                                      |
+| camera, lens, focal, f, shutter, ISO | details               | EXIF                                           | no                                      |
+| GPS                                  | details (map link)    | EXIF GPS, rounded                              | no                                      |
+| title, caption, alt                  | tile, details         | editorial                                      | alt in posts                            |
+| place name                           | tile overlay, details | editorial (or reverse geocode)                 | no                                      |
+| tags                                 | details               | editorial                                      | no                                      |
+| album membership                     | filter, related       | editorial                                      | no                                      |
 
 `src/features/gallery/types.ts` marks the source of every field the same way.
 
