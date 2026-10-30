@@ -3,7 +3,7 @@ import type { SrcSetCandidate } from "@/utils/image";
 /**
  * Every field says where it will come from once the gallery reads real data.
  * Today only the `manifest` fields exist; the rest need work in
- * s3-image-upload-thing (see `docs/gallery-metadata.md`), so they are optional
+ * s3-image-upload-thing (see `docs/gallery-plan.md`), so they are optional
  * and the UI hides whatever is missing.
  */
 
