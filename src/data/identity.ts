@@ -12,6 +12,7 @@ export const FIELD_LABELS = {
   tags: { zh: "標籤", en: "TAGS" },
   read: { zh: "閱讀", en: "READ" },
   series: { zh: "系列", en: "SERIES" },
+  geo: { zh: "座標", en: "GEO" },
 } as const satisfies Record<string, BilingualPair>;
 
 export type FieldKey = keyof typeof FIELD_LABELS;
