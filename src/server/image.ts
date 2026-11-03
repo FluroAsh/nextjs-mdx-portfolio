@@ -3,6 +3,7 @@ import probe from "probe-image-size";
 
 import { env } from "@/lib/env";
 import {
+  type LightboxSource,
   type ProbedSize,
   type SrcSetCandidate,
   getFileNameFromUrl,
@@ -123,7 +124,7 @@ const fromManifest = (
   };
 };
 
-const readManifest = async (imageSrc: string) => {
+const loadManifest = async (imageSrc: string) => {
   if (!env.imageOrigin || !imageSrc.startsWith(`${env.imageOrigin}/`))
     return null;
 
@@ -138,7 +139,14 @@ const readManifest = async (imageSrc: string) => {
     manifests.delete(manifestUrl);
     return FETCH_FAILED;
   }
-  return manifest && fromManifest(src, manifest);
+  return manifest && { src, manifest };
+};
+
+const readManifest = async (imageSrc: string) => {
+  const loaded = await loadManifest(imageSrc);
+  return loaded === FETCH_FAILED
+    ? FETCH_FAILED
+    : loaded && fromManifest(loaded.src, loaded.manifest);
 };
 
 const probeImage = async (imageSrc: string) => {
@@ -184,4 +192,39 @@ export const measureImage = async (
       candidates: [],
     };
   }
+};
+
+/** Never lightbox sizes: the placeholder is a 20px blur and the thumbnail a 120px grid size. */
+const NON_LIGHTBOX_SIZES = ["placeholder", "thumbnail"];
+
+/**
+ * The lightbox slide for an image: its `src` is the largest file of the set,
+ * with every real size as `srcSet`. A set with no manifest keeps the linked file.
+ */
+export const lightboxSlide = async (
+  imageSrc: string,
+): Promise<{ src: string; srcSet?: LightboxSource[] }> => {
+  const loaded = await loadManifest(imageSrc);
+  if (!loaded || loaded === FETCH_FAILED) return { src: imageSrc };
+
+  const { src, manifest } = loaded;
+  const ownFile = getFileNameFromUrl(src.pathname);
+  const variants = Object.entries(manifest.variants);
+  // A loose image beside a set folder of the same name must not take that set's sizes.
+  if (!variants.some(([, v]) => getFileNameFromUrl(v.key) === ownFile))
+    return { src: imageSrc };
+
+  const sources = variants
+    .filter(([size]) => !NON_LIGHTBOX_SIZES.includes(size))
+    .map(([, v]) => {
+      const url = new URL(getFileNameFromUrl(v.key), src);
+      url.search = src.search;
+      url.hash = src.hash;
+      return { src: url.href, width: v.width, height: v.height };
+    })
+    .sort((a, b) => a.width - b.width);
+
+  return sources.length
+    ? { src: sources[sources.length - 1].src, srcSet: sources }
+    : { src: imageSrc };
 };

@@ -4,14 +4,16 @@ import { useState } from "react";
 
 import { ExpandIconHover } from "@/components/icons/expand-hover";
 import { useLightboxDimensions } from "@/hooks/use-lightbox-dimensions";
-import { altToFilename } from "@/utils/image";
+import { type LightboxSource, altToFilename } from "@/utils/image";
 
 import { ImageCaption } from "./image-caption";
 import { Lightbox } from "./lightbox";
 import { LightboxTrigger } from "./lightbox-trigger";
 
 type LightBoxImageProps = {
+  /** Largest file of the set; the download link points at it. */
   src?: string;
+  srcSet?: LightboxSource[];
   alt?: string;
   caption?: string;
   children: React.ReactNode;
@@ -19,6 +21,7 @@ type LightBoxImageProps = {
 
 export const LightboxImage = ({
   src,
+  srcSet,
   alt,
   caption,
   children: serverImage,
@@ -42,6 +45,7 @@ export const LightboxImage = ({
         slides={[
           {
             src,
+            srcSet,
             alt,
             width: imageDimensions?.width,
             height: imageDimensions?.height,

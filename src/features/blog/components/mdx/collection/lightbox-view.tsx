@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { useLightboxDimensions } from "@/hooks/use-lightbox-dimensions";
+import { type LightboxSource } from "@/utils/image";
 import { cn, zeroPad } from "@/utils/misc";
 
 import { Lightbox } from "../lightbox";
@@ -13,6 +14,7 @@ type LightboxViewProps = {
   variant: CollectionVariant;
   slides: {
     src: string;
+    srcSet?: LightboxSource[];
     alt?: string;
     download?: {
       url: string;

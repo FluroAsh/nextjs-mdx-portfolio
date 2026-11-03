@@ -1,5 +1,7 @@
 import { type MDXComponents } from "mdx/types";
 
+import { lightboxSlide } from "@/server/image";
+
 import { ImageCollection } from "./collection/lightbox-collection";
 import { LightboxImage } from "./lightbox-image";
 import { CustomLink } from "./link";
@@ -14,11 +16,14 @@ export const components: MDXComponents = {
     />
   ),
   img: ResponsiveImage,
-  LightboxImage: (props) => (
-    <LightboxImage src={props.src} alt={props.alt} caption={props.caption}>
-      <ResponsiveImage {...props} />
-    </LightboxImage>
-  ),
+  LightboxImage: async (props) => {
+    const slide = props.src ? await lightboxSlide(props.src) : {};
+    return (
+      <LightboxImage {...slide} alt={props.alt} caption={props.caption}>
+        <ResponsiveImage {...props} />
+      </LightboxImage>
+    );
+  },
   /** Static markdown images in `/public` */
   // Image: ({ src, ...rest }: ImageProps) => (
   //   <Image src={`${basePath || ""}${src}`} {...rest} />
