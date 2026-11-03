@@ -171,7 +171,8 @@ export const imageSizes = (isFixedWidth: boolean) =>
     : `(min-width: ${FRAME_WIDTH}px) ${FRAME_WIDTH - GUTTERS - SIDE_PANEL}px, (min-width: ${SIDE_PANEL_BREAKPOINT}px) calc(100vw - ${GUTTERS + SIDE_PANEL}px), calc(100vw - ${GUTTERS}px)`;
 
 export const getFileNameFromUrl = (url: string) => {
-  const newURL = new URL(url);
+  // The base lets a manifest key (a path, not a URL) through.
+  const newURL = new URL(url, "http://localhost");
   return newURL.pathname.split("/").pop() || "";
 };
 

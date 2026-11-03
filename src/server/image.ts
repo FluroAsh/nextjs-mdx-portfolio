@@ -1,4 +1,3 @@
-import { writeSync } from "node:fs";
 import { getPlaiceholder } from "plaiceholder";
 import probe from "probe-image-size";
 
@@ -6,6 +5,7 @@ import { env } from "@/lib/env";
 import {
   type ProbedSize,
   type SrcSetCandidate,
+  getFileNameFromUrl,
   srcSetCandidates,
 } from "@/utils/image";
 
@@ -58,19 +58,6 @@ const manifests = new Map<
   string,
   Promise<Manifest | null | typeof FETCH_FAILED>
 >();
-const counts = { manifest: 0, fallback: 0 };
-
-// Next has no end-of-build hook and stops its static-generation workers with
-// SIGINT, while their output still reaches the build log. One line per worker.
-process.once("SIGINT", () => {
-  if (counts.manifest || counts.fallback)
-    writeSync(
-      1,
-      `Image sizes: ${counts.manifest} from manifests, ${counts.fallback} probed\n`,
-    );
-  // Keeps the default exit on SIGINT when nothing else handles it.
-  if (!process.listenerCount("SIGINT")) process.kill(process.pid, "SIGINT");
-});
 
 const fetchManifest = async (url: string) => {
   try {
@@ -79,16 +66,15 @@ const fetchManifest = async (url: string) => {
     if (res.status === 403 || res.status === 404) return null;
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const manifest: Manifest = await res.json();
-    return manifest.schema === 1 ? manifest : null;
+    // A manifest without variants cannot answer for any image, so the probe does.
+    return manifest.schema === 1 && manifest.variants ? manifest : null;
   } catch (error) {
     console.error(`Manifest fetch failed: ${url}`, error);
     return FETCH_FAILED;
   }
 };
 
-const fileName = (path: string) => path.split("/").pop() ?? "";
-
-type ImagePlaceholder = ProbedSize & {
+type ImageMeasurement = ProbedSize & {
   /** Base64 blur placeholder; `""` when there is none. */
   base64: string;
   /** Shape of the image; `undefined` only for non-numeric sizes. */
@@ -100,9 +86,11 @@ type ImagePlaceholder = ProbedSize & {
 const fromManifest = (
   src: URL,
   { placeholder, variants }: Manifest,
-): ImagePlaceholder | null => {
-  const ownFile = fileName(src.pathname);
-  const own = Object.values(variants).find((v) => fileName(v.key) === ownFile);
+): ImageMeasurement | null => {
+  const ownFile = getFileNameFromUrl(src.pathname);
+  const own = Object.values(variants).find(
+    (v) => getFileNameFromUrl(v.key) === ownFile,
+  );
   // A loose image beside a set folder of the same name must not take that set's sizes.
   if (!own) return null;
 
@@ -119,7 +107,7 @@ const fromManifest = (
 
   const toCandidate = (v: ManifestVariant) => {
     if (v === own) return { url: src.href, width: v.width };
-    const url = new URL(fileName(v.key), src);
+    const url = new URL(getFileNameFromUrl(v.key), src);
     url.search = src.search;
     url.hash = src.hash;
     return { url: url.href, width: v.width };
@@ -145,7 +133,11 @@ const readManifest = async (imageSrc: string) => {
     manifests.set(manifestUrl, fetchManifest(manifestUrl));
 
   const manifest = await manifests.get(manifestUrl);
-  if (manifest === FETCH_FAILED) return FETCH_FAILED;
+  if (manifest === FETCH_FAILED) {
+    // Not cached, so the next image of the set retries.
+    manifests.delete(manifestUrl);
+    return FETCH_FAILED;
+  }
   return manifest && fromManifest(src, manifest);
 };
 
@@ -166,16 +158,13 @@ const probeImage = async (imageSrc: string) => {
 };
 
 /** Sizes, blur and `srcset` from the set's manifest, else by downloading the image. */
-export const getImagePlaceholder = async (
+export const measureImage = async (
   imageSrc: string,
-): Promise<ImagePlaceholder> => {
+): Promise<ImageMeasurement> => {
   const fromSet = await readManifest(imageSrc);
-  if (fromSet && fromSet !== FETCH_FAILED) {
-    counts.manifest++;
-    return fromSet;
-  }
+  if (fromSet && fromSet !== FETCH_FAILED) return fromSet;
 
-  counts.fallback++;
+  console.warn(`Image probed (no manifest): ${imageSrc}`);
   try {
     return await probeImage(imageSrc);
   } catch (error) {

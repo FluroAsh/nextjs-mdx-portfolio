@@ -1,4 +1,4 @@
-import { getImagePlaceholder } from "@/server/image";
+import { measureImage } from "@/server/image";
 
 import { ClientImage } from "./client-image";
 
@@ -27,7 +27,7 @@ export const ResponsiveImage = async ({
     height: imageHeight,
     base64,
     candidates,
-  } = await getImagePlaceholder(src);
+  } = await measureImage(src);
 
   const { width, height, ...newProps } = props;
 

@@ -6,4 +6,6 @@ export type ImageProps = {
 };
 
 /** Grid layout of a collection, named by how many images it holds. */
-export type CollectionVariant = "2up" | "3up" | "4up" | "6up";
+export const COLLECTION_VARIANTS = ["2up", "3up", "4up", "6up"] as const;
+
+export type CollectionVariant = (typeof COLLECTION_VARIANTS)[number];
