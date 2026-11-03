@@ -1,10 +1,9 @@
-import { getImagePlaceholder } from "@/server/image";
-import { srcSetCandidates } from "@/utils/image";
+import { measureImage } from "@/server/image";
 
 import { ClientImage } from "./client-image";
 
 // React 19's types widen `src` to `string | Blob`; this component only ever
-// takes a URL, which it probes on the server.
+// takes a URL, which it measures on the server.
 type ResponsiveImageProps = {
   src?: string;
 } & Omit<React.ComponentProps<"img">, "src">;
@@ -24,11 +23,11 @@ export const ResponsiveImage = async ({
 
   const {
     orientation = "",
-    width: probedWidth,
-    height: probedHeight,
-    measured,
+    width: imageWidth,
+    height: imageHeight,
     base64,
-  } = await getImagePlaceholder(src);
+    candidates,
+  } = await measureImage(src);
 
   const { width, height, ...newProps } = props;
 
@@ -40,14 +39,10 @@ export const ResponsiveImage = async ({
       imageId={imageId}
       src={src}
       alt={alt}
-      width={probedWidth}
-      height={probedHeight}
+      width={imageWidth}
+      height={imageHeight}
       orientation={orientation}
-      candidates={srcSetCandidates(src, {
-        width: probedWidth,
-        height: probedHeight,
-        measured,
-      })}
+      candidates={candidates}
       className={className}
       blurDataURL={base64}
       {...newProps}

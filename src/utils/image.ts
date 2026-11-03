@@ -81,7 +81,7 @@ export const FLAT_LAYOUT_FOLDER = "legacy";
 /** A display variant every set of a layout has, with the pixel bound on its longest edge. */
 type SizedVariant = [variant: ImageVariant, bound: number];
 
-/** Stopgap until manifests carry real sizes. A missing key is a 403, hence only variants every set has; smallest first. */
+/** Estimates sibling widths for sets without a manifest. A missing key is a 403, hence only variants every set has; smallest first. */
 const SIZED_VARIANTS: Record<ParsedImageUrl["layout"], SizedVariant[]> = {
   flat: [
     ["small", 500],
@@ -94,13 +94,13 @@ const SIZED_VARIANTS: Record<ParsedImageUrl["layout"], SizedVariant[]> = {
   ],
 };
 
-/** What the build-time probe reports about an image. */
+/** An image's size as measured at build. */
 export type ProbedSize = {
   /** Intrinsic width in pixels. */
   width: number;
   /** Intrinsic height in pixels. */
   height: number;
-  /** `false` when the probe failed and `width` and `height` are a stand-in. */
+  /** `false` when measuring failed and `width` and `height` are a stand-in. */
   measured: boolean;
 };
 
@@ -171,7 +171,8 @@ export const imageSizes = (isFixedWidth: boolean) =>
     : `(min-width: ${FRAME_WIDTH}px) ${FRAME_WIDTH - GUTTERS - SIDE_PANEL}px, (min-width: ${SIDE_PANEL_BREAKPOINT}px) calc(100vw - ${GUTTERS + SIDE_PANEL}px), calc(100vw - ${GUTTERS}px)`;
 
 export const getFileNameFromUrl = (url: string) => {
-  const newURL = new URL(url);
+  // The base lets a manifest key (a path, not a URL) through.
+  const newURL = new URL(url, "http://localhost");
   return newURL.pathname.split("/").pop() || "";
 };
 
