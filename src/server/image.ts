@@ -113,6 +113,9 @@ const fromManifest = (
     ownIndex === -1
       ? inline.filter((v) => v.width <= own.width)
       : inline.slice(0, ownIndex + 1);
+  // A source smaller than a bound is stored at its own size, so sizes can share a width;
+  // the last of each run is kept, which is the linked file when it is in the run.
+  const unique = offered.filter((v, i) => offered[i + 1]?.width !== v.width);
 
   const toCandidate = (v: ManifestVariant) => {
     if (v === own) return { url: src.href, width: v.width };
@@ -128,7 +131,7 @@ const fromManifest = (
     measured: true,
     base64: placeholder ?? "",
     orientation: calculateOrientation(own.width, own.height),
-    candidates: (offered.length ? offered : [own]).map(toCandidate),
+    candidates: (unique.length ? unique : [own]).map(toCandidate),
   };
 };
 

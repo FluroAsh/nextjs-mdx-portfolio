@@ -148,6 +148,20 @@ describe("getImagePlaceholder from a manifest", () => {
     ]);
   });
 
+  it("lists one file per width when a small source made equal sizes", async () => {
+    serve(
+      manifest("trip", "tiny", {
+        small: [400, 300],
+        medium: [400, 300],
+        large: [400, 300],
+      }),
+    );
+
+    const image = await getImagePlaceholder(`${CDN}/trip/tiny/large_tiny.webp`);
+
+    expect(widths(image.candidates)).toEqual(["large_tiny.webp 400"]);
+  });
+
   it("fetches a set's manifest once for several of its images", async () => {
     serve(
       manifest("trip", "shared", { medium: [800, 600], large: [1440, 1080] }),
