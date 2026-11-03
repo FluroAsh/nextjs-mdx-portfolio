@@ -205,6 +205,17 @@ describe("srcSetCandidates", () => {
     ]);
   });
 
+  it("lists an older width-sized portrait's own file once", () => {
+    const large = `${CDN}/japan-2025/tokyo/tokyo-kura-2/large_tokyo-kura-2.webp`;
+    expect(srcSetCandidates(large, measured(1440, 1920))).toEqual([
+      {
+        url: `${CDN}/japan-2025/tokyo/tokyo-kura-2/medium_tokyo-kura-2.webp`,
+        width: 600,
+      },
+      { url: large, width: 1440 },
+    ]);
+  });
+
   it("stops at large for a nested full-size image, leaving it to the lightbox", () => {
     expect(
       srcSetCandidates(`${KYOTO}/full_kyoto-13.webp`, measured(2560, 3840)),

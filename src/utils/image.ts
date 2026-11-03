@@ -78,10 +78,10 @@ export const downsizedUrl = (url: string) => {
 /** The only folder whose flat keys are Strapi sets with sized siblings. */
 export const FLAT_LAYOUT_FOLDER = "legacy";
 
-/** A display variant every set of a layout has, with the pixel bound on its longest edge; listed smallest first. */
+/** A display variant every set of a layout has, with the pixel bound on its longest edge. */
 type SizedVariant = [variant: ImageVariant, bound: number];
 
-/** Stopgap until manifests carry real sizes. A missing key is a 403, hence only variants every set has. */
+/** Stopgap until manifests carry real sizes. A missing key is a 403, hence only variants every set has; smallest first. */
 const SIZED_VARIANTS: Record<ParsedImageUrl["layout"], SizedVariant[]> = {
   flat: [
     ["small", 500],
@@ -142,8 +142,11 @@ export const srcSetCandidates = (
   // siblings is left out, since it is the lightbox's file. It keeps a sibling
   // as wide as itself so that width is still offered.
   const isSized = variants.some(([variant]) => variant === parsed.variant);
-  const siblings = fitted.filter((candidate) =>
-    isSized ? candidate.width < width : candidate.width <= width,
+  // The image's own file is listed once, with its measured width, never also as an estimated sibling.
+  const siblings = fitted.filter(
+    (candidate) =>
+      candidate.url !== src &&
+      (isSized ? candidate.width < width : candidate.width <= width),
   );
   return isSized || !siblings.length ? [...siblings, self] : siblings;
 };
