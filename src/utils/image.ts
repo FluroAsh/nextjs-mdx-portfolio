@@ -112,13 +112,6 @@ export type SrcSetCandidate = {
   width: number;
 };
 
-/** One file offered to the lightbox, in the shape its `srcSet` takes. */
-export type LightboxSource = {
-  src: string;
-  width: number;
-  height: number;
-};
-
 /**
  * Candidates are narrowest first. Only narrower siblings are offered, so a
  * caller that downsized gets nothing larger back. Empty when the size is a

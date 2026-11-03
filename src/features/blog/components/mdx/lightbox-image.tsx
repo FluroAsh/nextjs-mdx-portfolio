@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 
+import { type ImageSource } from "yet-another-react-lightbox";
+
 import { ExpandIconHover } from "@/components/icons/expand-hover";
 import { useLightboxDimensions } from "@/hooks/use-lightbox-dimensions";
-import { type LightboxSource, altToFilename } from "@/utils/image";
+import { altToFilename } from "@/utils/image";
 
 import { ImageCaption } from "./image-caption";
 import { Lightbox } from "./lightbox";
@@ -13,7 +15,7 @@ import { LightboxTrigger } from "./lightbox-trigger";
 type LightBoxImageProps = {
   /** Largest file of the set; the download link points at it. */
   src?: string;
-  srcSet?: LightboxSource[];
+  srcSet?: ImageSource[];
   alt?: string;
   caption?: string;
   children: React.ReactNode;

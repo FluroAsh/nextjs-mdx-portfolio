@@ -23,8 +23,19 @@ export const ImageCollection = async ({
   useLowerRes = true,
 }: ImageCollectionProps) => {
   const variant = variantMapping[images.length] || CollectionVariant.TwoUp;
-  const lightboxSlides = await Promise.all(
-    images.map((image) => lightboxSlide(image.src)),
+  const slides = await Promise.all(
+    images.map(async (image) => {
+      const slide = await lightboxSlide(image.src);
+      return {
+        ...slide,
+        alt: image.alt,
+        download: {
+          // ?: Search param is required for CORS issue, see: https://yet-another-react-lightbox.com/plugins/download#Cross-OriginImages
+          url: `${slide.src}?download`,
+          filename: altToFilename(image.alt ?? crypto.randomUUID()),
+        },
+      };
+    }),
   );
   const captionFontSize = images.length > 2 ? "text-xs" : "text-sm";
 
@@ -43,15 +54,7 @@ export const ImageCollection = async ({
           className={captionFontSize}
         />
       ))}
-      slides={images.map((image, i) => ({
-        ...lightboxSlides[i],
-        alt: image.alt,
-        download: {
-          // ?: Search param is required for CORS issue, see: https://yet-another-react-lightbox.com/plugins/download#Cross-OriginImages
-          url: `${lightboxSlides[i].src}?download`,
-          filename: altToFilename(image.alt ?? crypto.randomUUID()),
-        },
-      }))}
+      slides={slides}
     />
   );
 };

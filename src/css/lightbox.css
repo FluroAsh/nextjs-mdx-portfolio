@@ -11,6 +11,12 @@
   );
 }
 
+/* Square, to match the plate language; the slide image is not draggable. */
+.yarl__slide_image {
+  border-radius: 0;
+  -webkit-user-drag: none;
+}
+
 /* Square, to match the plate language the article images now use. */
 .yarl__button:focus-visible {
   border-radius: 0;
