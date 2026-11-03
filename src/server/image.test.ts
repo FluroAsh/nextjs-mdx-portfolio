@@ -3,7 +3,7 @@ import probe from "probe-image-size";
 
 import { srcSetCandidates } from "@/utils/image";
 
-import { measureImage } from "./image";
+import { lightboxSlide, measureImage } from "./image";
 
 vi.hoisted(() => {
   process.env.NEXT_PUBLIC_S3_HOSTNAME = "images.example.com";
@@ -253,5 +253,30 @@ describe("measureImage fallback", () => {
     vi.mocked(probe).mockRejectedValue(new Error("probe down"));
 
     await expect(measureImage(src)).rejects.toThrow(src);
+  });
+});
+
+describe("lightboxSlide", () => {
+  it("offers every real size and links the largest", async () => {
+    serve(
+      manifest("trip", "wide", {
+        placeholder: [20, 13],
+        thumbnail: [120, 80],
+        medium: [800, 533],
+        large: [1440, 960],
+        full: [3840, 2560],
+      }),
+    );
+    const slide = await lightboxSlide(`${CDN}/trip/wide/large_wide.webp?v=1`);
+
+    expect(slide.src).toBe(`${CDN}/trip/wide/full_wide.webp?v=1`);
+    expect(slide.srcSet?.map((s) => s.width)).toEqual([800, 1440, 3840]);
+  });
+
+  it("keeps the linked file when the set has no manifest", async () => {
+    fetchMock.mockResolvedValue(new Response("", { status: 403 }));
+    const src = `${CDN}/trip/none/large_none.webp`;
+
+    expect(await lightboxSlide(src)).toEqual({ src });
   });
 });

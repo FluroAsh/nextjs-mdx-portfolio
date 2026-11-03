@@ -8,16 +8,6 @@ import "yet-another-react-lightbox/styles.css";
 
 import "@/css/lightbox.css";
 
-const LightboxSlide = ({ slide }: { slide: SlideImage }) => (
-  // eslint-disable-next-line @next/next/no-img-element
-  <img
-    src={slide.src}
-    alt={slide.alt}
-    className="max-h-full rounded-none"
-    draggable={false}
-  />
-);
-
 type ImageLightboxProps = {
   open: boolean;
   controls?: () => React.ReactNode;
@@ -42,7 +32,6 @@ export const Lightbox = ({
     render={{
       ...customRender, // For overrides (eg. disabling next/prev buttons)
       controls,
-      slide: LightboxSlide,
     }}
     index={index}
     slides={slides}

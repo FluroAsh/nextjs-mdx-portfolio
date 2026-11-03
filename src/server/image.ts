@@ -1,5 +1,6 @@
 import { getPlaiceholder } from "plaiceholder";
 import probe from "probe-image-size";
+import { type ImageSource } from "yet-another-react-lightbox";
 
 import { env } from "@/lib/env";
 import {
@@ -83,15 +84,24 @@ type ImageMeasurement = ProbedSize & {
   candidates: SrcSetCandidate[];
 };
 
+/** A loose image beside a set folder of the same name must not take that set's sizes. */
+const findOwnVariant = (src: URL, variants: ManifestVariant[]) => {
+  const ownFile = getFileNameFromUrl(src.pathname);
+  return variants.find((v) => getFileNameFromUrl(v.key) === ownFile);
+};
+
+const siblingUrl = (src: URL, { key }: ManifestVariant) => {
+  const url = new URL(getFileNameFromUrl(key), src);
+  url.search = src.search;
+  url.hash = src.hash;
+  return url.href;
+};
+
 const fromManifest = (
   src: URL,
   { placeholder, variants }: Manifest,
 ): ImageMeasurement | null => {
-  const ownFile = getFileNameFromUrl(src.pathname);
-  const own = Object.values(variants).find(
-    (v) => getFileNameFromUrl(v.key) === ownFile,
-  );
-  // A loose image beside a set folder of the same name must not take that set's sizes.
+  const own = findOwnVariant(src, Object.values(variants));
   if (!own) return null;
 
   const inline = INLINE_SIZES.flatMap((size) => variants[size] ?? []);
@@ -105,13 +115,10 @@ const fromManifest = (
   // the last of each run is kept, which is the linked file when it is in the run.
   const unique = offered.filter((v, i) => offered[i + 1]?.width !== v.width);
 
-  const toCandidate = (v: ManifestVariant) => {
-    if (v === own) return { url: src.href, width: v.width };
-    const url = new URL(getFileNameFromUrl(v.key), src);
-    url.search = src.search;
-    url.hash = src.hash;
-    return { url: url.href, width: v.width };
-  };
+  const toCandidate = (v: ManifestVariant) => ({
+    url: v === own ? src.href : siblingUrl(src, v),
+    width: v.width,
+  });
 
   return {
     width: own.width,
@@ -123,7 +130,7 @@ const fromManifest = (
   };
 };
 
-const readManifest = async (imageSrc: string) => {
+const loadManifest = async (imageSrc: string) => {
   if (!env.imageOrigin || !imageSrc.startsWith(`${env.imageOrigin}/`))
     return null;
 
@@ -138,7 +145,14 @@ const readManifest = async (imageSrc: string) => {
     manifests.delete(manifestUrl);
     return FETCH_FAILED;
   }
-  return manifest && fromManifest(src, manifest);
+  return manifest && { src, manifest };
+};
+
+const readManifest = async (imageSrc: string) => {
+  const loaded = await loadManifest(imageSrc);
+  return loaded === FETCH_FAILED
+    ? FETCH_FAILED
+    : loaded && fromManifest(loaded.src, loaded.manifest);
 };
 
 const probeImage = async (imageSrc: string) => {
@@ -184,4 +198,41 @@ export const measureImage = async (
       candidates: [],
     };
   }
+};
+
+/** Never lightbox sizes: the placeholder is a 20px blur and the thumbnail a 120px grid size. */
+const NON_LIGHTBOX_SIZES = ["placeholder", "thumbnail"];
+
+/**
+ * The lightbox slide for an image: its `src` is the largest file of the set,
+ * with every real size as `srcSet`. A set with no manifest keeps the linked file.
+ */
+export const lightboxSlide = async (
+  imageSrc: string,
+): Promise<{ src: string; srcSet?: ImageSource[] }> => {
+  const loaded = await loadManifest(imageSrc);
+  if (!loaded || loaded === FETCH_FAILED) return { src: imageSrc };
+
+  const { src, manifest } = loaded;
+  const variants = Object.entries(manifest.variants);
+  if (
+    !findOwnVariant(
+      src,
+      variants.map(([, v]) => v),
+    )
+  )
+    return { src: imageSrc };
+
+  const sources = variants
+    .filter(([size]) => !NON_LIGHTBOX_SIZES.includes(size))
+    .map(([, v]) => ({
+      src: siblingUrl(src, v),
+      width: v.width,
+      height: v.height,
+    }))
+    .sort((a, b) => a.width - b.width);
+
+  return sources.length
+    ? { src: sources[sources.length - 1].src, srcSet: sources }
+    : { src: imageSrc };
 };
