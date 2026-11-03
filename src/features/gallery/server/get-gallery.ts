@@ -1,6 +1,5 @@
 import { env } from "@/lib/env";
-import { getImagePlaceholder } from "@/server/image";
-import { srcSetCandidates } from "@/utils/image";
+import { measureImage } from "@/server/image";
 
 import { ALBUMS } from "../data/albums";
 import { PHOTO_ENTRIES } from "../data/photos";
@@ -26,8 +25,8 @@ export const getGallery = async (): Promise<{
   const photos = await Promise.all(
     PHOTO_ENTRIES.map(async ({ key, title, ...entry }, i) => {
       const src = `${env.imageOrigin}/${key}`;
-      const { width, height, measured, base64 } =
-        await getImagePlaceholder(src);
+      const { width, height, measured, base64, candidates } =
+        await measureImage(src);
 
       return {
         ...entry,
@@ -36,7 +35,7 @@ export const getGallery = async (): Promise<{
         width,
         height,
         measured,
-        candidates: srcSetCandidates(src, { width, height, measured }),
+        candidates,
         placeholder: base64,
         frame: i + 1,
         title: title ?? entry.alt,

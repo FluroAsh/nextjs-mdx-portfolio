@@ -4,7 +4,7 @@ const VARIANTS = [
   "small",
   "medium",
   "large",
-  "lossless",
+  "full",
 ] as const;
 
 /** Variant prefixes a stored image key can carry. */
@@ -78,39 +78,29 @@ export const downsizedUrl = (url: string) => {
 /** The only folder whose flat keys are Strapi sets with sized siblings. */
 export const FLAT_LAYOUT_FOLDER = "legacy";
 
-type SizedLayout = {
-  /** What the bounds were fitted to: `longest-edge` scales portraits down, `width` never upscales. */
-  fit: "longest-edge" | "width";
-  /** Display variants every set of the layout has, smallest first, with their pixel bound. */
-  variants: [variant: ImageVariant, bound: number][];
+/** A display variant every set of a layout has, with the pixel bound on its longest edge. */
+type SizedVariant = [variant: ImageVariant, bound: number];
+
+/** Estimates sibling widths for sets without a manifest. A missing key is a 403, hence only variants every set has; smallest first. */
+const SIZED_VARIANTS: Record<ParsedImageUrl["layout"], SizedVariant[]> = {
+  flat: [
+    ["small", 500],
+    ["medium", 750],
+    ["large", 1000],
+  ],
+  nested: [
+    ["medium", 800],
+    ["large", 1440],
+  ],
 };
 
-/** Stopgap until manifests carry real sizes. A missing key is a 403, hence only variants every set has. */
-const SIZED_VARIANTS: Record<ParsedImageUrl["layout"], SizedLayout> = {
-  flat: {
-    fit: "longest-edge",
-    variants: [
-      ["small", 500],
-      ["medium", 750],
-      ["large", 1000],
-    ],
-  },
-  nested: {
-    fit: "width",
-    variants: [
-      ["medium", 800],
-      ["large", 1440],
-    ],
-  },
-};
-
-/** What the build-time probe reports about an image. */
+/** An image's size as measured at build. */
 export type ProbedSize = {
   /** Intrinsic width in pixels. */
   width: number;
   /** Intrinsic height in pixels. */
   height: number;
-  /** `false` when the probe failed and `width` and `height` are a stand-in. */
+  /** `false` when measuring failed and `width` and `height` are a stand-in. */
   measured: boolean;
 };
 
@@ -140,8 +130,9 @@ export const srcSetCandidates = (
     parsed?.layout === "flat" && parsed.folder !== FLAT_LAYOUT_FOLDER;
   if (!parsed || isForeign) return [self];
 
-  const { fit, variants } = SIZED_VARIANTS[parsed.layout];
-  const scale = fit === "longest-edge" ? Math.min(1, width / height) : 1;
+  const variants = SIZED_VARIANTS[parsed.layout];
+  // Bounds are on the longest edge, so a portrait's siblings are narrower than their bound.
+  const scale = Math.min(1, width / height);
   const fitted = variants.map(([variant, bound]) => ({
     url: variantUrl(parsed, variant),
     width: Math.round(bound * scale),
@@ -151,8 +142,11 @@ export const srcSetCandidates = (
   // siblings is left out, since it is the lightbox's file. It keeps a sibling
   // as wide as itself so that width is still offered.
   const isSized = variants.some(([variant]) => variant === parsed.variant);
-  const siblings = fitted.filter((candidate) =>
-    isSized ? candidate.width < width : candidate.width <= width,
+  // The image's own file is listed once, with its measured width, never also as an estimated sibling.
+  const siblings = fitted.filter(
+    (candidate) =>
+      candidate.url !== src &&
+      (isSized ? candidate.width < width : candidate.width <= width),
   );
   return isSized || !siblings.length ? [...siblings, self] : siblings;
 };
@@ -177,7 +171,8 @@ export const imageSizes = (isFixedWidth: boolean) =>
     : `(min-width: ${FRAME_WIDTH}px) ${FRAME_WIDTH - GUTTERS - SIDE_PANEL}px, (min-width: ${SIDE_PANEL_BREAKPOINT}px) calc(100vw - ${GUTTERS + SIDE_PANEL}px), calc(100vw - ${GUTTERS}px)`;
 
 export const getFileNameFromUrl = (url: string) => {
-  const newURL = new URL(url);
+  // The base lets a manifest key (a path, not a URL) through.
+  const newURL = new URL(url, "http://localhost");
   return newURL.pathname.split("/").pop() || "";
 };
 

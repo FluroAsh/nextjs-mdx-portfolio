@@ -1,15 +1,8 @@
 import { altToFilename } from "@/utils/image";
 
-import { type ImageProps } from "./collection.types";
+import { CollectionVariant, type ImageProps } from "./collection.types";
 import { ImageTile } from "./image-tile";
 import { LightboxView } from "./lightbox-view";
-
-export enum CollectionVariant {
-  TwoUp = "2up",
-  ThreeUp = "3up",
-  FourUp = "4up",
-  SixUp = "6up",
-}
 
 const variantMapping: Record<number, CollectionVariant> = {
   2: CollectionVariant.TwoUp,

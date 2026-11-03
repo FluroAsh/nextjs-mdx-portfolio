@@ -7,7 +7,7 @@ import { cn, zeroPad } from "@/utils/misc";
 
 import { Lightbox } from "../lightbox";
 import { LightboxTrigger } from "../lightbox-trigger";
-import { CollectionVariant } from "./lightbox-collection";
+import { CollectionVariant } from "./collection.types";
 
 type LightboxViewProps = {
   variant: CollectionVariant;
