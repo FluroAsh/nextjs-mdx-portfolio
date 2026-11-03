@@ -51,7 +51,7 @@ type Manifest = {
 const INLINE_SIZES = ["small", "medium", "large"] as const;
 
 /** A manifest fetch that failed, as opposed to a set that has none. */
-const FETCH_FAILED = Symbol("manifest fetch failed");
+export const FETCH_FAILED = Symbol("manifest fetch failed");
 
 /** Per process, so a set linked by several images or posts is fetched once a build. */
 const manifests = new Map<
@@ -123,7 +123,7 @@ const fromManifest = (
   };
 };
 
-const readManifest = async (imageSrc: string) => {
+export const readManifest = async (imageSrc: string) => {
   if (!env.imageOrigin || !imageSrc.startsWith(`${env.imageOrigin}/`))
     return null;
 
