@@ -42,6 +42,16 @@ describe("parseImageUrl", () => {
       },
     ],
     [
+      "a Strapi image migrated to a set folder under legacy",
+      `${CDN}/legacy/DSC_1963_f6f8bf29c4/large_DSC_1963_f6f8bf29c4.webp`,
+      {
+        layout: "nested",
+        folder: "legacy",
+        name: "DSC_1963_f6f8bf29c4",
+        variant: "large",
+      },
+    ],
+    [
       "a flat un-prefixed original",
       `${CDN}/legacy/DSC_1963_f6f8bf29c4.webp`,
       {
@@ -222,6 +232,19 @@ describe("srcSetCandidates", () => {
     ).toEqual([
       { url: `${KYOTO}/medium_kyoto-13.webp`, width: 533 },
       { url: `${KYOTO}/large_kyoto-13.webp`, width: 960 },
+    ]);
+  });
+
+  it("offers set-folder widths, not Strapi ones, for a migrated legacy image", () => {
+    const set = `${CDN}/legacy/DSC_1963_f6f8bf29c4`;
+    expect(
+      srcSetCandidates(
+        `${set}/large_DSC_1963_f6f8bf29c4.webp`,
+        measured(1440, 960),
+      ),
+    ).toEqual([
+      { url: `${set}/medium_DSC_1963_f6f8bf29c4.webp`, width: 800 },
+      { url: `${set}/large_DSC_1963_f6f8bf29c4.webp`, width: 1440 },
     ]);
   });
 
