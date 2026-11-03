@@ -6,6 +6,7 @@ real data from the image service, s3-image-upload-thing, and says where
 collections and their photos are recorded.
 
 Updated 2026-11-03, against the image service's `main` and this repo's `main`.
+Progress is ticked off in #24.
 
 ## Where things stand
 
