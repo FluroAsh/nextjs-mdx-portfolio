@@ -7,7 +7,7 @@ import { cn, zeroPad } from "@/utils/misc";
 
 import { Lightbox } from "../lightbox";
 import { LightboxTrigger } from "../lightbox-trigger";
-import { type CollectionVariant } from "./collection.types";
+import { CollectionVariant } from "./collection.types";
 
 type LightboxViewProps = {
   variant: CollectionVariant;
@@ -24,11 +24,11 @@ type LightboxViewProps = {
 };
 
 const variantLayoutClasses: Record<CollectionVariant, string> = {
-  "2up": "grid-cols-2",
-  "3up":
+  [CollectionVariant.TwoUp]: "grid-cols-2",
+  [CollectionVariant.ThreeUp]:
     "grid-cols-2 sm:grid-cols-3 [&>:first-child]:col-span-2 sm:[&>:first-child]:col-span-1",
-  "4up": "grid-cols-4",
-  "6up": "grid-cols-6",
+  [CollectionVariant.FourUp]: "grid-cols-4",
+  [CollectionVariant.SixUp]: "grid-cols-6",
 };
 
 export const LightboxView = ({

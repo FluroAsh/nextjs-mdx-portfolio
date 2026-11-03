@@ -1,14 +1,14 @@
 import { altToFilename } from "@/utils/image";
 
-import { type CollectionVariant, type ImageProps } from "./collection.types";
+import { CollectionVariant, type ImageProps } from "./collection.types";
 import { ImageTile } from "./image-tile";
 import { LightboxView } from "./lightbox-view";
 
 const variantMapping: Record<number, CollectionVariant> = {
-  2: "2up",
-  3: "3up",
-  4: "4up",
-  6: "6up",
+  2: CollectionVariant.TwoUp,
+  3: CollectionVariant.ThreeUp,
+  4: CollectionVariant.FourUp,
+  6: CollectionVariant.SixUp,
 };
 
 type ImageCollectionProps = {
@@ -21,7 +21,7 @@ export const ImageCollection = ({
   images,
   useLowerRes = true,
 }: ImageCollectionProps) => {
-  const variant = variantMapping[images.length] || "2up";
+  const variant = variantMapping[images.length] || CollectionVariant.TwoUp;
   const captionFontSize = images.length > 2 ? "text-xs" : "text-sm";
 
   return (
