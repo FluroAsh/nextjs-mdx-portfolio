@@ -80,13 +80,13 @@ describe("parseImageUrl", () => {
     expect(parseImageUrl(url)).toMatchObject(expected);
   });
 
-  it("parses the lossless variant the upload service now writes", () => {
+  it("parses the full-size variant", () => {
     expect(
-      parseImageUrl(`${CDN}/content-store/buff-rick/lossless_buff-rick.webp`),
+      parseImageUrl(`${CDN}/content-store/buff-rick/full_buff-rick.webp`),
     ).toMatchObject({
       layout: "nested",
       name: "buff-rick",
-      variant: "lossless",
+      variant: "full",
     });
   });
 
@@ -193,6 +193,24 @@ describe("srcSetCandidates", () => {
     ).toEqual([
       { url: `${KYOTO}/medium_kyoto-13.webp`, width: 800 },
       { url: `${KYOTO}/large_kyoto-13.webp`, width: 1440 },
+    ]);
+  });
+
+  it("labels the siblings of a nested portrait with their widths, not their longest edge", () => {
+    expect(
+      srcSetCandidates(`${KYOTO}/large_kyoto-13.webp`, measured(960, 1440)),
+    ).toEqual([
+      { url: `${KYOTO}/medium_kyoto-13.webp`, width: 533 },
+      { url: `${KYOTO}/large_kyoto-13.webp`, width: 960 },
+    ]);
+  });
+
+  it("stops at large for a nested full-size image, leaving it to the lightbox", () => {
+    expect(
+      srcSetCandidates(`${KYOTO}/full_kyoto-13.webp`, measured(2560, 3840)),
+    ).toEqual([
+      { url: `${KYOTO}/medium_kyoto-13.webp`, width: 533 },
+      { url: `${KYOTO}/large_kyoto-13.webp`, width: 960 },
     ]);
   });
 

@@ -4,7 +4,7 @@ const VARIANTS = [
   "small",
   "medium",
   "large",
-  "lossless",
+  "full",
 ] as const;
 
 /** Variant prefixes a stored image key can carry. */
@@ -78,30 +78,20 @@ export const downsizedUrl = (url: string) => {
 /** The only folder whose flat keys are Strapi sets with sized siblings. */
 export const FLAT_LAYOUT_FOLDER = "legacy";
 
-type SizedLayout = {
-  /** What the bounds were fitted to: `longest-edge` scales portraits down, `width` never upscales. */
-  fit: "longest-edge" | "width";
-  /** Display variants every set of the layout has, smallest first, with their pixel bound. */
-  variants: [variant: ImageVariant, bound: number][];
-};
+/** A display variant every set of a layout has, with the pixel bound on its longest edge; listed smallest first. */
+type SizedVariant = [variant: ImageVariant, bound: number];
 
 /** Stopgap until manifests carry real sizes. A missing key is a 403, hence only variants every set has. */
-const SIZED_VARIANTS: Record<ParsedImageUrl["layout"], SizedLayout> = {
-  flat: {
-    fit: "longest-edge",
-    variants: [
-      ["small", 500],
-      ["medium", 750],
-      ["large", 1000],
-    ],
-  },
-  nested: {
-    fit: "width",
-    variants: [
-      ["medium", 800],
-      ["large", 1440],
-    ],
-  },
+const SIZED_VARIANTS: Record<ParsedImageUrl["layout"], SizedVariant[]> = {
+  flat: [
+    ["small", 500],
+    ["medium", 750],
+    ["large", 1000],
+  ],
+  nested: [
+    ["medium", 800],
+    ["large", 1440],
+  ],
 };
 
 /** What the build-time probe reports about an image. */
@@ -140,8 +130,9 @@ export const srcSetCandidates = (
     parsed?.layout === "flat" && parsed.folder !== FLAT_LAYOUT_FOLDER;
   if (!parsed || isForeign) return [self];
 
-  const { fit, variants } = SIZED_VARIANTS[parsed.layout];
-  const scale = fit === "longest-edge" ? Math.min(1, width / height) : 1;
+  const variants = SIZED_VARIANTS[parsed.layout];
+  // Bounds are on the longest edge, so a portrait's siblings are narrower than their bound.
+  const scale = Math.min(1, width / height);
   const fitted = variants.map(([variant, bound]) => ({
     url: variantUrl(parsed, variant),
     width: Math.round(bound * scale),
