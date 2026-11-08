@@ -45,14 +45,23 @@ beforeEach(() => {
 });
 
 describe("getGallery", () => {
-  it.each([403, 404])("is empty on %i", async (status) => {
-    fetchMock.mockResolvedValue(new Response("", { status }));
+  it("is empty on 404", async () => {
+    fetchMock.mockResolvedValue(new Response("", { status: 404 }));
     expect(await getGallery()).toEqual({ photos: [], albums: [] });
   });
 
-  it("throws on a 5xx", async () => {
-    fetchMock.mockResolvedValue(new Response("", { status: 503 }));
-    await expect(getGallery()).rejects.toThrow("HTTP 503");
+  it.each([403, 503])("throws on %i, naming the URL", async (status) => {
+    fetchMock.mockResolvedValue(new Response("", { status }));
+    await expect(getGallery()).rejects.toThrow(
+      `gallery/collections.json: HTTP ${status}`,
+    );
+  });
+
+  it("throws on a network error, naming the URL", async () => {
+    fetchMock.mockRejectedValue(new TypeError("fetch failed"));
+    await expect(getGallery()).rejects.toThrow(
+      "gallery/collections.json: request failed",
+    );
   });
 
   it("builds photos and albums", async () => {

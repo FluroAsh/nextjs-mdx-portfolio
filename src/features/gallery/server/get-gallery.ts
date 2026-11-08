@@ -29,10 +29,12 @@ type CollectionsFile = {
 type Gallery = { photos: GalleryPhoto[]; albums: GalleryAlbum[] };
 
 const fetchCollections = async (): Promise<CollectionsFile | null> => {
-  const res = await fetch(`${env.imageOrigin}/gallery/collections.json`);
-  // The CDN answers 403 for a missing key, so both mean no file yet; any other failure must not ship an empty gallery.
-  if (res.status === 403 || res.status === 404) return null;
-  if (!res.ok) throw new Error(`collections.json: HTTP ${res.status}`);
+  const url = `${env.imageOrigin}/gallery/collections.json`;
+  const res = await fetch(url).catch((cause) => {
+    throw new Error(`${url}: request failed`, { cause });
+  });
+  if (res.status === 404) return null;
+  if (!res.ok) throw new Error(`${url}: HTTP ${res.status}`);
   return res.json();
 };
 
