@@ -155,6 +155,14 @@ const readManifest = async (imageSrc: string) => {
     : loaded && fromManifest(loaded.src, loaded.manifest);
 };
 
+/** The measurement from the set's manifest; throws when there is none, so a caller never ships a guess. */
+export const requireManifest = async (src: string) => {
+  const measurement = await readManifest(src);
+  if (!measurement || measurement === FETCH_FAILED)
+    throw new Error(`Set has no usable manifest: ${src}`);
+  return measurement;
+};
+
 const probeImage = async (imageSrc: string) => {
   const { width, height } = await probe(imageSrc);
   const res = await fetch(imageSrc);

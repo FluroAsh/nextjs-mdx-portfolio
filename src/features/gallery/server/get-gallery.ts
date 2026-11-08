@@ -1,52 +1,112 @@
+import { allBlogContent } from "@/data/content";
 import { env } from "@/lib/env";
-import { measureImage } from "@/server/image";
+import { requireManifest } from "@/server/image";
+import { parseImageUrl, variantUrl } from "@/utils/image";
 
-import { ALBUMS } from "../data/albums";
-import { PHOTO_ENTRIES } from "../data/photos";
 import type { GalleryAlbum, GalleryPhoto } from "../types";
 
-/** The set's name: the folder of a nested key, the file stem of a flat one. */
-const idFromKey = (key: string) => {
-  const segments = key.split("/");
-  return segments.length > 2 &&
-    segments.at(-1)?.endsWith(`_${segments.at(-2)}.webp`)
-    ? segments.at(-2)!
-    : segments.at(-1)!.replace(/\.\w+$/, "");
+/** The fields the site reads from `gallery/collections.json` (upload service schema 1). */
+type CollectionsFile = {
+  schema: 1;
+  collections: {
+    slug: string;
+    name: string;
+    series?: string;
+    /** A post slug in this repo. */
+    post?: string;
+    /** A set in this collection; the first photo when absent. */
+    cover?: string;
+    photos: {
+      /** CDN path of the set, e.g. `japan-2025/tokyo/day-1/name` or `legacy/name`. */
+      set: string;
+      alt: string | null;
+      caption: string | null;
+      tags: string[];
+    }[];
+  }[];
 };
 
-/**
- * Size and blur come from the probe for now. Issue #8 swaps that for the
- * manifest behind the same call, so nothing here changes when it lands.
- */
-export const getGallery = async (): Promise<{
-  photos: GalleryPhoto[];
-  albums: GalleryAlbum[];
-}> => {
-  const photos = await Promise.all(
-    PHOTO_ENTRIES.map(async ({ key, title, ...entry }, i) => {
-      const src = `${env.imageOrigin}/${key}`;
-      const { width, height, measured, base64, candidates } =
-        await measureImage(src);
+type Gallery = { photos: GalleryPhoto[]; albums: GalleryAlbum[] };
 
-      return {
-        ...entry,
-        id: idFromKey(key),
-        src,
-        width,
-        height,
-        measured,
-        candidates,
-        placeholder: base64,
-        frame: i + 1,
-        title: title ?? entry.alt,
-      } satisfies GalleryPhoto;
-    }),
-  );
+const fetchCollections = async (): Promise<CollectionsFile | null> => {
+  const url = `${env.imageOrigin}/gallery/collections.json`;
+  const res = await fetch(url).catch((cause) => {
+    throw new Error(`${url}: request failed`, { cause });
+  });
+  if (res.status === 404) return null;
+  if (!res.ok) throw new Error(`${url}: HTTP ${res.status}`);
+  return res.json();
+};
 
-  // An album with nothing in it would be a filter that empties the page.
-  const albums = ALBUMS.filter((album) =>
-    photos.some((photo) => photo.album === album.slug),
-  );
+export const getGallery = async (): Promise<Gallery> => {
+  const file = await fetchCollections();
+  if (!file) return { photos: [], albums: [] };
+
+  const seen = new Set<string>();
+  const photos: GalleryPhoto[] = [];
+  const albums: GalleryAlbum[] = [];
+
+  for (const collection of file.collections) {
+    if (
+      collection.post &&
+      !allBlogContent.some((p) => p.slug === collection.post)
+    )
+      throw new Error(
+        `Collection "${collection.slug}": post "${collection.post}" is not a blog post`,
+      );
+    if (
+      collection.cover &&
+      !collection.photos.some((p) => p.set === collection.cover)
+    )
+      throw new Error(
+        `Collection "${collection.slug}": cover "${collection.cover}" is not in the collection`,
+      );
+
+    const collectionPhotos = await Promise.all(
+      collection.photos.map(async ({ set, alt, caption, tags }) => {
+        if (seen.has(set)) throw new Error(`Set listed twice: ${set}`);
+        seen.add(set);
+
+        const name = set.split("/").at(-1)!;
+        const original = parseImageUrl(
+          `${env.imageOrigin}/${set}/${name}.webp`,
+        )!;
+        const src = variantUrl(original, "large");
+        const manifest = await requireManifest(src);
+
+        if (!alt) console.warn(`Missing alt text: ${set}`);
+
+        return {
+          id: set,
+          src,
+          width: manifest.width,
+          height: manifest.height,
+          measured: manifest.measured,
+          candidates: manifest.candidates,
+          placeholder: manifest.base64,
+          title: alt ?? "",
+          alt: alt ?? "",
+          caption: caption ?? undefined,
+          tags,
+          album: collection.slug,
+        } satisfies Omit<GalleryPhoto, "frame">;
+      }),
+    );
+
+    photos.push(
+      ...collectionPhotos.map((photo, i) => ({
+        ...photo,
+        // Frames number the whole gallery, so a photo keeps its number under any filter.
+        frame: photos.length + i + 1,
+      })),
+    );
+    albums.push({
+      slug: collection.slug,
+      title: collection.name,
+      postPath: collection.post && `/blog/${collection.post}`,
+      series: collection.series,
+    });
+  }
 
   return { photos, albums };
 };
