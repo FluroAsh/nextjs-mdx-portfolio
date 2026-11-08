@@ -14,12 +14,16 @@ const TILE_SIZES =
 
 type PhotoTileProps = {
   photo: GalleryPhoto;
-  /** Display name of the photo's album, for the hover overlay. */
-  albumTitle?: string;
+  /** Display name of the photo's collection, for the hover overlay. */
+  collectionTitle?: string;
   onOpen: () => void;
 };
 
-export const PhotoTile = ({ photo, albumTitle, onOpen }: PhotoTileProps) => {
+export const PhotoTile = ({
+  photo,
+  collectionTitle,
+  onOpen,
+}: PhotoTileProps) => {
   const imgRef = useRef<HTMLImageElement>(null);
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -102,9 +106,9 @@ export const PhotoTile = ({ photo, albumTitle, onOpen }: PhotoTileProps) => {
             </span>
             {overlayPlace}
           </span>
-          {albumTitle && (
+          {collectionTitle && (
             <span className="shrink-0 border border-green-500/40 bg-black/60 px-1.5 py-px text-green-300">
-              {albumTitle}
+              {collectionTitle}
             </span>
           )}
         </span>

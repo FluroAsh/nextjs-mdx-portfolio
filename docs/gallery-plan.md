@@ -183,7 +183,7 @@ sets that are already filed lists them and asks to confirm.
 
 ## What in PR #14 is coupled to that contract
 
-The UI is not coupled: components only see `GalleryPhoto` and `GalleryAlbum`.
+The UI is not coupled: components only see `GalleryPhoto` and `GalleryCollection`.
 The coupling is in the data layer, and each piece below is replaced rather than
 edited.
 
@@ -192,7 +192,7 @@ edited.
 | `src/features/gallery/data/photos.ts`          | Hand-written fixture, sample EXIF | Deleted                                                                     | 1.5       |
 | `src/features/gallery/data/albums.ts`          | Three hard-coded albums           | Deleted; collections come from the file                                     | 1.5       |
 | `src/features/gallery/server/get-gallery.ts`   | Fixture + the probe               | Collections file + manifests                                                | 1.5       |
-| `GalleryAlbum`, "album" in UI copy and URLs    | Album                             | `GalleryCollection`, "collection"; the MDX `<Collection>` grid is unrelated | 1.6       |
+| `GalleryCollection`, "album" in UI copy and URLs    | Album                             | `GalleryCollection`, "collection"; the MDX `<Collection>` grid is unrelated | 1.6       |
 | `GalleryPhoto.id`                              | Set **name**, unique only by luck | Set **CDN path**                                                            | 1.5       |
 | `candidates`, `width`, `height`, `placeholder` | Probe + the size table            | Manifest `variants` and `placeholder`                                       | done (#8) |
 | `src` (lightbox)                               | `large`                           | Largest real size                                                           | #9        |

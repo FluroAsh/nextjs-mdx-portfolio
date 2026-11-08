@@ -47,7 +47,7 @@ beforeEach(() => {
 describe("getGallery", () => {
   it("is empty on 404", async () => {
     fetchMock.mockResolvedValue(new Response("", { status: 404 }));
-    expect(await getGallery()).toEqual({ photos: [], albums: [] });
+    expect(await getGallery()).toEqual({ photos: [], collections: [] });
   });
 
   it.each([403, 503])("throws on %i, naming the URL", async (status) => {
@@ -64,22 +64,35 @@ describe("getGallery", () => {
     );
   });
 
-  it("builds photos and albums", async () => {
+  it("builds photos and collections", async () => {
     serve([collection({ post: "japan-2025/tokyo" })]);
-    const { photos, albums } = await getGallery();
-    expect(photos.map((p) => [p.id, p.frame, p.album])).toEqual([
+    const { photos, collections } = await getGallery();
+    expect(photos.map((p) => [p.id, p.frame, p.collection])).toEqual([
       ["a/one", 1, "tokyo"],
       ["a/two", 2, "tokyo"],
     ]);
     expect(photos[0].src).toBe(
       "https://images.example.com/a/one/large_one.webp",
     );
-    expect(albums).toEqual([
+    expect(collections).toEqual([
       expect.objectContaining({
         title: "Tokyo",
         postPath: "/blog/japan-2025/tokyo",
       }),
     ]);
+  });
+
+  it("defaults the cover to the first photo, and honours a named one", async () => {
+    serve([
+      collection(),
+      collection({
+        slug: "b",
+        cover: "b/y",
+        photos: [photo("b/x"), photo("b/y")],
+      }),
+    ]);
+    const { collections } = await getGallery();
+    expect(collections.map((c) => c.cover)).toEqual(["a/one", "b/y"]);
   });
 
   it("builds the large URL for a Strapi set", async () => {
