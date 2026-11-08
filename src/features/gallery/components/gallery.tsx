@@ -4,7 +4,11 @@ import { useEffect, useMemo, useState } from "react";
 
 import { cn } from "@/utils/misc";
 
-import type { GalleryCollection, GalleryPhoto } from "../types";
+import type {
+  GalleryCollection,
+  GalleryPhoto,
+  ResolvedCollection,
+} from "../types";
 import { CollectionFilter } from "./collection-filter";
 import { PhotoLightbox } from "./lightbox/photo-lightbox";
 import { Masonry } from "./masonry";
@@ -41,15 +45,19 @@ export const Gallery = ({ photos, collections }: GalleryProps) => {
   /** Frame of the first tile added by "load more", which takes focus once rendered. */
   const [focusFrame, setFocusFrame] = useState<number | null>(null);
 
-  const { collectionCounts, collectionCovers } = useMemo(() => {
-    const counts: Record<string, number> = {};
-    for (const photo of photos)
-      counts[photo.collection] = (counts[photo.collection] ?? 0) + 1;
-    const covers: Record<string, GalleryPhoto> = {};
-    for (const { slug, cover } of collections)
-      covers[slug] = photos.find((p) => p.id === cover)!;
-    return { collectionCounts: counts, collectionCovers: covers };
-  }, [photos, collections]);
+  const resolved = useMemo<ResolvedCollection[]>(
+    () =>
+      collections.map(({ cover, ...rest }) => ({
+        ...rest,
+        count: photos.filter((p) => p.collection === rest.slug).length,
+        coverPhoto: photos.find((p) => p.id === cover)!,
+      })),
+    [photos, collections],
+  );
+  const titles = useMemo(
+    () => new Map(resolved.map((c) => [c.slug, c.title])),
+    [resolved],
+  );
 
   const filtered = useMemo(
     () =>
@@ -64,7 +72,7 @@ export const Gallery = ({ photos, collections }: GalleryProps) => {
     const params = new URLSearchParams(window.location.search);
     const linkedCollection = params.get("collection");
     const linkedPhoto = params.get("photo");
-    const validCollection = collections.some((a) => a.slug === linkedCollection)
+    const validCollection = collections.some((c) => c.slug === linkedCollection)
       ? linkedCollection
       : null;
     const pool = validCollection
@@ -113,10 +121,7 @@ export const Gallery = ({ photos, collections }: GalleryProps) => {
   return (
     <div className="max-w-frame mx-auto w-full px-6 pt-6">
       <CollectionFilter
-        collections={collections.map((a) => ({
-          ...a,
-          count: collectionCounts[a.slug] ?? 0,
-        }))}
+        collections={resolved}
         total={photos.length}
         active={collection}
         onChange={selectCollection}
@@ -128,10 +133,7 @@ export const Gallery = ({ photos, collections }: GalleryProps) => {
         {collection && (
           <>
             {" "}
-            in{" "}
-            <span className="text-green-400">
-              {collections.find((a) => a.slug === collection)?.title}
-            </span>
+            in <span className="text-green-400">{titles.get(collection)}</span>
           </>
         )}
       </p>
@@ -143,9 +145,7 @@ export const Gallery = ({ photos, collections }: GalleryProps) => {
             <PhotoTile
               photo={photo}
               collectionTitle={
-                collection
-                  ? undefined
-                  : collections.find((a) => a.slug === photo.collection)?.title
+                collection ? undefined : titles.get(photo.collection)
               }
               onOpen={() => openPhoto(photo.id)}
             />
@@ -183,9 +183,7 @@ export const Gallery = ({ photos, collections }: GalleryProps) => {
       <PhotoLightbox
         photos={filtered}
         index={openIndex >= 0 ? openIndex : null}
-        collections={collections}
-        collectionCounts={collectionCounts}
-        collectionCovers={collectionCovers}
+        collections={resolved}
         shareUrl={(photo) => {
           const url = new URL(window.location.href);
           url.search = "";

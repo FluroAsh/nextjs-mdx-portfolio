@@ -11,22 +11,14 @@ import { RecordField } from "@/components/record-field";
 import { cn } from "@/utils/misc";
 
 import { GALLERY_LABELS } from "../../labels";
-import type { GalleryCollection, GalleryPhoto } from "../../types";
+import type { GalleryPhoto, ResolvedCollection } from "../../types";
 import { exifFields, formatGeo, formatTakenAt } from "../../utils";
 import { IconButton } from "./icon-button";
 
-/** An collection offered as a next place to go, with what it needs to show. */
-export type RelatedCollection = Omit<GalleryCollection, "cover"> & {
-  /** Photos in the collection. */
-  count: number;
-  /** The collection's cover photo, used as the thumbnail. */
-  cover: GalleryPhoto;
-};
-
 type DetailsPanelProps = {
   photo: GalleryPhoto;
-  collection?: GalleryCollection;
-  related: RelatedCollection[];
+  collection?: ResolvedCollection;
+  related: ResolvedCollection[];
   /** Absolute URL that reopens this photo. */
   shareUrl: string;
   onDownload: () => void;
@@ -223,7 +215,7 @@ export const DetailsPanel = ({
       {related.length > 0 && (
         <Section label={GALLERY_LABELS.related}>
           <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
-            {related.map(({ slug, title, count, cover }) => (
+            {related.map(({ slug, title, count, coverPhoto }) => (
               <li key={slug}>
                 <button
                   type="button"
@@ -235,7 +227,7 @@ export const DetailsPanel = ({
                   )}
                 >
                   <img
-                    src={cover.candidates[0]?.url ?? cover.src}
+                    src={coverPhoto.candidates[0]?.url ?? coverPhoto.src}
                     alt=""
                     loading="lazy"
                     className="size-12 shrink-0 object-cover grayscale transition group-hover:grayscale-0"

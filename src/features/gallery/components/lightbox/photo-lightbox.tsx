@@ -8,9 +8,9 @@ import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { altToFilename } from "@/utils/image";
 import { cn, zeroPad } from "@/utils/misc";
 
-import type { GalleryCollection, GalleryPhoto } from "../../types";
+import type { GalleryPhoto, ResolvedCollection } from "../../types";
 import { formatAspectRatio, frameNumber } from "../../utils";
-import { DetailsPanel, type RelatedCollection } from "./details-panel";
+import { DetailsPanel } from "./details-panel";
 import { IconButton } from "./icon-button";
 
 /** Horizontal travel in pixels before a touch counts as a swipe. */
@@ -21,11 +21,7 @@ type PhotoLightboxProps = {
   photos: GalleryPhoto[];
   /** Index into `photos`; `null` when closed. */
   index: number | null;
-  collections: GalleryCollection[];
-  /** Photo counts per collection slug. */
-  collectionCounts: Record<string, number>;
-  /** First photo of each collection, for related thumbnails. */
-  collectionCovers: Record<string, GalleryPhoto>;
+  collections: ResolvedCollection[];
   shareUrl: (photo: GalleryPhoto) => string;
   onIndexChange: (index: number) => void;
   onClose: () => void;
@@ -56,11 +52,9 @@ const Kbd = ({ children }: { children: React.ReactNode }) => (
 );
 
 const relatedCollections = (
-  current: GalleryCollection | undefined,
-  collections: GalleryCollection[],
-  counts: Record<string, number>,
-  covers: Record<string, GalleryPhoto>,
-): RelatedCollection[] => {
+  current: ResolvedCollection | undefined,
+  collections: ResolvedCollection[],
+): ResolvedCollection[] => {
   const others = collections.filter(
     (collection) => collection.slug !== current?.slug,
   );
@@ -68,21 +62,16 @@ const relatedCollections = (
   const sameSeries = others.filter(
     (collection) => current?.series && collection.series === current.series,
   );
-  return [...sameSeries, ...others.filter((a) => !sameSeries.includes(a))]
-    .slice(0, 2)
-    .map((collection) => ({
-      ...collection,
-      count: counts[collection.slug],
-      cover: covers[collection.slug],
-    }));
+  return [
+    ...sameSeries,
+    ...others.filter((c) => !sameSeries.includes(c)),
+  ].slice(0, 2);
 };
 
 export const PhotoLightbox = ({
   photos,
   index,
   collections,
-  collectionCounts,
-  collectionCovers,
   shareUrl,
   onIndexChange,
   onClose,
@@ -105,7 +94,7 @@ export const PhotoLightbox = ({
     }
   }, [index, photos]);
 
-  const collection = collections.find((a) => a.slug === photo?.collection);
+  const collection = collections.find((c) => c.slug === photo?.collection);
   const isLoaded = loadedId === photo?.id;
 
   return (
@@ -246,12 +235,7 @@ export const PhotoLightbox = ({
             <DetailsPanel
               photo={photo}
               collection={collection}
-              related={relatedCollections(
-                collection,
-                collections,
-                collectionCounts,
-                collectionCovers,
-              )}
+              related={relatedCollections(collection, collections)}
               shareUrl={shareUrl(photo)}
               onDownload={() => downloadPhoto(photo)}
               onShowCollection={onShowCollection}

@@ -83,3 +83,9 @@ export type GalleryCollection = {
   /** Collections in one series are offered as related. */
   series?: string;
 };
+
+/** A collection with its cover resolved to a photo and its photos counted, for the filter and lightbox. */
+export type ResolvedCollection = Omit<GalleryCollection, "cover"> & {
+  count: number;
+  coverPhoto: GalleryPhoto;
+};

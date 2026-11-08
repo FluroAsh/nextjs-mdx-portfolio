@@ -2,13 +2,10 @@ import { BilingualLabel } from "@/components/bilingual-label";
 import { cn } from "@/utils/misc";
 
 import { GALLERY_LABELS } from "../labels";
-import type { GalleryCollection } from "../types";
+import type { ResolvedCollection } from "../types";
 
 type CollectionFilterProps = {
-  collections: (GalleryCollection & {
-    /** Photos in the collection. */
-    count: number;
-  })[];
+  collections: ResolvedCollection[];
   /** Photos across every collection. */
   total: number;
   /** Slug of the selected collection; `null` for all. */
