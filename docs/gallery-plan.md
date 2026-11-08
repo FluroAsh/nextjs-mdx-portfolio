@@ -132,8 +132,8 @@ type CollectionsFile = {
 
 - **A manifest exists only after every size is stored.**
 - **Public sizes carry no EXIF.**
-- **A missing collections file (403 or 404; the CDN answers 403 for a missing
-  key) means an empty gallery.** Any other
+- **A missing collections file (404) means an empty gallery.** The uploader
+  creates it empty, so it always exists and a 403 is a real access error. Any other
   failure to fetch it fails the build, so a CDN error never ships an empty
   gallery.
 - **The site accepts manifest schema 2 before the uploader writes it.**
@@ -172,7 +172,7 @@ sets that are already filed lists them and asks to confirm.
 
 ## How the build assembles the gallery
 
-1. Fetch `gallery/collections.json` (403 or 404 → empty gallery; any other failure
+1. Fetch `gallery/collections.json` (404 → empty gallery; any other failure
    fails the build).
 2. Fetch each listed set's manifest, through the existing manifest reader.
 3. Validate: each set listed once, its manifest exists, the cover is in its
