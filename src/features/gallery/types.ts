@@ -39,13 +39,13 @@ export type PhotoLocation = {
 };
 
 export type GalleryPhoto = {
-  /** Stable id for deep links; the image set's name. Source: manifest. */
+  /** Stable id for deep links; the set's CDN path, e.g. `legacy/name`. Source: collections file. */
   id: string;
   /** URL of the largest inline variant. Source: manifest. */
   src: string;
-  /** Intrinsic width of `src` in pixels. Source: manifest (probe until #8 lands). */
+  /** Intrinsic width of `src` in pixels. Source: manifest. */
   width: number;
-  /** Intrinsic height of `src` in pixels. Source: manifest (probe until #8 lands). */
+  /** Intrinsic height of `src` in pixels. Source: manifest. */
   height: number;
   /** Narrower siblings of `src` for `srcset`, narrowest first; empty when the size is a guess. */
   candidates: SrcSetCandidate[];

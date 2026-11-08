@@ -52,7 +52,7 @@ type Manifest = {
 const INLINE_SIZES = ["small", "medium", "large"] as const;
 
 /** A manifest fetch that failed, as opposed to a set that has none. */
-export const FETCH_FAILED = Symbol("manifest fetch failed");
+const FETCH_FAILED = Symbol("manifest fetch failed");
 
 /** Per process, so a set linked by several images or posts is fetched once a build. */
 const manifests = new Map<
@@ -148,11 +148,19 @@ const loadManifest = async (imageSrc: string) => {
   return manifest && { src, manifest };
 };
 
-export const readManifest = async (imageSrc: string) => {
+const readManifest = async (imageSrc: string) => {
   const loaded = await loadManifest(imageSrc);
   return loaded === FETCH_FAILED
     ? FETCH_FAILED
     : loaded && fromManifest(loaded.src, loaded.manifest);
+};
+
+/** The measurement from the set's manifest; throws when there is none, so a caller never ships a guess. */
+export const requireManifest = async (src: string) => {
+  const measurement = await readManifest(src);
+  if (!measurement || measurement === FETCH_FAILED)
+    throw new Error(`Set has no usable manifest: ${src}`);
+  return measurement;
 };
 
 const probeImage = async (imageSrc: string) => {

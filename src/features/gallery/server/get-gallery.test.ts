@@ -1,4 +1,4 @@
-import { FETCH_FAILED, readManifest } from "@/server/image";
+import { requireManifest } from "@/server/image";
 
 import { getGallery } from "./get-gallery";
 
@@ -9,8 +9,7 @@ vi.mock("@/data/content", () => ({
   allBlogContent: [{ slug: "japan-2025/tokyo" }],
 }));
 vi.mock("@/server/image", () => ({
-  FETCH_FAILED: Symbol("failed"),
-  readManifest: vi.fn(),
+  requireManifest: vi.fn(),
 }));
 
 const fetchMock = vi.fn();
@@ -35,7 +34,7 @@ const serve = (collections: object[]) =>
 
 beforeEach(() => {
   vi.resetAllMocks();
-  vi.mocked(readManifest).mockResolvedValue({
+  vi.mocked(requireManifest).mockResolvedValue({
     width: 100,
     height: 50,
     measured: true,
@@ -74,21 +73,31 @@ describe("getGallery", () => {
     ]);
   });
 
+  it("builds the large URL for a Strapi set", async () => {
+    serve([collection({ photos: [photo("legacy/old")] })]);
+    const { photos } = await getGallery();
+    expect(photos[0].src).toBe(
+      "https://images.example.com/legacy/old/large_old.webp",
+    );
+  });
+
+  it("builds the large URL for an upload-bucket set", async () => {
+    serve([collection({ photos: [photo("japan-2025/tokyo/day-1/name")] })]);
+    const { photos } = await getGallery();
+    expect(photos[0].src).toBe(
+      "https://images.example.com/japan-2025/tokyo/day-1/name/large_name.webp",
+    );
+  });
+
   it("rejects a set listed twice", async () => {
     serve([collection(), collection({ slug: "other" })]);
     await expect(getGallery()).rejects.toThrow("Set listed twice: a/one");
   });
 
-  it("rejects a missing manifest", async () => {
+  it("rejects a set without a manifest", async () => {
     serve([collection()]);
-    vi.mocked(readManifest).mockResolvedValue(null);
-    await expect(getGallery()).rejects.toThrow("a/one");
-  });
-
-  it("rejects a failed manifest fetch", async () => {
-    serve([collection()]);
-    vi.mocked(readManifest).mockResolvedValue(FETCH_FAILED);
-    await expect(getGallery()).rejects.toThrow("a/one");
+    vi.mocked(requireManifest).mockRejectedValue(new Error("no manifest"));
+    await expect(getGallery()).rejects.toThrow("no manifest");
   });
 
   it("rejects a cover outside the collection", async () => {

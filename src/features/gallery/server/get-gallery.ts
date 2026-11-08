@@ -1,6 +1,7 @@
 import { allBlogContent } from "@/data/content";
 import { env } from "@/lib/env";
-import { FETCH_FAILED, readManifest } from "@/server/image";
+import { requireManifest } from "@/server/image";
+import { parseImageUrl, variantUrl } from "@/utils/image";
 
 import type { GalleryAlbum, GalleryPhoto } from "../types";
 
@@ -65,32 +66,38 @@ export const getGallery = async (): Promise<Gallery> => {
         seen.add(set);
 
         const name = set.split("/").at(-1)!;
-        const src = `${env.imageOrigin}/${set}/large_${name}.webp`;
-        const measured = await readManifest(src);
-        if (!measured || measured === FETCH_FAILED)
-          throw new Error(`Set has no usable manifest: ${set}`);
+        const original = parseImageUrl(
+          `${env.imageOrigin}/${set}/${name}.webp`,
+        )!;
+        const src = variantUrl(original, "large");
+        const manifest = await requireManifest(src);
 
         if (!alt) console.warn(`Missing alt text: ${set}`);
 
         return {
           id: set,
           src,
-          width: measured.width,
-          height: measured.height,
-          measured: measured.measured,
-          candidates: measured.candidates,
-          placeholder: measured.base64,
-          frame: 0,
+          width: manifest.width,
+          height: manifest.height,
+          measured: manifest.measured,
+          candidates: manifest.candidates,
+          placeholder: manifest.base64,
           title: alt ?? "",
           alt: alt ?? "",
           caption: caption ?? undefined,
           tags,
           album: collection.slug,
-        } satisfies GalleryPhoto;
+        } satisfies Omit<GalleryPhoto, "frame">;
       }),
     );
 
-    photos.push(...collectionPhotos);
+    photos.push(
+      ...collectionPhotos.map((photo, i) => ({
+        ...photo,
+        // Frames number the whole gallery, so a photo keeps its number under any filter.
+        frame: photos.length + i + 1,
+      })),
+    );
     albums.push({
       slug: collection.slug,
       title: collection.name,
@@ -98,9 +105,6 @@ export const getGallery = async (): Promise<Gallery> => {
       series: collection.series,
     });
   }
-
-  // Frames number the whole gallery, so a photo keeps its number under any filter.
-  photos.forEach((photo, i) => (photo.frame = i + 1));
 
   return { photos, albums };
 };
