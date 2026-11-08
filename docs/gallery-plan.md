@@ -32,6 +32,9 @@ manifest)`.
 - **Collections, not albums.** A collection has a name and a fixed slug, and
   holds an ordered list of photos.
 - **One collection per photo; tags for anything cross-cutting.**
+- **A collection exists only while it has photos.** It is created with its first
+  sets, and a change that empties it removes it; deleting one means removing its
+  photos.
 - **`gallery/collections.json` is the source of truth.** One file in the upload
   bucket records every collection, its photos and their text. It stands in for
   a database for now; the upload server is its only writer.
@@ -129,7 +132,8 @@ type CollectionsFile = {
 
 - **A manifest exists only after every size is stored.**
 - **Public sizes carry no EXIF.**
-- **A missing collections file (404) means an empty gallery.** Any other
+- **A missing collections file (403 or 404; the CDN answers 403 for a missing
+  key) means an empty gallery.** Any other
   failure to fetch it fails the build, so a CDN error never ships an empty
   gallery.
 - **The site accepts manifest schema 2 before the uploader writes it.**
@@ -141,14 +145,14 @@ The server does every change as read, apply, validate and conditional write:
 newer version. On a 412 it re-reads and re-applies by itself, so the admin
 never sees a conflict.
 
-| Operation                                                      | Does                                       | SQL later          | Phase |
-| -------------------------------------------------------------- | ------------------------------------------ | ------------------ | ----- |
-| `GET /collections`                                             | All collections and photos                 | `SELECT`           | 1     |
-| `POST /collections` `{ name }`                                 | Create; slug derived from the name         | `INSERT`           | 1     |
-| `PUT /collections/members` `{ sets, collection: slug / null }` | Bulk add, move or clear any number of sets | `UPDATE … IN`      | 1     |
-| `PATCH /collections/members/:set` `{ alt, caption?, tags? }`   | Per-photo text                             | `UPDATE`           | 1     |
-| `PATCH /collections/:slug`, `DELETE /collections/:slug`        | Rename, series, post, cover; delete        | `UPDATE`, `DELETE` | 2     |
-| `PUT /collections/:slug/order`                                 | Reorder photos                             | `UPDATE`           | 2     |
+| Operation                                                               | Does                                       | SQL later          | Phase |
+| ----------------------------------------------------------------------- | ------------------------------------------ | ------------------ | ----- |
+| `GET /storage/collections`                                              | All collections and photos                 | `SELECT`           | 1     |
+| `POST /storage/collections` `{ name, sets }`                            | Create with its first sets; slug from name | `INSERT`           | 1     |
+| `PUT /storage/collections/members` `{ sets, collection: slug / null }`  | Bulk add, move or clear any number of sets | `UPDATE … IN`      | 1     |
+| `PATCH /storage/collections/members/:set` `{ alt, caption?, tags? }`    | Per-photo text                             | `UPDATE`           | 1     |
+| `PATCH /storage/collections/:slug`, `DELETE /storage/collections/:slug` | Rename, series, post, cover; delete        | `UPDATE`, `DELETE` | 2     |
+| `PUT /storage/collections/:slug/order`                                  | Reorder photos                             | `UPDATE`           | 2     |
 
 Validation at the server: slug format, a body size cap, each set listed once,
 set paths only under a known prefix (no `..`), the cover inside its own
@@ -168,7 +172,7 @@ sets that are already filed lists them and asks to confirm.
 
 ## How the build assembles the gallery
 
-1. Fetch `gallery/collections.json` (404 → empty gallery; any other failure
+1. Fetch `gallery/collections.json` (403 or 404 → empty gallery; any other failure
    fails the build).
 2. Fetch each listed set's manifest, through the existing manifest reader.
 3. Validate: each set listed once, its manifest exists, the cover is in its
@@ -185,8 +189,8 @@ edited.
 
 | File or field                                  | Today                             | Becomes                                                                     | Needs     |
 | ---------------------------------------------- | --------------------------------- | --------------------------------------------------------------------------- | --------- |
-| `src/features/gallery/data/photos.ts`          | Hand-written fixture, sample EXIF | Deleted                                                                     | 1.6       |
-| `src/features/gallery/data/albums.ts`          | Three hard-coded albums           | Deleted; collections come from the file                                     | 1.6       |
+| `src/features/gallery/data/photos.ts`          | Hand-written fixture, sample EXIF | Deleted                                                                     | 1.5       |
+| `src/features/gallery/data/albums.ts`          | Three hard-coded albums           | Deleted; collections come from the file                                     | 1.5       |
 | `src/features/gallery/server/get-gallery.ts`   | Fixture + the probe               | Collections file + manifests                                                | 1.5       |
 | `GalleryAlbum`, "album" in UI copy and URLs    | Album                             | `GalleryCollection`, "collection"; the MDX `<Collection>` grid is unrelated | 1.6       |
 | `GalleryPhoto.id`                              | Set **name**, unique only by luck | Set **CDN path**                                                            | 1.5       |
@@ -215,21 +219,21 @@ edited.
 | 1.3 | uploader  | Details panel: Collection dropdown with "New collection…", and alt text                                                      | 1.2        |
 | 1.4 | uploader  | Explorer: "Add all sets in this folder to…" and the "Select sets" checkbox mode                                              | 1.2        |
 | 1.5 | portfolio | Loader over the collections file and manifests, with build validation                                                        | —          |
-| 1.6 | portfolio | Replace the fixture, rename album to collection, and merge the prototype UI (PR #14)                                         | 1.5        |
+| 1.6 | portfolio | Rename album to collection, add the cover, and merge the prototype UI (PR #14)                                               | 1.5        |
 
-1.5 can be built against a 404 (empty gallery) before the uploader side ships.
+1.5 can be built against a missing file (empty gallery) before the uploader side ships.
 In phase 1 the cover is the first photo and photos keep the order they were
 added.
 
 ### 2. Collections, fully managed in the admin (uploader)
 
-| #   | Work                                                                                                        |
-| --- | ----------------------------------------------------------------------------------------------------------- |
-| 2.1 | `/dashboard/collections` page: list (cover thumbnail, name, slug, count, last edited), create, edit, delete |
-| 2.2 | Collection detail: 120px thumbnails, drag to reorder, caption and tags, remove, set cover, missing-alt flag |
-| 2.3 | Series and linked post on a collection                                                                      |
-| 2.4 | Upload modal: optional Collection dropdown                                                                  |
-| 2.5 | Rename the explorer's `isImageCollection` to `isImageSet`                                                   |
+| #   | Work                                                                                                                             |
+| --- | -------------------------------------------------------------------------------------------------------------------------------- |
+| 2.1 | `/dashboard/collections` page: list (cover thumbnail, name, slug, count, last edited), create, edit; deleting removes its photos |
+| 2.2 | Collection detail: 120px thumbnails, drag to reorder, caption and tags, remove, set cover, missing-alt flag                      |
+| 2.3 | Series and linked post on a collection                                                                                           |
+| 2.4 | Upload modal: optional Collection dropdown                                                                                       |
+| 2.5 | Rename the explorer's `isImageCollection` to `isImageSet`                                                                        |
 
 ### 3. EXIF (both)
 
