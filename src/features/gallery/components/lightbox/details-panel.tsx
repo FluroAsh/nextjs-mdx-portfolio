@@ -11,26 +11,18 @@ import { RecordField } from "@/components/record-field";
 import { cn } from "@/utils/misc";
 
 import { GALLERY_LABELS } from "../../labels";
-import type { GalleryAlbum, GalleryPhoto } from "../../types";
+import type { GalleryPhoto, ResolvedCollection } from "../../types";
 import { exifFields, formatGeo, formatTakenAt } from "../../utils";
 import { IconButton } from "./icon-button";
 
-/** An album offered as a next place to go, with what it needs to show. */
-export type RelatedAlbum = GalleryAlbum & {
-  /** Photos in the album. */
-  count: number;
-  /** First photo, used as the thumbnail. */
-  cover: GalleryPhoto;
-};
-
 type DetailsPanelProps = {
   photo: GalleryPhoto;
-  album?: GalleryAlbum;
-  related: RelatedAlbum[];
+  collection?: ResolvedCollection;
+  related: ResolvedCollection[];
   /** Absolute URL that reopens this photo. */
   shareUrl: string;
   onDownload: () => void;
-  onShowAlbum: (slug: string) => void;
+  onShowCollection: (slug: string) => void;
 };
 
 const Section = ({
@@ -78,11 +70,11 @@ const CopyLinkButton = ({ url }: { url: string }) => {
 
 export const DetailsPanel = ({
   photo,
-  album,
+  collection,
   related,
   shareUrl,
   onDownload,
-  onShowAlbum,
+  onShowCollection,
 }: DetailsPanelProps) => {
   const takenAt = photo.takenAt && formatTakenAt(photo.takenAt);
   const exif = photo.exif ? exifFields(photo.exif) : [];
@@ -120,14 +112,6 @@ export const DetailsPanel = ({
           <Dialog.Description className="sr-only">
             {photo.alt}
           </Dialog.Description>
-        )}
-
-        {photo.isSample && (
-          <p className="mt-3 border border-dashed border-neutral-600 px-2.5 py-1.5 text-xs text-neutral-400">
-            <BilingualLabel {...GALLERY_LABELS.sample} className="mr-2" />
-            Date, GPS and EXIF here are placeholders until the uploader reads
-            them from the file.
-          </p>
         )}
       </div>
 
@@ -201,11 +185,11 @@ export const DetailsPanel = ({
         </Section>
       )}
 
-      {album && (
+      {collection && (
         <Section className="space-y-2">
           <button
             type="button"
-            onClick={() => onShowAlbum(album.slug)}
+            onClick={() => onShowCollection(collection.slug)}
             className={cn(
               "group flex w-full items-center justify-between border border-green-500/60 bg-green-500/10 px-4 py-3.5",
               "font-mono text-xs tracking-[0.2em] text-green-200 uppercase",
@@ -213,12 +197,12 @@ export const DetailsPanel = ({
               "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400",
             )}
           >
-            View album · {album.title}
+            View collection · {collection.title}
             <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
           </button>
-          {album.postPath && (
+          {collection.postPath && (
             <Link
-              href={album.postPath}
+              href={collection.postPath}
               className="group flex items-center justify-between px-1 py-1.5 font-mono text-[11px] tracking-wider text-neutral-400 uppercase hover:text-green-300"
             >
               Read the post
@@ -231,11 +215,11 @@ export const DetailsPanel = ({
       {related.length > 0 && (
         <Section label={GALLERY_LABELS.related}>
           <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
-            {related.map(({ slug, title, count, cover }) => (
+            {related.map(({ slug, title, count, coverPhoto }) => (
               <li key={slug}>
                 <button
                   type="button"
-                  onClick={() => onShowAlbum(slug)}
+                  onClick={() => onShowCollection(slug)}
                   className={cn(
                     "group flex w-full items-center gap-3 border border-green-500/15 p-2 text-left",
                     "transition-colors duration-150 ease-linear hover:border-green-400",
@@ -243,7 +227,7 @@ export const DetailsPanel = ({
                   )}
                 >
                   <img
-                    src={cover.candidates[0]?.url ?? cover.src}
+                    src={coverPhoto.candidates[0]?.url ?? coverPhoto.src}
                     alt=""
                     loading="lazy"
                     className="size-12 shrink-0 object-cover grayscale transition group-hover:grayscale-0"
@@ -253,7 +237,7 @@ export const DetailsPanel = ({
                       {title}
                     </span>
                     <span className="block truncate font-mono text-[10px] tracking-wider text-neutral-500 uppercase">
-                      ?album={slug} · {count}
+                      ?collection={slug} · {count}
                     </span>
                   </span>
                   <ArrowRight className="size-3.5 shrink-0 text-neutral-500 group-hover:text-green-300" />

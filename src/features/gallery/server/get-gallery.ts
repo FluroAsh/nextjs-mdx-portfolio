@@ -3,7 +3,7 @@ import { env } from "@/lib/env";
 import { requireManifest } from "@/server/image";
 import { parseImageUrl, variantUrl } from "@/utils/image";
 
-import type { GalleryAlbum, GalleryPhoto } from "../types";
+import type { GalleryCollection, GalleryPhoto } from "../types";
 
 /** The fields the site reads from `gallery/collections.json` (upload service schema 1). */
 type CollectionsFile = {
@@ -26,7 +26,7 @@ type CollectionsFile = {
   }[];
 };
 
-type Gallery = { photos: GalleryPhoto[]; albums: GalleryAlbum[] };
+type Gallery = { photos: GalleryPhoto[]; collections: GalleryCollection[] };
 
 const fetchCollections = async (): Promise<CollectionsFile | null> => {
   const url = `${env.imageOrigin}/gallery/collections.json`;
@@ -40,11 +40,11 @@ const fetchCollections = async (): Promise<CollectionsFile | null> => {
 
 export const getGallery = async (): Promise<Gallery> => {
   const file = await fetchCollections();
-  if (!file) return { photos: [], albums: [] };
+  if (!file) return { photos: [], collections: [] };
 
   const seen = new Set<string>();
   const photos: GalleryPhoto[] = [];
-  const albums: GalleryAlbum[] = [];
+  const collections: GalleryCollection[] = [];
 
   for (const collection of file.collections) {
     if (
@@ -88,7 +88,7 @@ export const getGallery = async (): Promise<Gallery> => {
           alt: alt ?? "",
           caption: caption ?? undefined,
           tags,
-          album: collection.slug,
+          collection: collection.slug,
         } satisfies Omit<GalleryPhoto, "frame">;
       }),
     );
@@ -100,13 +100,14 @@ export const getGallery = async (): Promise<Gallery> => {
         frame: photos.length + i + 1,
       })),
     );
-    albums.push({
+    collections.push({
       slug: collection.slug,
       title: collection.name,
+      cover: collection.cover ?? collection.photos[0].set,
       postPath: collection.post && `/blog/${collection.post}`,
       series: collection.series,
     });
   }
 
-  return { photos, albums };
+  return { photos, collections };
 };

@@ -8,9 +8,9 @@ import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { altToFilename } from "@/utils/image";
 import { cn, zeroPad } from "@/utils/misc";
 
-import type { GalleryAlbum, GalleryPhoto } from "../../types";
+import type { GalleryPhoto, ResolvedCollection } from "../../types";
 import { formatAspectRatio, frameNumber } from "../../utils";
-import { DetailsPanel, type RelatedAlbum } from "./details-panel";
+import { DetailsPanel } from "./details-panel";
 import { IconButton } from "./icon-button";
 
 /** Horizontal travel in pixels before a touch counts as a swipe. */
@@ -21,15 +21,11 @@ type PhotoLightboxProps = {
   photos: GalleryPhoto[];
   /** Index into `photos`; `null` when closed. */
   index: number | null;
-  albums: GalleryAlbum[];
-  /** Photo counts per album slug. */
-  albumCounts: Record<string, number>;
-  /** First photo of each album, for related thumbnails. */
-  albumCovers: Record<string, GalleryPhoto>;
+  collections: ResolvedCollection[];
   shareUrl: (photo: GalleryPhoto) => string;
   onIndexChange: (index: number) => void;
   onClose: () => void;
-  onShowAlbum: (slug: string) => void;
+  onShowCollection: (slug: string) => void;
 };
 
 /** Cross-origin `download` attributes are ignored, so the file is fetched and saved as a blob. */
@@ -55,36 +51,31 @@ const Kbd = ({ children }: { children: React.ReactNode }) => (
   </kbd>
 );
 
-const relatedAlbums = (
-  current: GalleryAlbum | undefined,
-  albums: GalleryAlbum[],
-  counts: Record<string, number>,
-  covers: Record<string, GalleryPhoto>,
-): RelatedAlbum[] => {
-  const others = albums.filter((album) => album.slug !== current?.slug);
-  // Same series first; any other album only fills the space left over.
-  const sameSeries = others.filter(
-    (album) => current?.series && album.series === current.series,
+const relatedCollections = (
+  current: ResolvedCollection | undefined,
+  collections: ResolvedCollection[],
+): ResolvedCollection[] => {
+  const others = collections.filter(
+    (collection) => collection.slug !== current?.slug,
   );
-  return [...sameSeries, ...others.filter((a) => !sameSeries.includes(a))]
-    .slice(0, 2)
-    .map((album) => ({
-      ...album,
-      count: counts[album.slug],
-      cover: covers[album.slug],
-    }));
+  // Same series first; any other collection only fills the space left over.
+  const sameSeries = others.filter(
+    (collection) => current?.series && collection.series === current.series,
+  );
+  return [
+    ...sameSeries,
+    ...others.filter((c) => !sameSeries.includes(c)),
+  ].slice(0, 2);
 };
 
 export const PhotoLightbox = ({
   photos,
   index,
-  albums,
-  albumCounts,
-  albumCovers,
+  collections,
   shareUrl,
   onIndexChange,
   onClose,
-  onShowAlbum,
+  onShowCollection,
 }: PhotoLightboxProps) => {
   const photo = index === null ? undefined : photos[index];
   const touchStartX = useRef<number | null>(null);
@@ -103,7 +94,7 @@ export const PhotoLightbox = ({
     }
   }, [index, photos]);
 
-  const album = albums.find((a) => a.slug === photo?.album);
+  const collection = collections.find((c) => c.slug === photo?.collection);
   const isLoaded = loadedId === photo?.id;
 
   return (
@@ -155,7 +146,7 @@ export const PhotoLightbox = ({
                   {zeroPad(photos.length)}
                 </span>
                 <span className="hidden truncate text-neutral-400 lg:block">
-                  {[album?.title, photo.location?.label]
+                  {[collection?.title, photo.location?.label]
                     .filter(Boolean)
                     .join(" · ")}
                 </span>
@@ -243,11 +234,11 @@ export const PhotoLightbox = ({
 
             <DetailsPanel
               photo={photo}
-              album={album}
-              related={relatedAlbums(album, albums, albumCounts, albumCovers)}
+              collection={collection}
+              related={relatedCollections(collection, collections)}
               shareUrl={shareUrl(photo)}
               onDownload={() => downloadPhoto(photo)}
-              onShowAlbum={onShowAlbum}
+              onShowCollection={onShowCollection}
             />
           </Dialog.Content>
         )}

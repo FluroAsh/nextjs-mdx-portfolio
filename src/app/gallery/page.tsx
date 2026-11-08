@@ -10,12 +10,18 @@ export const metadata: Metadata = {
 };
 
 export default async function GalleryPage() {
-  const { photos, albums } = await getGallery();
+  const { photos, collections } = await getGallery();
 
   return (
     <div>
       <GalleryHeader total={photos.length} />
-      <Gallery photos={photos} albums={albums} />
+      {photos.length ? (
+        <Gallery photos={photos} collections={collections} />
+      ) : (
+        <p className="py-24 text-center font-mono text-xs tracking-wider text-neutral-500 uppercase">
+          No photos yet. Check back soon.
+        </p>
+      )}
     </div>
   );
 }

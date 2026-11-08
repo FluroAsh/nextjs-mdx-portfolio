@@ -67,19 +67,25 @@ export type GalleryPhoto = {
   exif?: PhotoExif;
   /** Source: editorial. */
   tags: string[];
-  /** Slug of the album the photo belongs to. Source: editorial. */
-  album: string;
-  /** Marks prototype values that were written by hand, not read from the file. */
-  isSample?: boolean;
+  /** Slug of the collection the photo belongs to. Source: editorial. */
+  collection: string;
 };
 
-export type GalleryAlbum = {
-  /** URL-safe id, used in `?album=`. */
+export type GalleryCollection = {
+  /** URL-safe id, used in `?collection=`. */
   slug: string;
   /** Display name, e.g. "Tokyo". */
   title: string;
-  /** Post that tells the story behind the album, if there is one. */
+  /** Id of the photo that stands for the collection; the first photo when `collections.json` names none. */
+  cover: string;
+  /** Post that tells the story behind the collection, if there is one. */
   postPath?: string;
-  /** Albums in one series are offered as related. */
+  /** Collections in one series are offered as related. */
   series?: string;
+};
+
+/** A collection with its cover resolved to a photo and its photos counted, for the filter and lightbox. */
+export type ResolvedCollection = Omit<GalleryCollection, "cover"> & {
+  count: number;
+  coverPhoto: GalleryPhoto;
 };

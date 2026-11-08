@@ -151,23 +151,26 @@ never sees a conflict.
 | `POST /storage/collections` `{ name, sets }`                            | Create with its first sets; slug from name | `INSERT`           | 1     |
 | `PUT /storage/collections/members` `{ sets, collection: slug / null }`  | Bulk add, move or clear any number of sets | `UPDATE … IN`      | 1     |
 | `PATCH /storage/collections/members/:set` `{ alt, caption?, tags? }`    | Per-photo text                             | `UPDATE`           | 1     |
-| `PATCH /storage/collections/:slug`, `DELETE /storage/collections/:slug` | Rename, series, post, cover; delete        | `UPDATE`, `DELETE` | 2     |
-| `PUT /storage/collections/:slug/order`                                  | Reorder photos                             | `UPDATE`           | 2     |
+| `PATCH /storage/collections/:slug`, `DELETE /storage/collections/:slug` | Rename, cover; delete (series, post: 2.3)  | `UPDATE`, `DELETE` | 1     |
+| `PUT /storage/collections/:slug/order`                                  | Reorder photos                             | `UPDATE`           | 1     |
 
 Validation at the server: slug format, a body size cap, each set listed once,
 set paths only under a known prefix (no `..`), the cover inside its own
 collection, and upload-bucket sets that exist.
 
-Designating sets in the admin:
+Managing collections in the admin is a per-bucket Collections modal, opened
+from the actions bar beside Upload (1.7 to 1.9): it lists the collections that
+hold a set from the selected bucket, and creates, renames and deletes them.
+Creating one takes a folder or hand-picked sets. A collection's detail screen
+shows 120px thumbnails with alt text and caption, and can remove a photo, set
+the cover, reorder by native drag and add sets; a selected photo also shows its
+sizes, inline blur and original.
 
-- **One set**: a "Collection" dropdown in the set's details panel (existing
-  collections, or "New collection…", which asks for a name), with an alt-text
-  field.
-- **A folder**: "Add all sets in this folder to…".
-- **Hand-picked sets**: a "Select sets" action turns on checkboxes in the
-  explorer tree (hidden by default), then "Add to collection…".
+The details panel keeps a per-set shortcut (1.3): a "Collection" dropdown
+(existing collections, or "New collection…", which asks for a name) with an
+alt-text field.
 
-All three call the bulk operation. Each set still has one collection: moving
+Every path calls the bulk operation. Each set still has one collection: moving
 sets that are already filed lists them and asks to confirm.
 
 ## How the build assembles the gallery
@@ -183,22 +186,23 @@ sets that are already filed lists them and asks to confirm.
 
 ## What in PR #14 is coupled to that contract
 
-The UI is not coupled: components only see `GalleryPhoto` and `GalleryAlbum`.
+The UI is not coupled: components only see `GalleryPhoto` and `GalleryCollection`.
 The coupling is in the data layer, and each piece below is replaced rather than
 edited.
 
-| File or field                                  | Today                             | Becomes                                                                     | Needs     |
-| ---------------------------------------------- | --------------------------------- | --------------------------------------------------------------------------- | --------- |
-| `src/features/gallery/data/photos.ts`          | Hand-written fixture, sample EXIF | Deleted                                                                     | 1.5       |
-| `src/features/gallery/data/albums.ts`          | Three hard-coded albums           | Deleted; collections come from the file                                     | 1.5       |
-| `src/features/gallery/server/get-gallery.ts`   | Fixture + the probe               | Collections file + manifests                                                | 1.5       |
-| `GalleryAlbum`, "album" in UI copy and URLs    | Album                             | `GalleryCollection`, "collection"; the MDX `<Collection>` grid is unrelated | 1.6       |
-| `GalleryPhoto.id`                              | Set **name**, unique only by luck | Set **CDN path**                                                            | 1.5       |
-| `candidates`, `width`, `height`, `placeholder` | Probe + the size table            | Manifest `variants` and `placeholder`                                       | done (#8) |
-| `src` (lightbox)                               | `large`                           | Largest real size                                                           | #9        |
-| `alt`, `caption`, `tags`                       | Fixture                           | Collections file                                                            | 1.5       |
-| `takenAt`, `exif`, `location.geo`              | Fixture, `isSample: true`         | Manifest schema 2; `isSample` and its notice deleted                        | 3.x       |
-| `title`, `location.label`                      | Fixture                           | Dropped until the place-name question is settled                            | —         |
+| File or field                                  | Today                             | Becomes                                                                     | Needs      |
+| ---------------------------------------------- | --------------------------------- | --------------------------------------------------------------------------- | ---------- |
+| `src/features/gallery/data/photos.ts`          | Hand-written fixture, sample EXIF | Deleted                                                                     | 1.5        |
+| `src/features/gallery/data/albums.ts`          | Three hard-coded albums           | Deleted; collections come from the file                                     | 1.5        |
+| `src/features/gallery/server/get-gallery.ts`   | Fixture + the probe               | Collections file + manifests                                                | 1.5        |
+| `GalleryAlbum`, "album" in UI copy and URLs    | Album                             | `GalleryCollection`, "collection"; the MDX `<Collection>` grid is unrelated | 1.6        |
+| `GalleryPhoto.id`                              | Set **name**, unique only by luck | Set **CDN path**                                                            | 1.5        |
+| `candidates`, `width`, `height`, `placeholder` | Probe + the size table            | Manifest `variants` and `placeholder`                                       | done (#8)  |
+| `src` (lightbox)                               | `large`                           | Largest real size                                                           | #9         |
+| `alt`, `caption`, `tags`                       | Fixture                           | Collections file                                                            | 1.5        |
+| `takenAt`, `exif`, `location.geo`              | Fixture                           | Manifest schema 2                                                           | 3.x        |
+| `isSample` and its notice                      | Flag on every fixture photo       | Deleted                                                                     | done (#28) |
+| `title`, `location.label`                      | Fixture                           | Dropped until the place-name question is settled                            | —          |
 
 ## Phases
 
@@ -212,28 +216,29 @@ edited.
 
 ### 1. Collections, straightforward (both)
 
-| #   | Repo      | Work                                                                                                                         | Depends on |
-| --- | --------- | ---------------------------------------------------------------------------------------------------------------------------- | ---------- |
-| 1.1 | uploader  | `collections.json` store: read, conditional write with retry, history copy, `no-cache`, validation, bucket-to-prefix mapping | —          |
-| 1.2 | uploader  | Phase 1 operations: list, create, bulk members, per-photo text                                                               | 1.1        |
-| 1.3 | uploader  | Details panel: Collection dropdown with "New collection…", and alt text                                                      | 1.2        |
-| 1.4 | uploader  | Explorer: "Add all sets in this folder to…" and the "Select sets" checkbox mode                                              | 1.2        |
-| 1.5 | portfolio | Loader over the collections file and manifests, with build validation                                                        | —          |
-| 1.6 | portfolio | Rename album to collection, add the cover, and merge the prototype UI (PR #14)                                               | 1.5        |
+| #   | Repo      | Work                                                                                                                                             | Depends on |
+| --- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | ---------- |
+| 1.1 | uploader  | `collections.json` store: read, conditional write with retry, history copy, `no-cache`, validation, bucket-to-prefix mapping                     | —          |
+| 1.2 | uploader  | Phase 1 operations: list, create, bulk members, per-photo text                                                                                   | 1.1        |
+| 1.3 | uploader  | Details panel: Collection dropdown with "New collection…", and alt text                                                                          | 1.2        |
+| 1.4 | uploader  | Superseded by 1.8's set picker (upload #53 closed)                                                                                               | —          |
+| 1.5 | portfolio | Loader over the collections file and manifests, with build validation                                                                            | —          |
+| 1.6 | portfolio | Rename album to collection, add the cover, and merge the prototype UI (PR #14)                                                                   | 1.5        |
+| 1.7 | uploader  | Routes for rename, cover, delete and reorder (upload #57)                                                                                        | 1.2        |
+| 1.8 | uploader  | Per-bucket Collections modal: collections holding a set from the selected bucket; create (by folder or hand-picked), rename, delete (upload #58) | 1.7        |
+| 1.9 | uploader  | Collection detail: 120px thumbnails, alt text and caption, remove, set cover, native drag to reorder, add sets (upload #59)                      | 1.7, 1.8   |
 
 1.5 can be built against a missing file (empty gallery) before the uploader side ships.
-In phase 1 the cover is the first photo and photos keep the order they were
-added.
+The cover can be set (1.9) and is the first photo while unset. Photo order is
+set by reorder (1.9).
 
-### 2. Collections, fully managed in the admin (uploader)
+### 2. Collections, remaining admin work (uploader)
 
-| #   | Work                                                                                                                             |
-| --- | -------------------------------------------------------------------------------------------------------------------------------- |
-| 2.1 | `/dashboard/collections` page: list (cover thumbnail, name, slug, count, last edited), create, edit; deleting removes its photos |
-| 2.2 | Collection detail: 120px thumbnails, drag to reorder, caption and tags, remove, set cover, missing-alt flag                      |
-| 2.3 | Series and linked post on a collection                                                                                           |
-| 2.4 | Upload modal: optional Collection dropdown                                                                                       |
-| 2.5 | Rename the explorer's `isImageCollection` to `isImageSet`                                                                        |
+| #   | Work                                                       |
+| --- | ---------------------------------------------------------- |
+| 2.3 | Series and linked post on a collection                     |
+| 2.4 | Upload modal: optional Collection dropdown, per-photo tags |
+| 2.5 | Rename the explorer's `isImageCollection` to `isImageSet`  |
 
 ### 3. EXIF (both)
 

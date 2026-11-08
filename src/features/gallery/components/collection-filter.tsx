@@ -2,18 +2,15 @@ import { BilingualLabel } from "@/components/bilingual-label";
 import { cn } from "@/utils/misc";
 
 import { GALLERY_LABELS } from "../labels";
-import type { GalleryAlbum } from "../types";
+import type { ResolvedCollection } from "../types";
 
-type AlbumFilterProps = {
-  albums: (GalleryAlbum & {
-    /** Photos in the album. */
-    count: number;
-  })[];
-  /** Photos across every album. */
+type CollectionFilterProps = {
+  collections: ResolvedCollection[];
+  /** Photos across every collection. */
   total: number;
-  /** Slug of the selected album; `null` for all. */
+  /** Slug of the selected collection; `null` for all. */
   active: string | null;
-  onChange: (album: string | null) => void;
+  onChange: (collection: string | null) => void;
 };
 
 const Chip = ({
@@ -52,18 +49,18 @@ const Chip = ({
   </button>
 );
 
-export const AlbumFilter = ({
-  albums,
+export const CollectionFilter = ({
+  collections,
   total,
   active,
   onChange,
-}: AlbumFilterProps) => (
+}: CollectionFilterProps) => (
   <div
     role="group"
-    aria-label="Filter by album"
+    aria-label="Filter by collection"
     className="flex items-center gap-4 border-b border-green-500/15 pb-4"
   >
-    <BilingualLabel {...GALLERY_LABELS.album} className="shrink-0" />
+    <BilingualLabel {...GALLERY_LABELS.collection} className="shrink-0" />
 
     {/* Scrolls sideways on a phone instead of wrapping into a second row of chips. */}
     <div className="scrollbar-slim -m-1 flex min-w-0 gap-2 overflow-x-auto p-1">
@@ -73,13 +70,13 @@ export const AlbumFilter = ({
         isActive={active === null}
         onClick={() => onChange(null)}
       />
-      {albums.map((album) => (
+      {collections.map((collection) => (
         <Chip
-          key={album.slug}
-          label={album.title}
-          count={album.count}
-          isActive={active === album.slug}
-          onClick={() => onChange(album.slug)}
+          key={collection.slug}
+          label={collection.title}
+          count={collection.count}
+          isActive={active === collection.slug}
+          onClick={() => onChange(collection.slug)}
         />
       ))}
     </div>

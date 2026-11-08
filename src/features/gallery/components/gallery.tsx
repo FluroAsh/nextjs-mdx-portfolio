@@ -4,8 +4,12 @@ import { useEffect, useMemo, useState } from "react";
 
 import { cn } from "@/utils/misc";
 
-import type { GalleryAlbum, GalleryPhoto } from "../types";
-import { AlbumFilter } from "./album-filter";
+import type {
+  GalleryCollection,
+  GalleryPhoto,
+  ResolvedCollection,
+} from "../types";
+import { CollectionFilter } from "./collection-filter";
 import { PhotoLightbox } from "./lightbox/photo-lightbox";
 import { Masonry } from "./masonry";
 import { PhotoTile } from "./photo-tile";
@@ -14,7 +18,7 @@ const PAGE_SIZE = 24;
 
 type GalleryProps = {
   photos: GalleryPhoto[];
-  albums: GalleryAlbum[];
+  collections: GalleryCollection[];
 };
 
 /**
@@ -22,10 +26,10 @@ type GalleryProps = {
  * view. `history.replaceState` rather than the router: the page is static, and
  * a router navigation would refetch it for a change only this component reads.
  */
-const writeParams = (album: string | null, photo: string | null) => {
+const writeParams = (collection: string | null, photo: string | null) => {
   const url = new URL(window.location.href);
   for (const [key, value] of [
-    ["album", album],
+    ["collection", collection],
     ["photo", photo],
   ] as const) {
     if (value) url.searchParams.set(key, value);
@@ -34,26 +38,31 @@ const writeParams = (album: string | null, photo: string | null) => {
   window.history.replaceState(window.history.state, "", url);
 };
 
-export const Gallery = ({ photos, albums }: GalleryProps) => {
-  const [album, setAlbum] = useState<string | null>(null);
+export const Gallery = ({ photos, collections }: GalleryProps) => {
+  const [collection, setCollection] = useState<string | null>(null);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const [openId, setOpenId] = useState<string | null>(null);
   /** Frame of the first tile added by "load more", which takes focus once rendered. */
   const [focusFrame, setFocusFrame] = useState<number | null>(null);
 
-  const { albumCounts, albumCovers } = useMemo(() => {
-    const counts: Record<string, number> = {};
-    const covers: Record<string, GalleryPhoto> = {};
-    for (const photo of photos) {
-      counts[photo.album] = (counts[photo.album] ?? 0) + 1;
-      covers[photo.album] ??= photo;
-    }
-    return { albumCounts: counts, albumCovers: covers };
-  }, [photos]);
+  const resolved = useMemo<ResolvedCollection[]>(
+    () =>
+      collections.map(({ cover, ...rest }) => ({
+        ...rest,
+        count: photos.filter((p) => p.collection === rest.slug).length,
+        coverPhoto: photos.find((p) => p.id === cover)!,
+      })),
+    [photos, collections],
+  );
+  const titles = useMemo(
+    () => new Map(resolved.map((c) => [c.slug, c.title])),
+    [resolved],
+  );
 
   const filtered = useMemo(
-    () => (album ? photos.filter((p) => p.album === album) : photos),
-    [album, photos],
+    () =>
+      collection ? photos.filter((p) => p.collection === collection) : photos,
+    [collection, photos],
   );
   const visible = filtered.slice(0, visibleCount);
   const openIndex = openId ? filtered.findIndex((p) => p.id === openId) : -1;
@@ -61,24 +70,24 @@ export const Gallery = ({ photos, albums }: GalleryProps) => {
   // The static page renders the unfiltered grid; a shared link narrows it once mounted.
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const linkedAlbum = params.get("album");
+    const linkedCollection = params.get("collection");
     const linkedPhoto = params.get("photo");
-    const validAlbum = albums.some((a) => a.slug === linkedAlbum)
-      ? linkedAlbum
+    const validCollection = collections.some((c) => c.slug === linkedCollection)
+      ? linkedCollection
       : null;
-    const pool = validAlbum
-      ? photos.filter((p) => p.album === validAlbum)
+    const pool = validCollection
+      ? photos.filter((p) => p.collection === validCollection)
       : photos;
     const position = pool.findIndex((p) => p.id === linkedPhoto);
 
     /* eslint-disable react-hooks/set-state-in-effect -- reads the URL once, which the server cannot see */
-    setAlbum(validAlbum);
+    setCollection(validCollection);
     if (position >= 0) {
       setOpenId(linkedPhoto);
       setVisibleCount(Math.max(PAGE_SIZE, position + 1));
     }
     /* eslint-enable react-hooks/set-state-in-effect */
-  }, [albums, photos]);
+  }, [collections, photos]);
 
   useEffect(() => {
     if (focusFrame === null) return;
@@ -89,8 +98,8 @@ export const Gallery = ({ photos, albums }: GalleryProps) => {
     setFocusFrame(null);
   }, [focusFrame]);
 
-  const selectAlbum = (slug: string | null) => {
-    setAlbum(slug);
+  const selectCollection = (slug: string | null) => {
+    setCollection(slug);
     setVisibleCount(PAGE_SIZE);
     setOpenId(null);
     writeParams(slug, null);
@@ -98,7 +107,7 @@ export const Gallery = ({ photos, albums }: GalleryProps) => {
 
   const openPhoto = (id: string | null) => {
     setOpenId(id);
-    writeParams(album, id);
+    writeParams(collection, id);
   };
 
   const loadMore = () => {
@@ -111,23 +120,20 @@ export const Gallery = ({ photos, albums }: GalleryProps) => {
 
   return (
     <div className="max-w-frame mx-auto w-full px-6 pt-6">
-      <AlbumFilter
-        albums={albums.map((a) => ({ ...a, count: albumCounts[a.slug] ?? 0 }))}
+      <CollectionFilter
+        collections={resolved}
         total={photos.length}
-        active={album}
-        onChange={selectAlbum}
+        active={collection}
+        onChange={selectCollection}
       />
 
       <p className="mt-3 mb-5 font-mono text-[10px] tracking-wider text-neutral-500 uppercase tabular-nums">
         Showing <span className="text-neutral-300">{visible.length}</span> of{" "}
         {filtered.length}
-        {album && (
+        {collection && (
           <>
             {" "}
-            in{" "}
-            <span className="text-green-400">
-              {albums.find((a) => a.slug === album)?.title}
-            </span>
+            in <span className="text-green-400">{titles.get(collection)}</span>
           </>
         )}
       </p>
@@ -138,10 +144,8 @@ export const Gallery = ({ photos, albums }: GalleryProps) => {
           <div key={photo.id} data-frame={photo.frame}>
             <PhotoTile
               photo={photo}
-              albumTitle={
-                album
-                  ? undefined
-                  : albums.find((a) => a.slug === photo.album)?.title
+              collectionTitle={
+                collection ? undefined : titles.get(photo.collection)
               }
               onOpen={() => openPhoto(photo.id)}
             />
@@ -179,9 +183,7 @@ export const Gallery = ({ photos, albums }: GalleryProps) => {
       <PhotoLightbox
         photos={filtered}
         index={openIndex >= 0 ? openIndex : null}
-        albums={albums}
-        albumCounts={albumCounts}
-        albumCovers={albumCovers}
+        collections={resolved}
         shareUrl={(photo) => {
           const url = new URL(window.location.href);
           url.search = "";
@@ -198,7 +200,7 @@ export const Gallery = ({ photos, albums }: GalleryProps) => {
           openPhoto(null);
           if (frame) setFocusFrame(frame);
         }}
-        onShowAlbum={selectAlbum}
+        onShowCollection={selectCollection}
       />
     </div>
   );
