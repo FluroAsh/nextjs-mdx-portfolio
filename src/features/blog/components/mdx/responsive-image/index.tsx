@@ -1,9 +1,8 @@
-import { measureImage } from "@/server/image";
+import { isOnImageOrigin, requireManifest } from "@/server/image";
 
 import { ClientImage } from "./client-image";
 
-// React 19's types widen `src` to `string | Blob`; this component only ever
-// takes a URL, which it measures on the server.
+/** React 19's types widen `src` to `string | Blob`; this component only ever takes a URL. */
 type ResponsiveImageProps = {
   src?: string;
 } & Omit<React.ComponentProps<"img">, "src">;
@@ -21,17 +20,28 @@ export const ResponsiveImage = async ({
   if (!src || !alt)
     throw new Error("Images must include src and alt attributes");
 
+  if (!isOnImageOrigin(src))
+    return (
+      <img
+        src={src}
+        alt={alt}
+        loading="lazy"
+        className={className}
+        {...props}
+      />
+    );
+
   const {
-    orientation = "",
+    orientation,
     width: imageWidth,
     height: imageHeight,
     base64,
     candidates,
-  } = await measureImage(src);
+  } = await requireManifest(src);
 
   const { width, height, ...newProps } = props;
 
-  // This needs to be generated on the server so it does not change when hydrating
+  /** Generated on the server so it does not change when hydrating. */
   const imageId = crypto.randomUUID();
 
   return (

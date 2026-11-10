@@ -31,7 +31,7 @@ type PhotoLightboxProps = {
 /** Cross-origin `download` attributes are ignored, so the file is fetched and saved as a blob. */
 const downloadPhoto = async (photo: GalleryPhoto) => {
   try {
-    // ?: Search param is required for CORS, see: https://yet-another-react-lightbox.com/plugins/download#Cross-OriginImages
+    /** The search param is required for CORS, see https://yet-another-react-lightbox.com/plugins/download#Cross-OriginImages */
     const response = await fetch(`${photo.src}?download`);
     if (!response.ok) throw new Error(String(response.status));
     const url = URL.createObjectURL(await response.blob());
@@ -58,7 +58,7 @@ const relatedCollections = (
   const others = collections.filter(
     (collection) => collection.slug !== current?.slug,
   );
-  // Same series first; any other collection only fills the space left over.
+  /** Same series first; any other collection only fills the space left over. */
   const sameSeries = others.filter(
     (collection) => current?.series && collection.series === current.series,
   );
@@ -86,7 +86,7 @@ export const PhotoLightbox = ({
   const goPrev = () => hasPrev && onIndexChange(index - 1);
   const goNext = () => hasNext && onIndexChange(index + 1);
 
-  // Neighbours load while this one is viewed, so stepping through is instant.
+  /** Neighbours load while this one is viewed, so stepping through is instant. */
   useEffect(() => {
     if (index === null) return;
     for (const neighbour of [photos[index - 1], photos[index + 1]]) {
@@ -107,13 +107,12 @@ export const PhotoLightbox = ({
               if (event.key === "ArrowLeft") goPrev();
               if (event.key === "ArrowRight") goNext();
             }}
-            // Focus would land on the copy button otherwise, and an arrow key
-            // press needs the dialog itself focused anyway.
+            /** Focus would land on the copy button otherwise, and arrow keys need the dialog focused. */
             onOpenAutoFocus={(event) => {
               event.preventDefault();
               (event.currentTarget as HTMLElement).focus();
             }}
-            // The gallery moves focus to the tile last viewed, not the one first opened.
+            /** The gallery moves focus to the tile last viewed, not the one first opened. */
             onCloseAutoFocus={(event) => event.preventDefault()}
             className={cn(
               "data-[state=open]:animate-in data-[state=open]:fade-in-0 fixed inset-0 z-[60] outline-none",
@@ -163,7 +162,7 @@ export const PhotoLightbox = ({
               <div className="relative flex min-h-0 flex-1 items-center justify-center px-4 pb-2 sm:px-20 lg:pb-0">
                 <figure className="flex max-h-full max-w-full flex-col">
                   <div
-                    // Sized by the image, so the ticks sit on its corners.
+                    /** Sized by the image, so the ticks sit on its corners. */
                     className="plate-ticks relative mx-auto w-fit max-w-full bg-cover bg-center"
                     style={{
                       backgroundImage:
@@ -192,13 +191,10 @@ export const PhotoLightbox = ({
                       {frameNumber(photo.frame)}
                       {photo.location && ` — ${photo.location.label}`}
                     </span>
-                    {/* A guessed size would read as a fact here. */}
-                    {photo.measured && (
-                      <span className="shrink-0">
-                        {formatAspectRatio(photo.width, photo.height)} ·{" "}
-                        {photo.width} × {photo.height}
-                      </span>
-                    )}
+                    <span className="shrink-0">
+                      {formatAspectRatio(photo.width, photo.height)} ·{" "}
+                      {photo.width} × {photo.height}
+                    </span>
                   </figcaption>
                 </figure>
 

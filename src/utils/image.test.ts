@@ -3,7 +3,6 @@ import {
   formatSrcSet,
   imageSizes,
   parseImageUrl,
-  srcSetCandidates,
   variantUrl,
 } from "./image";
 
@@ -156,101 +155,6 @@ describe("downsizedUrl", () => {
     ],
   ])("%s", (_, url, expected) => {
     expect(downsizedUrl(url)).toBe(expected);
-  });
-});
-
-describe("srcSetCandidates", () => {
-  const KYOTO = `${CDN}/japan-2025/kyoto/kyoto-13`;
-  const measured = (width: number, height: number) => ({
-    width,
-    height,
-    measured: true,
-  });
-
-  it("offers the medium sibling of a nested large image", () => {
-    expect(
-      srcSetCandidates(`${KYOTO}/large_kyoto-13.webp`, measured(1440, 1080)),
-    ).toEqual([
-      { url: `${KYOTO}/medium_kyoto-13.webp`, width: 800 },
-      { url: `${KYOTO}/large_kyoto-13.webp`, width: 1440 },
-    ]);
-  });
-
-  it("labels the siblings of a nested portrait with their widths, not their longest edge", () => {
-    expect(
-      srcSetCandidates(`${KYOTO}/large_kyoto-13.webp`, measured(960, 1440)),
-    ).toEqual([
-      { url: `${KYOTO}/medium_kyoto-13.webp`, width: 533 },
-      { url: `${KYOTO}/large_kyoto-13.webp`, width: 960 },
-    ]);
-  });
-
-  it("lists an older width-sized portrait's own file once", () => {
-    const large = `${CDN}/japan-2025/tokyo/tokyo-kura-2/large_tokyo-kura-2.webp`;
-    expect(srcSetCandidates(large, measured(1440, 1920))).toEqual([
-      {
-        url: `${CDN}/japan-2025/tokyo/tokyo-kura-2/medium_tokyo-kura-2.webp`,
-        width: 600,
-      },
-      { url: large, width: 1440 },
-    ]);
-  });
-
-  it("stops at large for a nested full-size image, leaving it to the lightbox", () => {
-    expect(
-      srcSetCandidates(`${KYOTO}/full_kyoto-13.webp`, measured(2560, 3840)),
-    ).toEqual([
-      { url: `${KYOTO}/medium_kyoto-13.webp`, width: 533 },
-      { url: `${KYOTO}/large_kyoto-13.webp`, width: 960 },
-    ]);
-  });
-
-  it("offers set-folder widths, not Strapi ones, for a migrated legacy image", () => {
-    const set = `${CDN}/legacy/DSC_1963_f6f8bf29c4`;
-    expect(
-      srcSetCandidates(
-        `${set}/large_DSC_1963_f6f8bf29c4.webp`,
-        measured(1440, 960),
-      ),
-    ).toEqual([
-      { url: `${set}/medium_DSC_1963_f6f8bf29c4.webp`, width: 800 },
-      { url: `${set}/large_DSC_1963_f6f8bf29c4.webp`, width: 1440 },
-    ]);
-  });
-
-  it("drops a nested sibling that is no narrower than the image itself", () => {
-    const large = `${CDN}/content-store/buff-rick/large_buff-rick.webp`;
-    expect(srcSetCandidates(large, measured(800, 450))).toEqual([
-      { url: large, width: 800 },
-    ]);
-  });
-
-  it("offers nothing wider than the image that was asked for", () => {
-    const medium = `${KYOTO}/medium_kyoto-13.webp`;
-    expect(srcSetCandidates(medium, measured(800, 600))).toEqual([
-      { url: medium, width: 800 },
-    ]);
-  });
-
-  it("offers no siblings for an image that is not in a set folder", () => {
-    const gif =
-      "https://media3.giphy.com/media/v1.abc/14cAD9mBjofP5m/giphy.gif";
-    expect(srcSetCandidates(gif, measured(480, 270))).toEqual([
-      { url: gif, width: 480 },
-    ]);
-  });
-
-  it("offers nothing when the size was not measured", () => {
-    expect(
-      srcSetCandidates(
-        `${CDN}/legacy/DSC_1963_f6f8bf29c4/large_DSC_1963_f6f8bf29c4.webp`,
-        {
-          width: 1200,
-          height: 800,
-          measured: false,
-        },
-      ),
-    ).toEqual([]);
   });
 });
 

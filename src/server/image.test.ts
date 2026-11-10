@@ -1,15 +1,8 @@
-import { getPlaiceholder } from "plaiceholder";
-import probe from "probe-image-size";
-
-import { srcSetCandidates } from "@/utils/image";
-
-import { lightboxSlide, measureImage } from "./image";
+import { isOnImageOrigin, lightboxSlide, requireManifest } from "./image";
 
 vi.hoisted(() => {
   process.env.NEXT_PUBLIC_S3_HOSTNAME = "images.example.com";
 });
-vi.mock("probe-image-size", () => ({ default: vi.fn() }));
-vi.mock("plaiceholder", () => ({ getPlaiceholder: vi.fn() }));
 
 const CDN = "https://images.example.com";
 const BLUR = "data:image/webp;base64,AAAA";
@@ -57,12 +50,10 @@ const widths = (candidates: { url: string; width: number }[]) =>
 
 beforeEach(() => {
   vi.clearAllMocks();
-  vi.mocked(probe).mockResolvedValue({ width: 1440, height: 960 } as never);
-  vi.mocked(getPlaiceholder).mockResolvedValue({ base64: "probed" } as never);
 });
 
-describe("measureImage from a manifest", () => {
-  it("reads a longest-edge portrait without downloading the image", async () => {
+describe("requireManifest", () => {
+  it("reads a longest-edge portrait from the manifest alone", async () => {
     const dir = `${CDN}/trip/portrait`;
     serve(
       manifest("trip", "portrait", {
@@ -74,15 +65,13 @@ describe("measureImage from a manifest", () => {
       }),
     );
 
-    const image = await measureImage(`${dir}/large_portrait.webp`);
+    const image = await requireManifest(`${dir}/large_portrait.webp`);
 
     expect(fetchMock).toHaveBeenCalledWith(`${dir}/manifest.json`);
     expect(fetchMock).toHaveBeenCalledTimes(1);
-    expect(probe).not.toHaveBeenCalled();
     expect(image).toMatchObject({
       width: 960,
       height: 1440,
-      measured: true,
       base64: BLUR,
       orientation: "portrait",
     });
@@ -102,7 +91,7 @@ describe("measureImage from a manifest", () => {
       }),
     );
 
-    const image = await measureImage(`${CDN}/trip/old/large_old.webp`);
+    const image = await requireManifest(`${CDN}/trip/old/large_old.webp`);
 
     expect(image).toMatchObject({ width: 1440, height: 1920 });
     expect(widths(image.candidates)).toEqual([
@@ -120,7 +109,7 @@ describe("measureImage from a manifest", () => {
       }),
     );
 
-    const image = await measureImage(
+    const image = await requireManifest(
       `${CDN}/trip/small-set/full_small-set.webp`,
     );
 
@@ -140,7 +129,7 @@ describe("measureImage from a manifest", () => {
       }),
     );
 
-    const image = await measureImage(`${CDN}/trip/mid/medium_mid.webp`);
+    const image = await requireManifest(`${CDN}/trip/mid/medium_mid.webp`);
 
     expect(widths(image.candidates)).toEqual([
       "small_mid.webp 400",
@@ -157,7 +146,7 @@ describe("measureImage from a manifest", () => {
       }),
     );
 
-    const image = await measureImage(`${CDN}/trip/tiny/large_tiny.webp`);
+    const image = await requireManifest(`${CDN}/trip/tiny/large_tiny.webp`);
 
     expect(widths(image.candidates)).toEqual(["large_tiny.webp 400"]);
   });
@@ -167,92 +156,68 @@ describe("measureImage from a manifest", () => {
       manifest("trip", "shared", { medium: [800, 600], large: [1440, 1080] }),
     );
 
-    await measureImage(`${CDN}/trip/shared/large_shared.webp`);
-    await measureImage(`${CDN}/trip/shared/medium_shared.webp`);
+    await requireManifest(`${CDN}/trip/shared/large_shared.webp`);
+    await requireManifest(`${CDN}/trip/shared/medium_shared.webp`);
 
     expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 });
 
-describe("measureImage fallback", () => {
-  const expectProbed = async (src: string) => {
-    const image = await measureImage(src);
+describe("requireManifest failures", () => {
+  it.each([
+    [
+      "an image its folder's manifest does not list",
+      () => serve(manifest("trip", "loose", { large: [1440, 960] })),
+      `${CDN}/trip/loose/large_other.webp`,
+    ],
+    [
+      "a manifest with an unknown schema",
+      () => serve(manifest("trip", "future", { large: [1440, 960] }, 2)),
+      `${CDN}/trip/future/large_future.webp`,
+    ],
+    [
+      "a manifest with no variants",
+      () => serve({ schema: 1, placeholder: BLUR }),
+      `${CDN}/trip/empty/large_empty.webp`,
+    ],
+    [
+      "a set with no manifest",
+      () =>
+        fetchMock.mockImplementation(
+          async () => new Response("", { status: 403 }),
+        ),
+      `${CDN}/trip/bare/large_bare.webp`,
+    ],
+    [
+      "a manifest fetch that fails",
+      () => fetchMock.mockRejectedValue(new Error("network down")),
+      `${CDN}/trip/broken/large_broken.webp`,
+    ],
+  ])("fails, naming the image, for %s", async (_, arrange, src) => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    arrange();
 
-    expect(probe).toHaveBeenCalledWith(src);
-    expect(image).toMatchObject({
-      width: 1440,
-      height: 960,
-      measured: true,
-      base64: "probed",
-    });
-    expect(image.candidates).toEqual(
-      srcSetCandidates(src, { width: 1440, height: 960, measured: true }),
-    );
-  };
-
-  it("probes an image its folder's manifest does not list", async () => {
-    serve(manifest("trip", "loose", { large: [1440, 960] }));
-
-    await expectProbed(`${CDN}/trip/loose/large_other.webp`);
-  });
-
-  it("probes an image whose manifest has an unknown schema", async () => {
-    serve(manifest("trip", "future", { large: [1440, 960] }, 2));
-
-    await expectProbed(`${CDN}/trip/future/large_future.webp`);
-  });
-
-  it("probes an image whose manifest has no variants", async () => {
-    serve({ schema: 1, placeholder: BLUR });
-
-    await expectProbed(`${CDN}/trip/empty/large_empty.webp`);
-  });
-
-  it("warns once with the URL of each probed image", async () => {
-    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
-    const src = `${CDN}/trip/bare/large_bare.webp`;
-    fetchMock.mockImplementation(async () => new Response("", { status: 404 }));
-
-    await measureImage(src);
-
-    expect(warn).toHaveBeenCalledTimes(1);
-    expect(warn).toHaveBeenCalledWith(expect.stringContaining(src));
+    await expect(requireManifest(src)).rejects.toThrow(src);
   });
 
   it("retries a failed manifest fetch on the next call", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
     fetchMock.mockRejectedValueOnce(new Error("network down"));
     serve(manifest("trip", "retry", { large: [1440, 960] }));
 
-    await measureImage(`${CDN}/trip/retry/large_retry.webp`);
-    const image = await measureImage(`${CDN}/trip/retry/large_retry.webp`);
+    await expect(
+      requireManifest(`${CDN}/trip/retry/large_retry.webp`),
+    ).rejects.toThrow();
+    const image = await requireManifest(`${CDN}/trip/retry/large_retry.webp`);
 
-    expect(probe).toHaveBeenCalledTimes(1);
     expect(image.width).toBe(1440);
   });
+});
 
-  it("probes an image whose set has no manifest", async () => {
-    fetchMock.mockImplementation(async () => new Response("", { status: 403 }));
-
-    await expectProbed(`${CDN}/trip/bare/large_bare.webp`);
-  });
-
-  it("probes an image on another host without looking for a manifest", async () => {
-    const src = "https://elsewhere.example.com/a/b/large_b.webp";
-
-    await measureImage(src);
-
-    expect(fetchMock).not.toHaveBeenCalledWith(
-      expect.stringContaining("manifest.json"),
-    );
-    expect(probe).toHaveBeenCalledWith(src);
-  });
-
-  it("fails, naming the image, when the manifest fetch and the probe both fail", async () => {
-    const src = `${CDN}/trip/broken/large_broken.webp`;
-    fetchMock.mockRejectedValue(new Error("network down"));
-    vi.mocked(probe).mockRejectedValue(new Error("probe down"));
-
-    await expect(measureImage(src)).rejects.toThrow(src);
+describe("isOnImageOrigin", () => {
+  it("is true for the CDN host and false for any other", () => {
+    expect(isOnImageOrigin(`${CDN}/a/b/large_b.webp`)).toBe(true);
+    expect(isOnImageOrigin("https://elsewhere.example.com/a.gif")).toBe(false);
   });
 });
 

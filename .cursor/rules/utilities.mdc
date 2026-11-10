@@ -84,11 +84,9 @@ applyIntelligently: true
 
 ### `/src/server/image.ts` - Server-Side Image Utilities
 
-- `getImagePlaceholder(imageSrc: string)` - Generates image metadata and placeholder
-  - Uses `probe-image-size` to get dimensions
-  - Uses `plaiceholder` to generate base64 placeholder
-  - Returns: width, height, base64, orientation, aspectRatio
-  - Includes error handling with fallback values
+- `isOnImageOrigin(imageSrc: string)` - True for images on our CDN host, the only ones with manifests
+- `requireManifest(imageSrc: string)` - Reads width, height, base64 placeholder, orientation and srcset candidates from the set's manifest
+  - Throws, naming the URL, when an image has no usable manifest
 
 ## Common Patterns
 
