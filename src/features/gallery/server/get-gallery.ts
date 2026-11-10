@@ -95,7 +95,7 @@ export const getGallery = async (): Promise<Gallery> => {
     photos.push(
       ...collectionPhotos.map((photo, i) => ({
         ...photo,
-        // Frames number the whole gallery, so a photo keeps its number under any filter.
+        /** Frames number the whole gallery, so a photo keeps its number under any filter. */
         frame: photos.length + i + 1,
       })),
     );

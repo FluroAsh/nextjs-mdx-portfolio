@@ -2,12 +2,12 @@
 
 import { motion as m } from "motion/react";
 
-import { BilingualLabel } from "@/components/bilingual-label";
 import { author } from "@/data/author";
 import { HERO_FIELDS, HERO_NAME_LABEL } from "@/data/identity";
 import { cn } from "@/utils/misc";
 
 import { ENTER } from "../../utils";
+import { BilingualLabel } from "@/components/bilingual-label";
 
 /** The masthead lands in three steps: name, rule, fields. */
 const enterStep = (index: number) => ({ ...ENTER, delay: index * 0.09 });

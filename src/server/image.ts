@@ -5,20 +5,9 @@ import { type SrcSetCandidate, getFileNameFromUrl } from "@/utils/image";
 
 type Orientation = "landscape" | "portrait" | "square";
 
-const calculateOrientation = (
-  width: number,
-  height: number,
-): Orientation | undefined => {
-  switch (true) {
-    case width > height:
-      return "landscape";
-    case height > width:
-      return "portrait";
-    case height === width:
-      return "square";
-    default:
-      return undefined;
-  }
+const calculateOrientation = (width: number, height: number): Orientation => {
+  if (width > height) return "landscape";
+  return height > width ? "portrait" : "square";
 };
 
 /** One stored file of an image set, as its manifest records it. */
@@ -56,7 +45,6 @@ const manifests = new Map<
 const fetchManifest = async (url: string) => {
   try {
     const res = await fetch(url);
-    /** The CDN answers 403 for a missing key, which is a set with no manifest. */
     if (res.status === 403 || res.status === 404) return null;
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const manifest: Manifest = await res.json();
@@ -74,8 +62,8 @@ type ImageMeasurement = {
   height: number;
   /** Base64 blur placeholder; `""` when there is none. */
   base64: string;
-  /** Shape of the image; `undefined` only for non-numeric sizes. */
-  orientation: Orientation | undefined;
+  /** Shape of the image. */
+  orientation: Orientation;
   /** Files the `srcset` offers, narrowest first. */
   candidates: SrcSetCandidate[];
 };
@@ -102,13 +90,12 @@ const fromManifest = (
 
   const inline = INLINE_SIZES.flatMap((size) => variants[size] ?? []);
   const ownIndex = inline.indexOf(own);
-  // Nothing wider than the linked file, so a caller that downsized gets nothing larger back.
+  /** Nothing wider than the linked file, so a caller that downsized gets nothing larger back. */
   const offered =
     ownIndex === -1
       ? inline.filter((v) => v.width <= own.width)
       : inline.slice(0, ownIndex + 1);
-  // A source smaller than a bound is stored at its own size, so sizes can share a width;
-  // the last of each run is kept, which is the linked file when it is in the run.
+  /** A source smaller than a bound is stored at its own size, so sizes can share a width; the last of each run is kept. */
   const unique = offered.filter((v, i) => offered[i + 1]?.width !== v.width);
 
   const toCandidate = (v: ManifestVariant) => ({
@@ -125,7 +112,7 @@ const fromManifest = (
   };
 };
 
-/** Only images on our CDN host have manifests; any other host is rendered unmeasured. */
+/** Only images on our CDN host have manifests. */
 export const isOnImageOrigin = (imageSrc: string) =>
   !!env.imageOrigin && imageSrc.startsWith(`${env.imageOrigin}/`);
 
@@ -139,25 +126,21 @@ const loadManifest = async (imageSrc: string) => {
 
   const manifest = await manifests.get(manifestUrl);
   if (manifest === FETCH_FAILED) {
-    // Not cached, so the next image of the set retries.
+    /** Not cached, so the next image of the set retries. */
     manifests.delete(manifestUrl);
     return FETCH_FAILED;
   }
   return manifest && { src, manifest };
 };
 
-const readManifest = async (imageSrc: string) => {
-  const loaded = await loadManifest(imageSrc);
-  return loaded === FETCH_FAILED
-    ? FETCH_FAILED
-    : loaded && fromManifest(loaded.src, loaded.manifest);
-};
-
 /** The measurement from the set's manifest; throws when there is none, so a caller never ships a guess. */
 export const requireManifest = async (src: string) => {
-  const measurement = await readManifest(src);
-  if (!measurement || measurement === FETCH_FAILED)
-    throw new Error(`Set has no usable manifest: ${src}`);
+  const loaded = await loadManifest(src);
+  const measurement =
+    loaded && loaded !== FETCH_FAILED
+      ? fromManifest(loaded.src, loaded.manifest)
+      : null;
+  if (!measurement) throw new Error(`Set has no usable manifest: ${src}`);
   return measurement;
 };
 

@@ -40,8 +40,7 @@ export const parseImageUrl = (url: string): ParsedImageUrl | null => {
   const [, prefix, rest] = VARIANT_PREFIX.exec(stem) ?? [];
   const parent = dir.split("/").at(-1);
 
-  // The folder repeats the name, which also settles whether a leading variant
-  // word is a prefix or part of the name.
+  /** The folder repeats the name, which settles whether a leading variant word is a prefix or part of the name. */
   const isOriginal = parent === stem;
   if (!isOriginal && rest !== parent) return null;
   const name = isOriginal ? stem : rest;
@@ -65,8 +64,7 @@ export const variantUrl = (
   return `${origin}/${path.join("/")}${suffix}`;
 };
 
-/** The CDN has no resizing API, only pre-generated variants. `medium_` is the
- *  one variant present in every set. */
+/** The CDN has no resizing API, only pre-generated variants; `medium_` is present in every set. */
 export const downsizedUrl = (url: string) => {
   const parsed = parseImageUrl(url);
   return parsed?.variant === "large" ? variantUrl(parsed, "medium") : url;
@@ -100,7 +98,7 @@ export const imageSizes = (isFixedWidth: boolean) =>
     : `(min-width: ${FRAME_WIDTH}px) ${FRAME_WIDTH - GUTTERS - SIDE_PANEL}px, (min-width: ${SIDE_PANEL_BREAKPOINT}px) calc(100vw - ${GUTTERS + SIDE_PANEL}px), calc(100vw - ${GUTTERS}px)`;
 
 export const getFileNameFromUrl = (url: string) => {
-  // The base lets a manifest key (a path, not a URL) through.
+  /** The base lets a manifest key (a path, not a URL) through. */
   const newURL = new URL(url, "http://localhost");
   return newURL.pathname.split("/").pop() || "";
 };
@@ -112,6 +110,6 @@ export const getFileNameFromUrl = (url: string) => {
  */
 export const altToFilename = (text: string) =>
   text
-    .replace(/ /g, "-") // Replace spaces with dashes
-    .replace(/[^a-zA-Z0-9-]/g, "") // Remove any non-alphanumeric characters
+    .replace(/ /g, "-")
+    .replace(/[^a-zA-Z0-9-]/g, "")
     .toLowerCase();

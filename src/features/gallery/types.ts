@@ -1,12 +1,5 @@
 import type { SrcSetCandidate } from "@/utils/image";
 
-/**
- * Every field says where it will come from once the gallery reads real data.
- * Today only the `manifest` fields exist; the rest need work in
- * s3-image-upload-thing (see `docs/gallery-plan.md`), so they are optional
- * and the UI hides whatever is missing.
- */
-
 /** Camera settings as recorded in the file. Source: EXIF, extracted at upload. */
 export type PhotoExif = {
   /** `Make` + `Model`, e.g. "NIKON Z 6". */
