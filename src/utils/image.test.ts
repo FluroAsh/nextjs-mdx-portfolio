@@ -15,7 +15,6 @@ describe("parseImageUrl", () => {
       "a nested variant",
       `${CDN}/japan-2025/kyoto/kyoto-13/large_kyoto-13.webp`,
       {
-        layout: "nested",
         folder: "japan-2025/kyoto",
         name: "kyoto-13",
         variant: "large",
@@ -25,47 +24,24 @@ describe("parseImageUrl", () => {
       "a nested un-prefixed original",
       `${CDN}/content-store/buff-rick/buff-rick.webp`,
       {
-        layout: "nested",
         folder: "content-store",
         name: "buff-rick",
         variant: null,
       },
     ],
     [
-      "a flat variant",
-      `${CDN}/legacy/large_DSC_2361_Enhanced_NR_34e9ea1944.webp`,
-      {
-        layout: "flat",
-        folder: "legacy",
-        name: "DSC_2361_Enhanced_NR_34e9ea1944",
-        variant: "large",
-      },
-    ],
-    [
       "a Strapi image migrated to a set folder under legacy",
       `${CDN}/legacy/DSC_1963_f6f8bf29c4/large_DSC_1963_f6f8bf29c4.webp`,
       {
-        layout: "nested",
         folder: "legacy",
         name: "DSC_1963_f6f8bf29c4",
         variant: "large",
-      },
-    ],
-    [
-      "a flat un-prefixed original",
-      `${CDN}/legacy/DSC_1963_f6f8bf29c4.webp`,
-      {
-        layout: "flat",
-        folder: "legacy",
-        name: "DSC_1963_f6f8bf29c4",
-        variant: null,
       },
     ],
     [
       "a nested name that starts with a variant word",
       `${CDN}/large-prints/large_format/medium_large_format.webp`,
       {
-        layout: "nested",
         folder: "large-prints",
         name: "large_format",
         variant: "medium",
@@ -74,15 +50,9 @@ describe("parseImageUrl", () => {
     [
       "a nested original whose name starts with a variant word",
       `${CDN}/food/medium_rare/medium_rare.webp`,
-      { layout: "nested", folder: "food", name: "medium_rare", variant: null },
-    ],
-    [
-      "a flat name that contains a variant word",
-      `${CDN}/legacy/enlarged_small_cake_bb45ff3720.webp`,
       {
-        layout: "flat",
-        folder: "legacy",
-        name: "enlarged_small_cake_bb45ff3720",
+        folder: "food",
+        name: "medium_rare",
         variant: null,
       },
     ],
@@ -94,10 +64,20 @@ describe("parseImageUrl", () => {
     expect(
       parseImageUrl(`${CDN}/content-store/buff-rick/full_buff-rick.webp`),
     ).toMatchObject({
-      layout: "nested",
       name: "buff-rick",
       variant: "full",
     });
+  });
+
+  it.each([
+    ["a file outside any set folder", `${CDN}/legacy/large_DSC_2361.webp`],
+    ["a file in /public", "/images/portrait.webp"],
+    [
+      "an image on another host",
+      "https://media3.giphy.com/media/abc/giphy.gif",
+    ],
+  ])("returns null for %s", (_, url) => {
+    expect(parseImageUrl(url)).toBeNull();
   });
 
   it("returns null for something that is not an image URL", () => {
@@ -113,16 +93,6 @@ describe("variantUrl", () => {
       `${CDN}/japan-2025/kyoto/kyoto-13/medium_kyoto-13.webp`,
     ],
     [
-      "flat",
-      `${CDN}/legacy/large_DSC_2361_Enhanced_NR_34e9ea1944.webp`,
-      `${CDN}/legacy/medium_DSC_2361_Enhanced_NR_34e9ea1944.webp`,
-    ],
-    [
-      "flat un-prefixed original",
-      `${CDN}/legacy/DSC_1963_f6f8bf29c4.webp`,
-      `${CDN}/legacy/medium_DSC_1963_f6f8bf29c4.webp`,
-    ],
-    [
       "folder and name containing `large`",
       `${CDN}/large-prints/large-shrine/large_large-shrine.webp`,
       `${CDN}/large-prints/large-shrine/medium_large-shrine.webp`,
@@ -134,10 +104,10 @@ describe("variantUrl", () => {
   it("builds the un-prefixed original", () => {
     expect(
       variantUrl(
-        parseImageUrl(`${CDN}/legacy/large_chestnut_cake_bb45ff3720.webp`)!,
+        parseImageUrl(`${CDN}/legacy/chestnut_cake/large_chestnut_cake.webp`)!,
         null,
       ),
-    ).toBe(`${CDN}/legacy/chestnut_cake_bb45ff3720.webp`);
+    ).toBe(`${CDN}/legacy/chestnut_cake/chestnut_cake.webp`);
   });
 });
 
@@ -150,13 +120,13 @@ describe("downsizedUrl", () => {
     ],
     [
       "leaves an un-prefixed original alone",
-      `${CDN}/legacy/DSC_1963_f6f8bf29c4.webp`,
-      `${CDN}/legacy/DSC_1963_f6f8bf29c4.webp`,
+      `${CDN}/static/ash-warrnambool/ash-warrnambool.webp`,
+      `${CDN}/static/ash-warrnambool/ash-warrnambool.webp`,
     ],
     [
-      "leaves an original in a folder named `large` alone",
-      `${CDN}/large/enlarged_cake_bb45ff3720.webp`,
-      `${CDN}/large/enlarged_cake_bb45ff3720.webp`,
+      "leaves a file outside any set folder alone",
+      `${CDN}/legacy/large_DSC_2361.webp`,
+      `${CDN}/legacy/large_DSC_2361.webp`,
     ],
     [
       "leaves an already medium variant alone",
@@ -262,51 +232,7 @@ describe("srcSetCandidates", () => {
     ]);
   });
 
-  it("stops at large for a flat landscape original, leaving the original to the lightbox", () => {
-    const original = `${CDN}/legacy/DSC_1963_f6f8bf29c4.webp`;
-    expect(srcSetCandidates(original, measured(2160, 1440))).toEqual([
-      { url: `${CDN}/legacy/small_DSC_1963_f6f8bf29c4.webp`, width: 500 },
-      { url: `${CDN}/legacy/medium_DSC_1963_f6f8bf29c4.webp`, width: 750 },
-      { url: `${CDN}/legacy/large_DSC_1963_f6f8bf29c4.webp`, width: 1000 },
-    ]);
-  });
-
-  it("labels the siblings of a flat portrait with their widths, not their longest edge", () => {
-    const original = `${CDN}/legacy/friendship_garden_pce_b4f7d9fd16.webp`;
-    expect(srcSetCandidates(original, measured(1080, 1620))).toEqual([
-      {
-        url: `${CDN}/legacy/small_friendship_garden_pce_b4f7d9fd16.webp`,
-        width: 333,
-      },
-      {
-        url: `${CDN}/legacy/medium_friendship_garden_pce_b4f7d9fd16.webp`,
-        width: 500,
-      },
-      {
-        url: `${CDN}/legacy/large_friendship_garden_pce_b4f7d9fd16.webp`,
-        width: 667,
-      },
-    ]);
-  });
-
-  it("does not repeat a width when a flat original is as wide as its large sibling", () => {
-    const original = `${CDN}/legacy/square_0a1b2c3d4e.webp`;
-    const widths = srcSetCandidates(original, measured(1000, 667)).map(
-      (candidate) => candidate.width,
-    );
-    expect(widths).toEqual([500, 750, 1000]);
-  });
-
-  it("does not add the original for a flat variant, whose original width is unknown", () => {
-    const large = `${CDN}/legacy/large_DSC_1963_f6f8bf29c4.webp`;
-    expect(srcSetCandidates(large, measured(1000, 667))).toEqual([
-      { url: `${CDN}/legacy/small_DSC_1963_f6f8bf29c4.webp`, width: 500 },
-      { url: `${CDN}/legacy/medium_DSC_1963_f6f8bf29c4.webp`, width: 750 },
-      { url: large, width: 1000 },
-    ]);
-  });
-
-  it("offers no siblings for a flat image outside the legacy folder", () => {
+  it("offers no siblings for an image that is not in a set folder", () => {
     const gif =
       "https://media3.giphy.com/media/v1.abc/14cAD9mBjofP5m/giphy.gif";
     expect(srcSetCandidates(gif, measured(480, 270))).toEqual([
@@ -314,20 +240,16 @@ describe("srcSetCandidates", () => {
     ]);
   });
 
-  it("offers a flat original that is smaller than every sibling size", () => {
-    const original = `${CDN}/legacy/tiny_icon_0a1b2c3d4e.webp`;
-    expect(srcSetCandidates(original, measured(400, 300))).toEqual([
-      { url: original, width: 400 },
-    ]);
-  });
-
   it("offers nothing when the size was not measured", () => {
     expect(
-      srcSetCandidates(`${CDN}/legacy/DSC_1963_f6f8bf29c4.webp`, {
-        width: 1200,
-        height: 800,
-        measured: false,
-      }),
+      srcSetCandidates(
+        `${CDN}/legacy/DSC_1963_f6f8bf29c4/large_DSC_1963_f6f8bf29c4.webp`,
+        {
+          width: 1200,
+          height: 800,
+          measured: false,
+        },
+      ),
     ).toEqual([]);
   });
 });

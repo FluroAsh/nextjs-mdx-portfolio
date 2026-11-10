@@ -18,8 +18,8 @@ Progress is ticked off in #24.
   full is for the lightbox only.
 - **Originals are kept** at `{set}/original.{ext}`, private: the CDN denies
   `*/original.*` on both buckets. EXIF can be read from them at any time.
-- **Strapi sets are migrated** into set folders in the Strapi bucket, served
-  under `/legacy/`, and the China 2024 post links them.
+- **Strapi sets are migrated** into set folders under `legacy/` in the upload
+  bucket, and the China 2024 post links them.
 - **This repo reads manifests** (#8): srcsets use real widths. A set with no
   manifest falls back to the build-time probe and logs `Image probed (no
 manifest)`.
@@ -76,19 +76,18 @@ reached.
 | What        | URL                                           | Exists                    |
 | ----------- | --------------------------------------------- | ------------------------- |
 | Collections | `https://{host}/gallery/collections.json`     | no (phase 1)              |
-| Manifest    | `https://{host}/{prefix}{set}/manifest.json`  | yes, after #9 for all     |
+| Manifest    | `https://{host}/{set}/manifest.json`          | yes, after #9 for all     |
 | Size        | same folder + file name of `variants[v].key`  | yes                       |
 | Download    | `{size URL}?download`, fetched in the browser | yes; needs CORS on images |
 
-`{host}` is `NEXT_PUBLIC_S3_HOSTNAME`. `{prefix}` is the bucket's CDN route:
-empty for the upload bucket, `legacy/` for the Strapi bucket.
+`{host}` is `NEXT_PUBLIC_S3_HOSTNAME`. Every set is served from the upload
+bucket, so a set's CDN path is its bucket key.
 
 ### Set identity
 
-A set is named by its **CDN path**, `{prefix}{folder}/{name}`, for example
+A set is named by its **CDN path**, `{folder}/{name}`, for example
 `japan-2025/tokyo/day-1/nkon-tokyo-d1-14` or `legacy/{name}`. The collections
-file, a cover and the `?photo=` deep link all use it. The uploader server maps
-each bucket to its prefix. Any admin operation that deletes or moves a set
+file, a cover and the `?photo=` deep link all use it. Any admin operation that deletes or moves a set
 updates the collections file in the same operation.
 
 ### `gallery/collections.json`

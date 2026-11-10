@@ -11,13 +11,11 @@ const VARIANTS = [
 export type ImageVariant = (typeof VARIANTS)[number];
 
 export type ParsedImageUrl = {
-  /** `nested`: `{folder}/{name}/{variant}_{name}.webp`. `flat`: `{folder}/{variant}_{name}.webp`. */
-  layout: "nested" | "flat";
   /** Scheme and host, e.g. `https://example.com`; `""` for a root-relative path. */
   origin: string;
   /** Path the image set lives under, without leading or trailing slash; `""` at the root. */
   folder: string;
-  /** Base name without variant prefix or extension; for flat keys it includes the hash. */
+  /** Base name without variant prefix or extension. */
   name: string;
   /** `null` is the un-prefixed original. */
   variant: ImageVariant | null;
@@ -31,8 +29,8 @@ const IMAGE_URL = /^(https?:\/\/[^/]+)?\/(?:(.+)\/)?([^/]+?)(\.\w+)([?#].*)?$/;
 const VARIANT_PREFIX = new RegExp(`^(${VARIANTS.join("|")})_(.+)$`);
 
 /**
- * Nested keys are `{folder}/{name}/{variant}_{name}.webp`; flat ones are
- * `{folder}/{variant}_{name}.webp` beside an un-prefixed original.
+ * Set-folder keys are `{folder}/{name}/{variant}_{name}.webp`; `null` for any
+ * other URL (another host, a file in `/public`), which has no sized siblings.
  */
 export const parseImageUrl = (url: string): ParsedImageUrl | null => {
   const match = IMAGE_URL.exec(url);
@@ -42,16 +40,15 @@ export const parseImageUrl = (url: string): ParsedImageUrl | null => {
   const [, prefix, rest] = VARIANT_PREFIX.exec(stem) ?? [];
   const parent = dir.split("/").at(-1);
 
-  // The folder repeats the name in a nested key, which also settles whether a
-  // leading variant word is a prefix or part of the name.
-  const isOriginal = parent === stem || !prefix;
+  // The folder repeats the name, which also settles whether a leading variant
+  // word is a prefix or part of the name.
+  const isOriginal = parent === stem;
+  if (!isOriginal && rest !== parent) return null;
   const name = isOriginal ? stem : rest;
-  const layout = parent === name ? "nested" : "flat";
 
   return {
-    layout,
     origin,
-    folder: layout === "nested" ? dir.slice(0, -name.length - 1) : dir,
+    folder: dir.slice(0, -name.length - 1),
     name,
     variant: isOriginal ? null : (prefix as ImageVariant),
     extension,
@@ -60,39 +57,29 @@ export const parseImageUrl = (url: string): ParsedImageUrl | null => {
 };
 
 export const variantUrl = (
-  { layout, origin, folder, name, extension, suffix }: ParsedImageUrl,
+  { origin, folder, name, extension, suffix }: ParsedImageUrl,
   variant: ImageVariant | null,
 ) => {
   const file = `${variant ? `${variant}_` : ""}${name}${extension}`;
-  const path = [folder, layout === "nested" && name, file].filter(Boolean);
+  const path = [folder, name, file].filter(Boolean);
   return `${origin}/${path.join("/")}${suffix}`;
 };
 
 /** The CDN has no resizing API, only pre-generated variants. `medium_` is the
- *  one variant present in every set of both layouts. */
+ *  one variant present in every set. */
 export const downsizedUrl = (url: string) => {
   const parsed = parseImageUrl(url);
   return parsed?.variant === "large" ? variantUrl(parsed, "medium") : url;
 };
 
-/** The only folder whose flat keys are Strapi sets with sized siblings. */
-export const FLAT_LAYOUT_FOLDER = "legacy";
-
-/** A display variant every set of a layout has, with the pixel bound on its longest edge. */
+/** A display variant every set has, with the pixel bound on its longest edge. */
 type SizedVariant = [variant: ImageVariant, bound: number];
 
 /** Estimates sibling widths for sets without a manifest. A missing key is a 403, hence only variants every set has; smallest first. */
-const SIZED_VARIANTS: Record<ParsedImageUrl["layout"], SizedVariant[]> = {
-  flat: [
-    ["small", 500],
-    ["medium", 750],
-    ["large", 1000],
-  ],
-  nested: [
-    ["medium", 800],
-    ["large", 1440],
-  ],
-};
+const SIZED_VARIANTS: SizedVariant[] = [
+  ["medium", 800],
+  ["large", 1440],
+];
 
 /** An image's size as measured at build. */
 export type ProbedSize = {
@@ -125,15 +112,11 @@ export const srcSetCandidates = (
 
   const parsed = parseImageUrl(src);
   const self = { url: src, width };
-  // Any other flat URL (a GIF host, a file in /public) has no sized siblings.
-  const isForeign =
-    parsed?.layout === "flat" && parsed.folder !== FLAT_LAYOUT_FOLDER;
-  if (!parsed || isForeign) return [self];
+  if (!parsed) return [self];
 
-  const variants = SIZED_VARIANTS[parsed.layout];
   // Bounds are on the longest edge, so a portrait's siblings are narrower than their bound.
   const scale = Math.min(1, width / height);
-  const fitted = variants.map(([variant, bound]) => ({
+  const fitted = SIZED_VARIANTS.map(([variant, bound]) => ({
     url: variantUrl(parsed, variant),
     width: Math.round(bound * scale),
   }));
@@ -141,7 +124,9 @@ export const srcSetCandidates = (
   // `large` is the inline ceiling: an original or full-size file with sized
   // siblings is left out, since it is the lightbox's file. It keeps a sibling
   // as wide as itself so that width is still offered.
-  const isSized = variants.some(([variant]) => variant === parsed.variant);
+  const isSized = SIZED_VARIANTS.some(
+    ([variant]) => variant === parsed.variant,
+  );
   // The image's own file is listed once, with its measured width, never also as an estimated sibling.
   const siblings = fitted.filter(
     (candidate) =>
