@@ -114,7 +114,6 @@ export const srcSetCandidates = (
   const self = { url: src, width };
   if (!parsed) return [self];
 
-  const variants = SIZED_VARIANTS;
   // Bounds are on the longest edge, so a portrait's siblings are narrower than their bound.
   const scale = Math.min(1, width / height);
   const fitted = SIZED_VARIANTS.map(([variant, bound]) => ({

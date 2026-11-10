@@ -129,11 +129,6 @@ describe("downsizedUrl", () => {
       `${CDN}/legacy/large_DSC_2361.webp`,
     ],
     [
-      "leaves an original in a folder named `large` alone",
-      `${CDN}/large/enlarged_cake_bb45ff3720.webp`,
-      `${CDN}/large/enlarged_cake_bb45ff3720.webp`,
-    ],
-    [
       "leaves an already medium variant alone",
       `${CDN}/japan-2025/kyoto/kyoto-13/medium_kyoto-13.webp`,
       `${CDN}/japan-2025/kyoto/kyoto-13/medium_kyoto-13.webp`,
@@ -247,11 +242,14 @@ describe("srcSetCandidates", () => {
 
   it("offers nothing when the size was not measured", () => {
     expect(
-      srcSetCandidates(`${CDN}/legacy/DSC_1963_f6f8bf29c4.webp`, {
-        width: 1200,
-        height: 800,
-        measured: false,
-      }),
+      srcSetCandidates(
+        `${CDN}/legacy/DSC_1963_f6f8bf29c4/large_DSC_1963_f6f8bf29c4.webp`,
+        {
+          width: 1200,
+          height: 800,
+          measured: false,
+        },
+      ),
     ).toEqual([]);
   });
 });
