@@ -81,7 +81,6 @@ export const getGallery = async (): Promise<Gallery> => {
           src,
           width: manifest.width,
           height: manifest.height,
-          measured: manifest.measured,
           candidates: manifest.candidates,
           placeholder: manifest.base64,
           title: alt ?? "",

@@ -1,14 +1,7 @@
-import { getPlaiceholder } from "plaiceholder";
-import probe from "probe-image-size";
 import { type ImageSource } from "yet-another-react-lightbox";
 
 import { env } from "@/lib/env";
-import {
-  type ProbedSize,
-  type SrcSetCandidate,
-  getFileNameFromUrl,
-  srcSetCandidates,
-} from "@/utils/image";
+import { type SrcSetCandidate, getFileNameFromUrl } from "@/utils/image";
 
 type Orientation = "landscape" | "portrait" | "square";
 
@@ -63,11 +56,10 @@ const manifests = new Map<
 const fetchManifest = async (url: string) => {
   try {
     const res = await fetch(url);
-    // The CDN answers 403 for a missing key, which is a set with no manifest yet.
+    /** The CDN answers 403 for a missing key, which is a set with no manifest. */
     if (res.status === 403 || res.status === 404) return null;
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const manifest: Manifest = await res.json();
-    // A manifest without variants cannot answer for any image, so the probe does.
     return manifest.schema === 1 && manifest.variants ? manifest : null;
   } catch (error) {
     console.error(`Manifest fetch failed: ${url}`, error);
@@ -75,12 +67,16 @@ const fetchManifest = async (url: string) => {
   }
 };
 
-type ImageMeasurement = ProbedSize & {
+type ImageMeasurement = {
+  /** Intrinsic width in pixels. */
+  width: number;
+  /** Intrinsic height in pixels. */
+  height: number;
   /** Base64 blur placeholder; `""` when there is none. */
   base64: string;
   /** Shape of the image; `undefined` only for non-numeric sizes. */
   orientation: Orientation | undefined;
-  /** Files the `srcset` offers, narrowest first; empty when the size is a stand-in. */
+  /** Files the `srcset` offers, narrowest first. */
   candidates: SrcSetCandidate[];
 };
 
@@ -123,16 +119,18 @@ const fromManifest = (
   return {
     width: own.width,
     height: own.height,
-    measured: true,
     base64: placeholder ?? "",
     orientation: calculateOrientation(own.width, own.height),
     candidates: (unique.length ? unique : [own]).map(toCandidate),
   };
 };
 
+/** Only images on our CDN host have manifests; any other host is rendered unmeasured. */
+export const isOnImageOrigin = (imageSrc: string) =>
+  !!env.imageOrigin && imageSrc.startsWith(`${env.imageOrigin}/`);
+
 const loadManifest = async (imageSrc: string) => {
-  if (!env.imageOrigin || !imageSrc.startsWith(`${env.imageOrigin}/`))
-    return null;
+  if (!isOnImageOrigin(imageSrc)) return null;
 
   const src = new URL(imageSrc);
   const manifestUrl = new URL("manifest.json", src).href;
@@ -161,51 +159,6 @@ export const requireManifest = async (src: string) => {
   if (!measurement || measurement === FETCH_FAILED)
     throw new Error(`Set has no usable manifest: ${src}`);
   return measurement;
-};
-
-const probeImage = async (imageSrc: string) => {
-  const { width, height } = await probe(imageSrc);
-  const res = await fetch(imageSrc);
-  const { base64 } = await getPlaiceholder(
-    Buffer.from(await res.arrayBuffer()),
-  );
-  const size = { width, height, measured: true };
-
-  return {
-    ...size,
-    base64,
-    orientation: calculateOrientation(width, height),
-    candidates: srcSetCandidates(imageSrc, size),
-  };
-};
-
-/** Sizes, blur and `srcset` from the set's manifest, else by downloading the image. */
-export const measureImage = async (
-  imageSrc: string,
-): Promise<ImageMeasurement> => {
-  const fromSet = await readManifest(imageSrc);
-  if (fromSet && fromSet !== FETCH_FAILED) return fromSet;
-
-  console.warn(`Image probed (no manifest): ${imageSrc}`);
-  try {
-    return await probeImage(imageSrc);
-  } catch (error) {
-    if (fromSet === FETCH_FAILED)
-      throw new Error(`Image could not be measured: ${imageSrc}`, {
-        cause: error,
-      });
-
-    console.error(`Image placeholder failed: ${imageSrc}`, error);
-
-    return {
-      width: 1200,
-      height: 800,
-      measured: false,
-      base64: "",
-      orientation: "landscape",
-      candidates: [],
-    };
-  }
 };
 
 /** Never lightbox sizes: the placeholder is a 20px blur and the thumbnail a 120px grid size. */

@@ -37,7 +37,6 @@ beforeEach(() => {
   vi.mocked(requireManifest).mockResolvedValue({
     width: 100,
     height: 50,
-    measured: true,
     base64: "blur",
     orientation: "landscape",
     candidates: [],

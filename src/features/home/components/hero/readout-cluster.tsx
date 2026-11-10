@@ -4,12 +4,12 @@ import { useEffect, useState } from "react";
 
 import { motion as m } from "motion/react";
 
+import { BilingualLabel } from "@/components/bilingual-label";
 import { MELBOURNE } from "@/data/identity";
 import { formatMelbourneClock } from "@/utils/melbourne-time";
 import { cn } from "@/utils/misc";
 
 import { ENTER } from "../../utils";
-import { BilingualLabel } from "@/components/bilingual-label";
 
 /**
  * Background readouts, placed diagonally opposite the photo. One busy corner

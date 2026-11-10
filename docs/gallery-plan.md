@@ -20,12 +20,11 @@ Progress is ticked off in #24.
   `*/original.*` on both buckets. EXIF can be read from them at any time.
 - **Strapi sets are migrated** into set folders under `legacy/` in the upload
   bucket, and the China 2024 post links them.
-- **This repo reads manifests** (#8): srcsets use real widths. A set with no
-  manifest falls back to the build-time probe and logs `Image probed (no
-manifest)`.
-- **Not every set has a manifest yet.** 260 of 272 sets in the upload bucket
-  are an older layout with no manifest, no full size and no original. The full
-  backfill (uploader #9) writes their manifests.
+- **This repo reads manifests** (#8, #10): srcsets use real widths. A CDN image
+  whose set has no manifest fails the build; images on other hosts render
+  unmeasured.
+- **Every set has a manifest.** The full backfill (uploader #9) wrote the
+  manifests of the older layout.
 
 ## Decisions
 
@@ -66,10 +65,8 @@ anything in this section is a change on both sides.
 
 Once the full backfill (uploader #9) has run, **every set folder contains a
 `manifest.json`**, and the uploader keeps it that way. From then on a set with
-no manifest, or an unknown `schema`, is an error, and this repo deletes the
-probe, placeholder generation and the size table (#10). Until then the probe
-stays, and its `Image probed` warnings list the sets the backfill has not
-reached.
+no manifest, or an unknown `schema`, fails the build. The probe, placeholder
+generation and size table are gone (#10).
 
 ### URLs
 
@@ -193,10 +190,10 @@ edited.
 | ---------------------------------------------- | --------------------------------- | --------------------------------------------------------------------------- | ---------- |
 | `src/features/gallery/data/photos.ts`          | Hand-written fixture, sample EXIF | Deleted                                                                     | 1.5        |
 | `src/features/gallery/data/albums.ts`          | Three hard-coded albums           | Deleted; collections come from the file                                     | 1.5        |
-| `src/features/gallery/server/get-gallery.ts`   | Fixture + the probe               | Collections file + manifests                                                | 1.5        |
+| `src/features/gallery/server/get-gallery.ts`   | Fixture                           | Collections file + manifests                                                | 1.5        |
 | `GalleryAlbum`, "album" in UI copy and URLs    | Album                             | `GalleryCollection`, "collection"; the MDX `<Collection>` grid is unrelated | 1.6        |
 | `GalleryPhoto.id`                              | Set **name**, unique only by luck | Set **CDN path**                                                            | 1.5        |
-| `candidates`, `width`, `height`, `placeholder` | Probe + the size table            | Manifest `variants` and `placeholder`                                       | done (#8)  |
+| `candidates`, `width`, `height`, `placeholder` | Manifest (was probe + size table) | Manifest `variants` and `placeholder`                                       | done (#8)  |
 | `src` (lightbox)                               | `large`                           | Largest real size                                                           | #9         |
 | `alt`, `caption`, `tags`                       | Fixture                           | Collections file                                                            | 1.5        |
 | `takenAt`, `exif`, `location.geo`              | Fixture                           | Manifest schema 2                                                           | 3.x        |
@@ -210,7 +207,7 @@ edited.
 | #   | Repo      | Work                                                        | Depends on |
 | --- | --------- | ----------------------------------------------------------- | ---------- |
 | 0.1 | uploader  | #9 run the full backfill on the upload bucket               | —          |
-| 0.2 | portfolio | #10 delete the probe, placeholder generation and size table | 0.1        |
+| 0.2 | portfolio | #10 delete the probe, placeholder generation and size table | done (#10) |
 | 0.3 | portfolio | #9 lightbox uses the largest real size                      | —          |
 
 ### 1. Collections, straightforward (both)

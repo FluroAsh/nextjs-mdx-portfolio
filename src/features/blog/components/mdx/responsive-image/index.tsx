@@ -1,4 +1,4 @@
-import { measureImage } from "@/server/image";
+import { isOnImageOrigin, requireManifest } from "@/server/image";
 
 import { ClientImage } from "./client-image";
 
@@ -21,13 +21,24 @@ export const ResponsiveImage = async ({
   if (!src || !alt)
     throw new Error("Images must include src and alt attributes");
 
+  if (!isOnImageOrigin(src))
+    return (
+      <img
+        src={src}
+        alt={alt}
+        loading="lazy"
+        className={className}
+        {...props}
+      />
+    );
+
   const {
     orientation = "",
     width: imageWidth,
     height: imageHeight,
     base64,
     candidates,
-  } = await measureImage(src);
+  } = await requireManifest(src);
 
   const { width, height, ...newProps } = props;
 

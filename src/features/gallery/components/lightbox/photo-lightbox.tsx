@@ -192,13 +192,10 @@ export const PhotoLightbox = ({
                       {frameNumber(photo.frame)}
                       {photo.location && ` — ${photo.location.label}`}
                     </span>
-                    {/* A guessed size would read as a fact here. */}
-                    {photo.measured && (
-                      <span className="shrink-0">
-                        {formatAspectRatio(photo.width, photo.height)} ·{" "}
-                        {photo.width} × {photo.height}
-                      </span>
-                    )}
+                    <span className="shrink-0">
+                      {formatAspectRatio(photo.width, photo.height)} ·{" "}
+                      {photo.width} × {photo.height}
+                    </span>
                   </figcaption>
                 </figure>
 

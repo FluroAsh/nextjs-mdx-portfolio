@@ -72,68 +72,12 @@ export const downsizedUrl = (url: string) => {
   return parsed?.variant === "large" ? variantUrl(parsed, "medium") : url;
 };
 
-/** A display variant every set has, with the pixel bound on its longest edge. */
-type SizedVariant = [variant: ImageVariant, bound: number];
-
-/** Estimates sibling widths for sets without a manifest. A missing key is a 403, hence only variants every set has; smallest first. */
-const SIZED_VARIANTS: SizedVariant[] = [
-  ["medium", 800],
-  ["large", 1440],
-];
-
-/** An image's size as measured at build. */
-export type ProbedSize = {
-  /** Intrinsic width in pixels. */
-  width: number;
-  /** Intrinsic height in pixels. */
-  height: number;
-  /** `false` when measuring failed and `width` and `height` are a stand-in. */
-  measured: boolean;
-};
-
 /** One file a browser may pick from a `srcset`. */
 export type SrcSetCandidate = {
   /** Location of the file. */
   url: string;
   /** Intrinsic width of the file in pixels. */
   width: number;
-};
-
-/**
- * Candidates are narrowest first. Only narrower siblings are offered, so a
- * caller that downsized gets nothing larger back. Empty when the size is a
- * guess, since the widths would be invented.
- */
-export const srcSetCandidates = (
-  src: string,
-  { width, height, measured }: ProbedSize,
-): SrcSetCandidate[] => {
-  if (!measured) return [];
-
-  const parsed = parseImageUrl(src);
-  const self = { url: src, width };
-  if (!parsed) return [self];
-
-  // Bounds are on the longest edge, so a portrait's siblings are narrower than their bound.
-  const scale = Math.min(1, width / height);
-  const fitted = SIZED_VARIANTS.map(([variant, bound]) => ({
-    url: variantUrl(parsed, variant),
-    width: Math.round(bound * scale),
-  }));
-
-  // `large` is the inline ceiling: an original or full-size file with sized
-  // siblings is left out, since it is the lightbox's file. It keeps a sibling
-  // as wide as itself so that width is still offered.
-  const isSized = SIZED_VARIANTS.some(
-    ([variant]) => variant === parsed.variant,
-  );
-  // The image's own file is listed once, with its measured width, never also as an estimated sibling.
-  const siblings = fitted.filter(
-    (candidate) =>
-      candidate.url !== src &&
-      (isSized ? candidate.width < width : candidate.width <= width),
-  );
-  return isSized || !siblings.length ? [...siblings, self] : siblings;
 };
 
 export const formatSrcSet = (candidates: SrcSetCandidate[]) =>

@@ -47,10 +47,8 @@ export type GalleryPhoto = {
   width: number;
   /** Intrinsic height of `src` in pixels. Source: manifest. */
   height: number;
-  /** Narrower siblings of `src` for `srcset`, narrowest first; empty when the size is a guess. */
+  /** Narrower siblings of `src` for `srcset`, narrowest first. */
   candidates: SrcSetCandidate[];
-  /** `false` when the size is a stand-in and must not be shown as fact. */
-  measured: boolean;
   /** Base64 blur; `""` when there is none. Source: manifest. */
   placeholder: string;
   /** Position in the whole gallery, 1-based, so a frame keeps its number under any filter. */

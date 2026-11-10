@@ -9,7 +9,6 @@ A modern, performant portfolio and blog built with Next.js 15, MDX, and Contentl
 - **Styling**: [Tailwind CSS 4](https://tailwindcss.com/)
 - **Animations**: [Motion](https://motion.dev/) (Framer Motion successor)
 - **Code Highlighting**: [Shiki](https://shiki.style/) via rehype-pretty-code
-- **Image Optimization**: [Plaiceholder](https://plaiceholder.co/)
 - **Testing**: [Vitest](https://vitest.dev/) + [Testing Library](https://testing-library.com/)
 - **Package Manager**: [Bun](https://bun.sh/) (recommended)
 
@@ -96,7 +95,7 @@ bun run lint
 ### Image Handling
 
 - **Responsive Images**: Automatic srcset generation with multiple sizes
-- **Blur Placeholders**: LQIP (Low-Quality Image Placeholders) generated using [Plaiceholder](https://plaiceholder.co/) and [probe-image-size](https://github.com/nodeca/probe-image-size) to ensure width/height-aware placeholders with proper aspect ratios
+- **Blur Placeholders**: LQIP (Low-Quality Image Placeholders) and sizes read from each image set's `manifest.json` on the CDN, so the build fails for a CDN image whose set has none
 - **Lightbox**: Click to zoom on images
 - **Captions**: Automatic caption support from alt text
 
@@ -113,10 +112,10 @@ _Caption text_
 
 **How Image Placeholders Work:**
 
-1. `probe-image-size` fetches image dimensions without downloading the full image
-2. `plaiceholder` generates a low-quality base64 placeholder
-3. Aspect ratio and orientation are calculated automatically
-4. The placeholder is displayed while the full image loads
+1. The build reads the set's `manifest.json` for sizes and a base64 placeholder
+2. Aspect ratio and orientation are calculated automatically
+3. The placeholder is displayed while the full image loads
+4. Images on other hosts render unmeasured, without a placeholder
 
 ### Developer Experience
 
