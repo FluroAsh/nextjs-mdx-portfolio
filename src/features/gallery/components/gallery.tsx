@@ -1,8 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-
-import { cn } from "@/utils/misc";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import type {
   GalleryCollection,
@@ -22,9 +20,8 @@ type GalleryProps = {
 };
 
 /**
- * Filter and open photo live in the query string so a link reopens the same
- * view. `history.replaceState` rather than the router: the page is static, and
- * a router navigation would refetch it for a change only this component reads.
+ * `history.replaceState`, not the router: the page is static, and a router
+ * navigation would refetch it for a change only this component reads.
  */
 const writeParams = (collection: string | null, photo: string | null) => {
   const url = new URL(window.location.href);
@@ -42,8 +39,9 @@ export const Gallery = ({ photos, collections }: GalleryProps) => {
   const [collection, setCollection] = useState<string | null>(null);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const [openId, setOpenId] = useState<string | null>(null);
-  /** Frame of the first tile added by "load more", which takes focus once rendered. */
+  /** Frame of the tile that takes focus once rendered, after the lightbox closes. */
   const [focusFrame, setFocusFrame] = useState<number | null>(null);
+  const footerRef = useRef<HTMLDivElement>(null);
 
   const resolved = useMemo<ResolvedCollection[]>(
     () =>
@@ -67,7 +65,7 @@ export const Gallery = ({ photos, collections }: GalleryProps) => {
   const visible = filtered.slice(0, visibleCount);
   const openIndex = openId ? filtered.findIndex((p) => p.id === openId) : -1;
 
-  // The static page renders the unfiltered grid; a shared link narrows it once mounted.
+  /** The static page renders the unfiltered grid; a shared link narrows it once mounted. */
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const linkedCollection = params.get("collection");
@@ -110,12 +108,22 @@ export const Gallery = ({ photos, collections }: GalleryProps) => {
     writeParams(collection, id);
   };
 
-  const loadMore = () => {
-    setFocusFrame(filtered[visibleCount]?.frame ?? null);
-    setVisibleCount((count) => count + PAGE_SIZE);
-  };
+  const hasMore = visibleCount < filtered.length;
 
-  const remaining = filtered.length - visible.length;
+  /** Re-observes after every batch: a new observer reports at once, so a footer still in range keeps loading. */
+  useEffect(() => {
+    if (!hasMore || !footerRef.current) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) setVisibleCount((count) => count + PAGE_SIZE);
+      },
+      /** Loads a screen ahead, so the next batch is in place before the reader reaches it. */
+      { rootMargin: "0px 0px 100% 0px" },
+    );
+    observer.observe(footerRef.current);
+    return () => observer.disconnect();
+  }, [hasMore, visibleCount]);
+
   const progress = filtered.length ? visible.length / filtered.length : 1;
 
   return (
@@ -153,7 +161,10 @@ export const Gallery = ({ photos, collections }: GalleryProps) => {
         )}
       />
 
-      <div className="mx-auto mt-12 flex max-w-xs flex-col items-center gap-3 font-mono text-[10px] tracking-wider text-neutral-500 uppercase tabular-nums">
+      <div
+        ref={footerRef}
+        className="mx-auto mt-12 flex max-w-xs flex-col items-center gap-3 font-mono text-[10px] tracking-wider text-neutral-500 uppercase tabular-nums"
+      >
         <span>
           {visible.length} / {filtered.length} loaded
         </span>
@@ -163,21 +174,7 @@ export const Gallery = ({ photos, collections }: GalleryProps) => {
             style={{ width: `${progress * 100}%` }}
           />
         </span>
-        {remaining > 0 ? (
-          <button
-            type="button"
-            onClick={loadMore}
-            className={cn(
-              "mt-2 border border-green-500/40 px-5 py-2.5 text-[11px] text-green-300 uppercase",
-              "transition-colors duration-150 ease-linear hover:border-green-400 hover:bg-green-500/10",
-              "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400",
-            )}
-          >
-            Load more +{Math.min(remaining, PAGE_SIZE)}
-          </button>
-        ) : (
-          <span className="mt-2 text-green-600">End of roll</span>
-        )}
+        {!hasMore && <span className="mt-2 text-green-600">End of roll</span>}
       </div>
 
       <PhotoLightbox
@@ -192,7 +189,7 @@ export const Gallery = ({ photos, collections }: GalleryProps) => {
         }}
         onIndexChange={(index) => {
           openPhoto(filtered[index].id);
-          // Keeps the tile on the page, so closing can return focus to it.
+          /** Keeps the tile on the page, so closing can return focus to it. */
           setVisibleCount((count) => Math.max(count, index + 1));
         }}
         onClose={() => {
