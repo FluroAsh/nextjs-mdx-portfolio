@@ -8,9 +8,9 @@ import { cn } from "@/utils/misc";
 import type { GalleryPhoto } from "../types";
 import { formatTakenAt, frameNumber } from "../utils";
 
-/** Tile width for a width/height ratio: rows run near 33vw tall on a phone and 22vw from 640px, up to 300px in the 1400px gallery. */
+/** Tile width for a width/height ratio: rows run near 33vw tall on a phone and 22vw from 640px, up to 215px in the full frame. */
 const tileSizes = (ratio: number) =>
-  `(min-width: 640px) min(${Math.round(ratio * 22)}vw, ${Math.round(ratio * 300)}px), ${Math.round(ratio * 33)}vw`;
+  `(min-width: 640px) min(${Math.round(ratio * 22)}vw, ${Math.round(ratio * 215)}px), ${Math.round(ratio * 33)}vw`;
 
 type PhotoTileProps = {
   photo: GalleryPhoto;
