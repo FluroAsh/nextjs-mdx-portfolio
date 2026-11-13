@@ -51,23 +51,6 @@ const Kbd = ({ children }: { children: React.ReactNode }) => (
   </kbd>
 );
 
-const relatedCollections = (
-  current: ResolvedCollection | undefined,
-  collections: ResolvedCollection[],
-): ResolvedCollection[] => {
-  const others = collections.filter(
-    (collection) => collection.slug !== current?.slug,
-  );
-  /** Same series first; any other collection only fills the space left over. */
-  const sameSeries = others.filter(
-    (collection) => current?.series && collection.series === current.series,
-  );
-  return [
-    ...sameSeries,
-    ...others.filter((c) => !sameSeries.includes(c)),
-  ].slice(0, 2);
-};
-
 export const PhotoLightbox = ({
   photos,
   index,
@@ -231,7 +214,6 @@ export const PhotoLightbox = ({
             <DetailsPanel
               photo={photo}
               collection={collection}
-              related={relatedCollections(collection, collections)}
               shareUrl={shareUrl(photo)}
               onDownload={() => downloadPhoto(photo)}
               onShowCollection={onShowCollection}

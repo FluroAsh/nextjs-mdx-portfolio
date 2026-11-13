@@ -11,7 +11,6 @@ type CollectionsFile = {
   collections: {
     slug: string;
     name: string;
-    series?: string;
     /** A post slug in this repo. */
     post?: string;
     /** A set in this collection; the first photo when absent. */
@@ -104,7 +103,6 @@ export const getGallery = async (): Promise<Gallery> => {
       title: collection.name,
       cover: collection.cover ?? collection.photos[0].set,
       postPath: collection.post && `/blog/${collection.post}`,
-      series: collection.series,
     });
   }
 

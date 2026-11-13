@@ -18,7 +18,6 @@ import { IconButton } from "./icon-button";
 type DetailsPanelProps = {
   photo: GalleryPhoto;
   collection?: ResolvedCollection;
-  related: ResolvedCollection[];
   /** Absolute URL that reopens this photo. */
   shareUrl: string;
   onDownload: () => void;
@@ -71,7 +70,6 @@ const CopyLinkButton = ({ url }: { url: string }) => {
 export const DetailsPanel = ({
   photo,
   collection,
-  related,
   shareUrl,
   onDownload,
   onShowCollection,
@@ -209,42 +207,6 @@ export const DetailsPanel = ({
               <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
             </Link>
           )}
-        </Section>
-      )}
-
-      {related.length > 0 && (
-        <Section label={GALLERY_LABELS.related}>
-          <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
-            {related.map(({ slug, title, count, coverPhoto }) => (
-              <li key={slug}>
-                <button
-                  type="button"
-                  onClick={() => onShowCollection(slug)}
-                  className={cn(
-                    "group flex w-full items-center gap-3 border border-green-500/15 p-2 text-left",
-                    "transition-colors duration-150 ease-linear hover:border-green-400",
-                    "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400",
-                  )}
-                >
-                  <img
-                    src={coverPhoto.candidates[0]?.url ?? coverPhoto.src}
-                    alt=""
-                    loading="lazy"
-                    className="size-12 shrink-0 object-cover grayscale transition group-hover:grayscale-0"
-                  />
-                  <span className="min-w-0 flex-1">
-                    <span className="block truncate font-medium text-neutral-100 uppercase group-hover:text-green-300">
-                      {title}
-                    </span>
-                    <span className="block truncate font-mono text-[10px] tracking-wider text-neutral-500 uppercase">
-                      ?collection={slug} · {count}
-                    </span>
-                  </span>
-                  <ArrowRight className="size-3.5 shrink-0 text-neutral-500 group-hover:text-green-300" />
-                </button>
-              </li>
-            ))}
-          </ul>
         </Section>
       )}
     </aside>
