@@ -71,8 +71,6 @@ export type GalleryCollection = {
   cover: string;
   /** Post that tells the story behind the collection, if there is one. */
   postPath?: string;
-  /** Collections in one series are offered as related. */
-  series?: string;
 };
 
 /** A collection with its cover resolved to a photo and its photos counted, for the filter and lightbox. */

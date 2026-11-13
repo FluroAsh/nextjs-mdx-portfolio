@@ -8,5 +8,4 @@ export const GALLERY_LABELS = {
   details: { zh: "詳情", en: "DETAILS" },
   exif: { zh: "參數", en: "EXIF" },
   tags: { zh: "標籤", en: "TAGS" },
-  related: { zh: "相關", en: "RELATED" },
 } as const satisfies Record<string, BilingualPair>;
