@@ -1,5 +1,4 @@
 import {
-  distributeColumns,
   exifFields,
   formatAspectRatio,
   formatExposure,
@@ -7,34 +6,6 @@ import {
   formatTakenAt,
   frameNumber,
 } from "./utils";
-
-const landscape = (id: number) => ({ id, width: 3, height: 2 });
-const portrait = (id: number) => ({ id, width: 2, height: 3 });
-
-describe("distributeColumns", () => {
-  it("fills columns left to right while heights are equal", () => {
-    const columns = distributeColumns([1, 2, 3].map(landscape), 3);
-    expect(columns.map((c) => c.map((i) => i.id))).toEqual([[1], [2], [3]]);
-  });
-
-  it("places each item in the shortest column", () => {
-    const columns = distributeColumns(
-      [portrait(1), landscape(2), landscape(3)],
-      2,
-    );
-    expect(columns.map((c) => c.map((i) => i.id))).toEqual([[1], [2, 3]]);
-  });
-
-  it("keeps earlier placements when more items are appended", () => {
-    const first = [portrait(1), landscape(2), landscape(3), portrait(4)];
-    const before = distributeColumns(first, 3);
-    const after = distributeColumns([...first, landscape(5)], 3);
-
-    before.forEach((column, i) =>
-      expect(after[i].slice(0, column.length)).toEqual(column),
-    );
-  });
-});
 
 describe("formatTakenAt", () => {
   it.each([

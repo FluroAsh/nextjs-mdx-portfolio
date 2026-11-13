@@ -9,10 +9,13 @@ import type {
 } from "../types";
 import { CollectionFilter } from "./collection-filter";
 import { PhotoLightbox } from "./lightbox/photo-lightbox";
-import { Masonry } from "./masonry";
 import { PhotoTile } from "./photo-tile";
 
 const PAGE_SIZE = 24;
+
+/** `--row` is the target row height: two landscapes a row on a phone, three from 640px. The `after` spacer stops a last row stretching while a portrait could still join it. */
+const ROWS =
+  "flex flex-wrap items-start gap-2 [--row:clamp(110px,20vw,280px)] after:grow-[9999] after:basis-[calc(var(--row)*2/3)] after:content-['']";
 
 type GalleryProps = {
   photos: GalleryPhoto[];
@@ -127,7 +130,7 @@ export const Gallery = ({ photos, collections }: GalleryProps) => {
   const progress = filtered.length ? visible.length / filtered.length : 1;
 
   return (
-    <div className="max-w-frame mx-auto w-full px-6 pt-6">
+    <div className="mx-auto w-full max-w-[1400px] px-6 pt-6">
       <CollectionFilter
         collections={resolved}
         total={photos.length}
@@ -146,20 +149,28 @@ export const Gallery = ({ photos, collections }: GalleryProps) => {
         )}
       </p>
 
-      <Masonry
-        photos={visible}
-        renderTile={(photo) => (
-          <div key={photo.id} data-frame={photo.frame}>
-            <PhotoTile
-              photo={photo}
-              collectionTitle={
-                collection ? undefined : titles.get(photo.collection)
-              }
-              onOpen={() => openPhoto(photo.id)}
-            />
-          </div>
-        )}
-      />
+      <div className={ROWS}>
+        {visible.map((photo) => {
+          const ratio = photo.width / photo.height;
+          return (
+            <div
+              key={photo.id}
+              data-frame={photo.frame}
+              className="min-w-0"
+              /** Growing in proportion to the ratio keeps every tile in a row at one height. */
+              style={{ flex: `${ratio} ${ratio} calc(var(--row) * ${ratio})` }}
+            >
+              <PhotoTile
+                photo={photo}
+                collectionTitle={
+                  collection ? undefined : titles.get(photo.collection)
+                }
+                onOpen={() => openPhoto(photo.id)}
+              />
+            </div>
+          );
+        })}
+      </div>
 
       <div
         ref={footerRef}

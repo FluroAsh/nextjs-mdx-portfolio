@@ -1,38 +1,5 @@
 import type { PhotoExif, PhotoLocation } from "./types";
 
-/** Anything that can be laid out by its shape. */
-type Sized = {
-  /** Intrinsic width in pixels; only the ratio to `height` matters. */
-  width: number;
-  /** Intrinsic height in pixels. */
-  height: number;
-};
-
-/**
- * Greedy shortest-column placement. Heights are in units of column width, so
- * the result does not depend on how wide the columns end up. `extra` is the
- * caption under each tile in the same unit.
- *
- * Appending items never moves the ones already placed, which is why "load more"
- * uses this and not CSS columns: those rebalance every column on each append.
- */
-export const distributeColumns = <T extends Sized>(
-  items: T[],
-  columnCount: number,
-  extra = 0,
-): T[][] => {
-  const columns: T[][] = Array.from({ length: columnCount }, () => []);
-  const heights = new Array<number>(columnCount).fill(0);
-
-  for (const item of items) {
-    const shortest = heights.indexOf(Math.min(...heights));
-    columns[shortest].push(item);
-    heights[shortest] += item.height / item.width + extra;
-  }
-
-  return columns;
-};
-
 /** Three digits, the width of a film counter. */
 export const frameNumber = (frame: number) => String(frame).padStart(3, "0");
 
@@ -49,7 +16,7 @@ export const formatTakenAt = (takenAt: string) => {
   if (!match) return null;
 
   const [, date, time, offset] = match;
-  // Cameras without a time zone setting record no offset; calling that UTC would be a guess.
+  /** Cameras without a time zone setting record no offset; calling that UTC would be a guess. */
   const zone = !offset
     ? null
     : offset === "Z"
@@ -64,7 +31,7 @@ export const formatExposure = (seconds: number) => {
   if (seconds >= 1 || seconds <= 0) return `${seconds} S`;
 
   const denominator = Math.round(1 / seconds);
-  // A shutter of 0.4s is not "1/3"; only reciprocals of whole numbers read as fractions.
+  /** A shutter of 0.4s is not "1/3"; only reciprocals of whole numbers read as fractions. */
   return Math.abs(1 / denominator - seconds) < seconds * 0.05
     ? `1/${denominator} S`
     : `${seconds} S`;
