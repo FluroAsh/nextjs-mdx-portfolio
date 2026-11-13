@@ -8,9 +8,9 @@ import { cn } from "@/utils/misc";
 import type { GalleryPhoto } from "../types";
 import { formatTakenAt, frameNumber } from "../utils";
 
-/** Column widths at each breakpoint, inside the 1024px frame with 24px gutters. */
-const TILE_SIZES =
-  "(min-width: 1024px) 236px, (min-width: 900px) calc((100vw - 84px) / 4), (min-width: 640px) calc((100vw - 72px) / 3), calc((100vw - 60px) / 2)";
+/** Tile width for a width/height ratio: rows run near 33vw tall on a phone and 22vw from 640px, up to 215px in the full frame. */
+const tileSizes = (ratio: number) =>
+  `(min-width: 640px) min(${Math.round(ratio * 22)}vw, ${Math.round(ratio * 215)}px), ${Math.round(ratio * 33)}vw`;
 
 type PhotoTileProps = {
   photo: GalleryPhoto;
@@ -27,7 +27,7 @@ export const PhotoTile = ({
   const imgRef = useRef<HTMLImageElement>(null);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  // Server-rendered images can finish before hydration attaches `onLoad`.
+  /** Server-rendered images can finish before hydration attaches `onLoad`. */
   useEffect(() => {
     if (imgRef.current?.complete && imgRef.current.naturalWidth > 0) {
       setIsLoaded(true);
@@ -35,6 +35,7 @@ export const PhotoTile = ({
   }, []);
 
   const takenAt = photo.takenAt && formatTakenAt(photo.takenAt);
+  const subline = takenAt ? takenAt.date : photo.location?.label;
   const overlayPlace = photo.location?.short ?? photo.location?.label;
 
   return (
@@ -43,7 +44,7 @@ export const PhotoTile = ({
         type="button"
         onClick={onOpen}
         data-photo-id={photo.id}
-        aria-label={`Open ${photo.title}`}
+        aria-label={`Open ${photo.title || `frame ${frameNumber(photo.frame)}`}`}
         className={cn(
           "group/tile relative block w-full overflow-hidden hover:cursor-zoom-in",
           "ring-1 ring-green-500/15 transition-[box-shadow] duration-150 ease-linear",
@@ -75,7 +76,11 @@ export const PhotoTile = ({
           srcSet={
             photo.candidates.length ? formatSrcSet(photo.candidates) : undefined
           }
-          sizes={photo.candidates.length ? TILE_SIZES : undefined}
+          sizes={
+            photo.candidates.length
+              ? tileSizes(photo.width / photo.height)
+              : undefined
+          }
           alt={photo.alt}
           width={photo.width}
           height={photo.height}
@@ -114,14 +119,16 @@ export const PhotoTile = ({
         </span>
       </button>
 
-      <figcaption className="mt-2 mb-1 min-w-0">
-        <p className="truncate text-sm leading-tight font-medium text-neutral-100">
-          {photo.title}
-        </p>
-        <p className="mt-0.5 truncate font-mono text-[10px] tracking-wider text-neutral-500 uppercase tabular-nums">
-          {takenAt ? takenAt.date : photo.location?.label}
-        </p>
-      </figcaption>
+      {(photo.title || subline) && (
+        <figcaption className="mt-2 mb-1 min-w-0">
+          <p className="truncate text-sm leading-tight font-medium text-neutral-100">
+            {photo.title}
+          </p>
+          <p className="mt-0.5 truncate font-mono text-[10px] tracking-wider text-neutral-500 uppercase tabular-nums">
+            {subline}
+          </p>
+        </figcaption>
+      )}
     </figure>
   );
 };

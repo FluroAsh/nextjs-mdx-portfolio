@@ -53,6 +53,9 @@
   /* Used top and bottom on every section, so the space between sections is always bigger than the space inside one. */
   --spacing-section: clamp(56px, 7vw, 96px);
 
+  /* Target height of a gallery row: two landscapes fit a row from a 320px phone, three from 640px up to the full frame. */
+  --spacing-gallery-row: clamp(88px, 20vw, 200px);
+
   /* `measure` limits the text width and sits *inside* `frame`; putting it on the frame itself narrows the whole page. */
   --container-frame: 1024px;
 

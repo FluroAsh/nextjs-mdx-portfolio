@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 
+import { cn } from "@/utils/misc";
+
 import type {
   GalleryCollection,
   GalleryPhoto,
@@ -9,7 +11,6 @@ import type {
 } from "../types";
 import { CollectionFilter } from "./collection-filter";
 import { PhotoLightbox } from "./lightbox/photo-lightbox";
-import { Masonry } from "./masonry";
 import { PhotoTile } from "./photo-tile";
 
 const PAGE_SIZE = 24;
@@ -146,20 +147,35 @@ export const Gallery = ({ photos, collections }: GalleryProps) => {
         )}
       </p>
 
-      <Masonry
-        photos={visible}
-        renderTile={(photo) => (
-          <div key={photo.id} data-frame={photo.frame}>
-            <PhotoTile
-              photo={photo}
-              collectionTitle={
-                collection ? undefined : titles.get(photo.collection)
-              }
-              onOpen={() => openPhoto(photo.id)}
-            />
-          </div>
+      {/* Justified rows: a tile grows in proportion to its ratio, so a row ends at one height. The spacer stops a last row stretching while a portrait could still join it. */}
+      <div
+        className={cn(
+          "flex flex-wrap items-start gap-2",
+          "after:grow-[9999] after:basis-[calc(var(--spacing-gallery-row)*2/3)] after:content-['']",
         )}
-      />
+      >
+        {visible.map((photo) => {
+          const ratio = photo.width / photo.height;
+          return (
+            <div
+              key={photo.id}
+              data-frame={photo.frame}
+              className="min-w-0"
+              style={{
+                flex: `${ratio} ${ratio} calc(var(--spacing-gallery-row) * ${ratio})`,
+              }}
+            >
+              <PhotoTile
+                photo={photo}
+                collectionTitle={
+                  collection ? undefined : titles.get(photo.collection)
+                }
+                onOpen={() => openPhoto(photo.id)}
+              />
+            </div>
+          );
+        })}
+      </div>
 
       <div
         ref={footerRef}
