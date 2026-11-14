@@ -1,7 +1,9 @@
-import { type ImageSource } from "yet-another-react-lightbox";
-
 import { env } from "@/lib/env";
-import { type SrcSetCandidate, getFileNameFromUrl } from "@/utils/image";
+import {
+  type SrcSetCandidate,
+  formatSrcSet,
+  getFileNameFromUrl,
+} from "@/utils/image";
 
 type Orientation = "landscape" | "portrait" | "square";
 
@@ -147,13 +149,24 @@ export const requireManifest = async (src: string) => {
 /** Never lightbox sizes: the placeholder is a 20px blur and the thumbnail a 120px grid size. */
 const NON_LIGHTBOX_SIZES = ["placeholder", "thumbnail"];
 
-/**
- * The lightbox slide for an image: its `src` is the largest file of the set,
- * with every real size as `srcSet`. A set with no manifest keeps the linked file.
- */
+/** An image as the lightbox takes it. */
+type LightboxSource = {
+  /** Largest file of the set. */
+  src: string;
+  /** Every real size of the set, as a `srcset` value. */
+  srcSet?: string;
+  /** Intrinsic width of `src` in pixels. */
+  width?: number;
+  /** Intrinsic height of `src` in pixels. */
+  height?: number;
+  /** Base64 blur of the set. */
+  placeholder?: string;
+};
+
+/** The lightbox slide for an image; a set with no manifest keeps the linked file and nothing else. */
 export const lightboxSlide = async (
   imageSrc: string,
-): Promise<{ src: string; srcSet?: ImageSource[] }> => {
+): Promise<LightboxSource> => {
   const loaded = await loadManifest(imageSrc);
   if (!loaded || loaded === FETCH_FAILED) return { src: imageSrc };
 
@@ -170,13 +183,22 @@ export const lightboxSlide = async (
   const sources = variants
     .filter(([size]) => !NON_LIGHTBOX_SIZES.includes(size))
     .map(([, v]) => ({
-      src: siblingUrl(src, v),
+      url: siblingUrl(src, v),
       width: v.width,
       height: v.height,
     }))
-    .sort((a, b) => a.width - b.width);
+    .sort((a, b) => a.width - b.width)
+    /** A source smaller than a bound is stored at its own size, so sizes can share a width; the last of each run is kept. */
+    .filter((v, i, all) => all[i + 1]?.width !== v.width);
 
-  return sources.length
-    ? { src: sources[sources.length - 1].src, srcSet: sources }
+  const largest = sources.at(-1);
+  return largest
+    ? {
+        src: largest.url,
+        srcSet: formatSrcSet(sources),
+        width: largest.width,
+        height: largest.height,
+        placeholder: manifest.placeholder ?? undefined,
+      }
     : { src: imageSrc };
 };

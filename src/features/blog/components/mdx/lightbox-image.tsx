@@ -2,36 +2,23 @@
 
 import { useState } from "react";
 
-import { type ImageSource } from "yet-another-react-lightbox";
-
 import { ExpandIconHover } from "@/components/icons/expand-hover";
-import { useLightboxDimensions } from "@/hooks/use-lightbox-dimensions";
-import { altToFilename } from "@/utils/image";
 
 import { ImageCaption } from "./image-caption";
-import { Lightbox } from "./lightbox";
 import { LightboxTrigger } from "./lightbox-trigger";
+import { PostLightbox, type PostSlide } from "./post-lightbox";
 
-type LightBoxImageProps = {
-  /** Largest file of the set; the download link points at it. */
-  src?: string;
-  srcSet?: ImageSource[];
-  alt?: string;
-  caption?: string;
+type LightBoxImageProps = Partial<PostSlide> & {
   children: React.ReactNode;
 };
 
 export const LightboxImage = ({
-  src,
-  srcSet,
-  alt,
-  caption,
   children: serverImage,
+  caption,
+  ...slide
 }: LightBoxImageProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { dimensions, containerRef } = useLightboxDimensions();
-
-  const imageDimensions = dimensions[0];
+  const { src, alt } = slide;
 
   if (!src || !alt) {
     throw new Error(
@@ -41,35 +28,14 @@ export const LightboxImage = ({
 
   return (
     <>
-      <Lightbox
-        open={isOpen}
+      <PostLightbox
+        slides={[{ ...slide, src, alt, caption }]}
+        index={isOpen ? 0 : null}
+        onIndexChange={() => {}}
         onClose={() => setIsOpen(false)}
-        slides={[
-          {
-            src,
-            srcSet,
-            alt,
-            width: imageDimensions?.width,
-            height: imageDimensions?.height,
-            download: {
-              // ?: Search param is required for CORS issue, see: https://yet-another-react-lightbox.com/plugins/download#Cross-OriginImages
-              url: `${src}?download`,
-              filename: altToFilename(alt),
-            },
-          },
-        ]}
-        render={{
-          // No need for next/prev buttons on single images
-          buttonNext: () => null,
-          buttonPrev: () => null,
-        }}
-        carousel={{ finite: true }}
       />
 
-      <figure
-        ref={containerRef}
-        className="plate-ticks relative isolate mx-auto w-fit"
-      >
+      <figure className="plate-ticks relative isolate mx-auto w-fit">
         <LightboxTrigger
           onOpen={() => setIsOpen(true)}
           label={`Expand image: ${alt}`}

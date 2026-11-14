@@ -7,13 +7,13 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { ArrowRight, Check, Download, Link2, X } from "lucide-react";
 
 import { BilingualLabel } from "@/components/bilingual-label";
+import { IconButton } from "@/components/lightbox/icon-button";
 import { RecordField } from "@/components/record-field";
 import { cn } from "@/utils/misc";
 
 import { GALLERY_LABELS } from "../../labels";
 import type { GalleryPhoto, ResolvedCollection } from "../../types";
 import { exifFields, formatGeo, formatTakenAt } from "../../utils";
-import { IconButton } from "./icon-button";
 
 type DetailsPanelProps = {
   photo: GalleryPhoto;
