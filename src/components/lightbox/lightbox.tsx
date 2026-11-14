@@ -8,6 +8,7 @@ import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { cn, zeroPad } from "@/utils/misc";
 
 import { IconButton } from "./icon-button";
+import { usePrototypeZoom } from "./prototype-zoom";
 import { ScrubPreview } from "./scrub-preview";
 import { Scrubber } from "./scrubber";
 import { type LightboxSlide, SIZES, preload } from "./slide";
@@ -76,6 +77,8 @@ export const Lightbox = ({
     ghostRef,
     previewImageRef,
   } = useScrubPreview(slides, index, onIndexChange);
+
+  const { zoomImageRef, scale } = usePrototypeZoom(previewIndex !== null);
 
   const isSeries = slides.length > 1;
   const hasScrubber = scrubber && isSeries;
@@ -152,10 +155,16 @@ export const Lightbox = ({
                 aside ? "lg:h-dvh" : "h-dvh",
               )}
               onTouchStart={(event) => {
-                touchStartX.current = event.touches[0].clientX;
+                /** PROTOTYPE: a pinch is not a swipe. */
+                touchStartX.current =
+                  event.touches.length === 1 ? event.touches[0].clientX : null;
               }}
               onTouchEnd={(event) => {
-                if (touchStartX.current === null) return;
+                /** PROTOTYPE: zoomed in, a sideways drag pans the photo. */
+                if (touchStartX.current === null || scale > 1) {
+                  touchStartX.current = null;
+                  return;
+                }
                 const distance =
                   event.changedTouches[0].clientX - touchStartX.current;
                 touchStartX.current = null;
@@ -263,35 +272,48 @@ export const Lightbox = ({
                             : undefined,
                       }}
                     >
-                      {/* Remounted per slide: a reused element keeps the last photo's size until the next one loads. */}
-                      <img
-                        key={slide.src}
-                        src={slide.src}
-                        srcSet={slide.srcSet}
-                        sizes={slide.srcSet && SIZES}
-                        alt={slide.alt}
-                        width={slide.width}
-                        height={slide.height}
-                        onLoad={() => setLoadedSrc(slide.src)}
-                        draggable={false}
-                        className={cn(
-                          "block h-auto max-h-(--photo-max-h) max-w-full border border-green-500/25 object-contain",
-                          aside
-                            ? "[--photo-max-h:62dvh] lg:[--photo-max-h:calc(100dvh-180px)]"
-                            : "[--photo-max-h:calc(100dvh-180px)]",
-                          !ratio && "w-auto",
-                          "transition-opacity duration-200",
-                          isLoaded ? "opacity-100" : "opacity-0",
-                        )}
-                        /** An explicit width: with both sides `auto` an image has no size until its file's header arrives, whatever its `width` and `height` say. */
-                        style={
-                          ratio
-                            ? {
-                                width: `min(100cqw, calc(var(--photo-max-h) * ${ratio}), ${slide.width}px)`,
-                              }
-                            : undefined
-                        }
-                      />
+                      {/* PROTOTYPE: the clip box the zoomed photo pans inside; it carries the border so the border does not zoom. */}
+                      <div className="overflow-hidden border border-green-500/25">
+                        {/* Remounted per slide: a reused element keeps the last photo's size until the next one loads. */}
+                        <img
+                          ref={zoomImageRef}
+                          key={slide.src}
+                          src={slide.src}
+                          srcSet={slide.srcSet}
+                          /** PROTOTYPE: asks for a larger file once zoomed. */
+                          sizes={
+                            slide.srcSet &&
+                            (scale > 1 ? `${Math.ceil(scale) * 100}vw` : SIZES)
+                          }
+                          alt={slide.alt}
+                          width={slide.width}
+                          height={slide.height}
+                          onLoad={() => setLoadedSrc(slide.src)}
+                          draggable={false}
+                          className={cn(
+                            "block h-auto max-h-(--photo-max-h) max-w-full object-contain",
+                            aside
+                              ? "[--photo-max-h:62dvh] lg:[--photo-max-h:calc(100dvh-180px)]"
+                              : "[--photo-max-h:calc(100dvh-180px)]",
+                            !ratio && "w-auto",
+                            "transition-opacity duration-200",
+                            isLoaded ? "opacity-100" : "opacity-0",
+                          )}
+                          /** An explicit width: with both sides `auto` an image has no size until its file's header arrives, whatever its `width` and `height` say. */
+                          style={
+                            ratio
+                              ? {
+                                  width: `min(100cqw, calc(var(--photo-max-h) * ${ratio}), ${slide.width}px)`,
+                                }
+                              : undefined
+                          }
+                        />
+                      </div>
+                      {scale > 1 && (
+                        <span className="image-caption tabular-nums">
+                          {Math.round(scale * 100)}%
+                        </span>
+                      )}
                     </div>
 
                     {previewIndex !== null && slides[previewIndex] && (
@@ -384,6 +406,8 @@ export const Lightbox = ({
                     <span className="mr-2">Nav</span>
                   </>
                 )}
+                <Kbd>Scroll</Kbd>
+                <span className="mr-2">Zoom</span>
                 <Kbd>Esc</Kbd>
                 <span>Close</span>
               </p>

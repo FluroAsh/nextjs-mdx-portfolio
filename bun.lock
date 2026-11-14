@@ -5,6 +5,7 @@
     "": {
       "name": "nextjs-mdx-portfolio",
       "dependencies": {
+        "@panzoom/panzoom": "^4.6.2",
         "@radix-ui/react-dialog": "^1.1.6",
         "@radix-ui/react-select": "^2.1.6",
         "@radix-ui/react-visually-hidden": "^1.2.11",
@@ -378,6 +379,8 @@
     "@opentelemetry/sdk-trace-node": ["@opentelemetry/sdk-trace-node@1.30.1", "", { "dependencies": { "@opentelemetry/context-async-hooks": "1.30.1", "@opentelemetry/core": "1.30.1", "@opentelemetry/propagator-b3": "1.30.1", "@opentelemetry/propagator-jaeger": "1.30.1", "@opentelemetry/sdk-trace-base": "1.30.1", "semver": "^7.5.2" }, "peerDependencies": { "@opentelemetry/api": ">=1.0.0 <1.10.0" } }, ""],
 
     "@opentelemetry/semantic-conventions": ["@opentelemetry/semantic-conventions@1.30.0", "", {}, ""],
+
+    "@panzoom/panzoom": ["@panzoom/panzoom@4.6.2", "", {}, "sha512-Zn3B5/hwa6eYIPRSKX0xf2clv8nviTX8AnAU5kU/EugiTDhG41ya2wlBqYrZJYCWQROr/5XkWObZhIkepi89qw=="],
 
     "@protobufjs/aspromise": ["@protobufjs/aspromise@1.1.2", "", {}, ""],
 
