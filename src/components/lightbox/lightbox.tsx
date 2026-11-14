@@ -159,28 +159,46 @@ export const Lightbox = ({
               }}
             >
               <div className="flex items-center justify-between gap-4 px-4 py-3 font-mono text-[11px] tracking-wider uppercase sm:px-6 lg:py-5">
-                <span
-                  className="text-neutral-400 tabular-nums"
-                  aria-live="polite"
-                >
+                {/* On a phone the counter carries the previous and next buttons, which have no room beside the photo; swipe alone would leave no way through for anyone who cannot swipe. */}
+                <div className="flex items-center gap-3">
                   {isSeries && (
-                    <>
-                      <span className="text-green-400">
-                        {zeroPad(index! + 1)}
-                      </span>
-                      <span className="mx-1.5 text-green-700">/</span>
-                      {zeroPad(slides.length)}
-                    </>
+                    <IconButton
+                      label="Previous photo"
+                      onClick={goPrev}
+                      disabled={!hasPrev}
+                      className="sm:hidden"
+                    >
+                      <ChevronLeft />
+                    </IconButton>
                   )}
-                </span>
+                  <span
+                    className="text-neutral-400 tabular-nums"
+                    aria-live="polite"
+                  >
+                    {isSeries && (
+                      <>
+                        <span className="text-green-400">
+                          {zeroPad(index! + 1)}
+                        </span>
+                        <span className="mx-1.5 text-green-700">/</span>
+                        {zeroPad(slides.length)}
+                      </>
+                    )}
+                  </span>
+                  {isSeries && (
+                    <IconButton
+                      label="Next photo"
+                      onClick={goNext}
+                      disabled={!hasNext}
+                      className="sm:hidden"
+                    >
+                      <ChevronRight />
+                    </IconButton>
+                  )}
+                </div>
                 {meta && (
                   <span className="hidden truncate text-neutral-400 lg:block">
                     {meta}
-                  </span>
-                )}
-                {isSeries && (
-                  <span aria-hidden className="text-neutral-500 lg:hidden">
-                    Swipe ← →
                   </span>
                 )}
                 <div
