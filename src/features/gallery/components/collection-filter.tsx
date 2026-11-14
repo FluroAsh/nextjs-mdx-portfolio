@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { BilingualLabel } from "@/components/bilingual-label";
 import { cn } from "@/utils/misc";
 
@@ -17,11 +19,14 @@ const Chip = ({
   label,
   count,
   isActive,
+  collapsed,
   onClick,
 }: {
   label: string;
   count: number;
   isActive: boolean;
+  /** Hidden on phones while the list is collapsed. */
+  collapsed: boolean;
   onClick: () => void;
 }) => (
   <button
@@ -29,6 +34,7 @@ const Chip = ({
     aria-pressed={isActive}
     onClick={onClick}
     className={cn(
+      collapsed && "max-sm:hidden",
       "shrink-0 border px-2.5 py-1.5 font-mono text-[11px] tracking-wider uppercase",
       "transition-colors duration-150 ease-linear",
       "focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-green-400",
@@ -49,36 +55,64 @@ const Chip = ({
   </button>
 );
 
+/** Collections shown on a phone before "more" is tapped; the active one always stays visible. */
+const PHONE_VISIBLE = 2;
+
 export const CollectionFilter = ({
   collections,
   total,
   active,
   onChange,
-}: CollectionFilterProps) => (
-  <div
-    role="group"
-    aria-label="Filter by collection"
-    className="flex items-center gap-4 border-b border-green-500/15 pb-4"
-  >
-    <BilingualLabel {...GALLERY_LABELS.collection} className="shrink-0" />
+}: CollectionFilterProps) => {
+  const [expanded, setExpanded] = useState(false);
+  const isHidden = (slug: string, index: number) =>
+    !expanded && index >= PHONE_VISIBLE && slug !== active;
+  const hiddenCount = collections.filter((c, i) => isHidden(c.slug, i)).length;
 
-    {/* Scrolls sideways on a phone instead of wrapping into a second row of chips. */}
-    <div className="scrollbar-slim -m-1 flex min-w-0 gap-2 overflow-x-auto p-1">
-      <Chip
-        label="All"
-        count={total}
-        isActive={active === null}
-        onClick={() => onChange(null)}
+  return (
+    <div
+      role="group"
+      aria-label="Filter by collection"
+      className="flex flex-col gap-2 border-b border-green-500/15 pb-4 sm:flex-row sm:items-start sm:gap-4"
+    >
+      <BilingualLabel
+        {...GALLERY_LABELS.collection}
+        className="shrink-0 sm:pt-2"
       />
-      {collections.map((collection) => (
+
+      <div className="flex flex-wrap gap-2">
         <Chip
-          key={collection.slug}
-          label={collection.title}
-          count={collection.count}
-          isActive={active === collection.slug}
-          onClick={() => onChange(collection.slug)}
+          label="All"
+          count={total}
+          isActive={active === null}
+          collapsed={false}
+          onClick={() => onChange(null)}
         />
-      ))}
+        {collections.map((collection, index) => (
+          <Chip
+            key={collection.slug}
+            label={collection.title}
+            count={collection.count}
+            isActive={active === collection.slug}
+            collapsed={isHidden(collection.slug, index)}
+            onClick={() => onChange(collection.slug)}
+          />
+        ))}
+        {(expanded || hiddenCount > 0) && (
+          <button
+            type="button"
+            aria-expanded={expanded}
+            onClick={() => setExpanded(!expanded)}
+            className={cn(
+              "shrink-0 border border-dashed border-green-500/40 px-2.5 py-1.5 font-mono text-[11px] tracking-wider text-green-400 uppercase sm:hidden",
+              "transition-colors duration-150 ease-linear hover:border-green-400",
+              "focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-green-400",
+            )}
+          >
+            {expanded ? "Less" : `+${hiddenCount} more`}
+          </button>
+        )}
+      </div>
     </div>
-  </div>
-);
+  );
+};
