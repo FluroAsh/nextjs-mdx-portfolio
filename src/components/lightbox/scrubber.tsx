@@ -70,7 +70,7 @@ const DRAG_SLOP = 3;
 /** Height in pixels of the vertical rail at its tallest. */
 const RAIL_HEIGHT = 192;
 /** Milliseconds without a wheel event before a run of the wheel counts as over; long enough to take in the preview before the photo changes. */
-const WHEEL_IDLE = 600;
+const WHEEL_IDLE = 400;
 
 /**
  * A short window onto a strip of ticks, one per slide, that fades out at both ends: click a tick to jump, or drag the strip to move through the set.
