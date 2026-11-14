@@ -234,8 +234,17 @@ describe("lightboxSlide", () => {
     );
     const slide = await lightboxSlide(`${CDN}/trip/wide/large_wide.webp?v=1`);
 
-    expect(slide.src).toBe(`${CDN}/trip/wide/full_wide.webp?v=1`);
-    expect(slide.srcSet?.map((s) => s.width)).toEqual([800, 1440, 3840]);
+    expect(slide).toEqual({
+      src: `${CDN}/trip/wide/full_wide.webp?v=1`,
+      srcSet: [
+        `${CDN}/trip/wide/medium_wide.webp?v=1 800w`,
+        `${CDN}/trip/wide/large_wide.webp?v=1 1440w`,
+        `${CDN}/trip/wide/full_wide.webp?v=1 3840w`,
+      ].join(", "),
+      width: 3840,
+      height: 2560,
+      placeholder: BLUR,
+    });
   });
 
   it("keeps the linked file when the set has no manifest", async () => {

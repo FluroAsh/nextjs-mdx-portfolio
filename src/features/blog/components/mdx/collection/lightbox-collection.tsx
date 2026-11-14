@@ -1,5 +1,4 @@
 import { lightboxSlide } from "@/server/image";
-import { altToFilename } from "@/utils/image";
 
 import { CollectionVariant, type ImageProps } from "./collection.types";
 import { ImageTile } from "./image-tile";
@@ -24,18 +23,11 @@ export const ImageCollection = async ({
 }: ImageCollectionProps) => {
   const variant = variantMapping[images.length] || CollectionVariant.TwoUp;
   const slides = await Promise.all(
-    images.map(async (image) => {
-      const slide = await lightboxSlide(image.src);
-      return {
-        ...slide,
-        alt: image.alt,
-        download: {
-          // ?: Search param is required for CORS issue, see: https://yet-another-react-lightbox.com/plugins/download#Cross-OriginImages
-          url: `${slide.src}?download`,
-          filename: altToFilename(image.alt ?? crypto.randomUUID()),
-        },
-      };
-    }),
+    images.map(async (image) => ({
+      ...(await lightboxSlide(image.src)),
+      alt: image.alt ?? image.caption ?? "",
+      caption: image.caption,
+    })),
   );
   const captionFontSize = images.length > 2 ? "text-xs" : "text-sm";
 

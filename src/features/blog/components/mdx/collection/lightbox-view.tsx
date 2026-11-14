@@ -2,18 +2,15 @@
 
 import { useState } from "react";
 
-import { type SlideImage } from "yet-another-react-lightbox";
+import { cn } from "@/utils/misc";
 
-import { useLightboxDimensions } from "@/hooks/use-lightbox-dimensions";
-import { cn, zeroPad } from "@/utils/misc";
-
-import { Lightbox } from "../lightbox";
 import { LightboxTrigger } from "../lightbox-trigger";
+import { PostLightbox, type PostSlide } from "../post-lightbox";
 import { CollectionVariant } from "./collection.types";
 
 type LightboxViewProps = {
   variant: CollectionVariant;
-  slides: SlideImage[];
+  slides: PostSlide[];
   images: React.ReactNode[];
   className?: string;
 };
@@ -32,25 +29,11 @@ export const LightboxView = ({
   images,
   className,
 }: LightboxViewProps) => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [index, setIndex] = useState<number>(0);
-  const { dimensions, containerRef } = useLightboxDimensions();
-
-  const slidesWithDimensions = slides.map((slide, i) => ({
-    ...slide,
-    width: dimensions[i]?.width,
-    height: dimensions[i]?.height,
-  }));
-
-  const handleClick = (idx: number) => {
-    setIndex(idx);
-    setIsOpen(true);
-  };
+  const [index, setIndex] = useState<number | null>(null);
 
   return (
     <div className="space-y-2">
       <div
-        ref={containerRef}
         // Ticks mark the collection as one plate. Per tile they multiply into
         // noise, which is the whole reason the marks read as an instrument.
         className={cn(
@@ -63,7 +46,7 @@ export const LightboxView = ({
           // Wraps the RSC image so the click can be handled on the client.
           <LightboxTrigger
             key={`${variant}-wrapper-${i + 1}`}
-            onOpen={() => handleClick(i)}
+            onOpen={() => setIndex(i)}
             label={`Expand image ${i + 1} of ${slides.length}${slides[i]?.alt ? `: ${slides[i].alt}` : ""}`}
           >
             {serverImage}
@@ -71,27 +54,11 @@ export const LightboxView = ({
         ))}
       </div>
 
-      <Lightbox
+      <PostLightbox
+        slides={slides}
         index={index}
-        open={isOpen}
-        onClose={() => setIsOpen(false)}
-        slides={slidesWithDimensions}
-        on={{ view: ({ index }) => setIndex(index) }} // Syncs state
-        controls={() => (
-          <div
-            className={cn(
-              "absolute left-1/2 z-10 -translate-x-1/2",
-              "bottom-4 sm:top-6 sm:bottom-auto",
-              "bg-surface-page/85 px-3 py-1.5 backdrop-blur-sm",
-            )}
-          >
-            <span className="font-mono text-[11px] tracking-wider text-green-400 tabular-nums">
-              {zeroPad(index + 1)}
-              <span className="mx-1 text-green-600">/</span>
-              {zeroPad(slides.length)}
-            </span>
-          </div>
-        )}
+        onIndexChange={setIndex}
+        onClose={() => setIndex(null)}
       />
     </div>
   );
