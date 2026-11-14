@@ -40,17 +40,19 @@ export const ScrubPreview = ({
       aria-hidden
       className={cn(
         "pointer-events-none absolute top-1/2 left-1/2 z-10 -translate-x-1/2 -translate-y-1/2",
-        "flex size-[clamp(18rem,40vmin,36rem)] items-center justify-center",
+        /** Never larger than the photo it sits over, which on a phone is smaller than the box it would like. */
+        "[container-type:size] flex size-[clamp(18rem,40vmin,36rem)] max-h-full max-w-full items-center justify-center",
         "animate-in fade-in-0 zoom-in-95 duration-150 motion-reduce:animate-none",
       )}
     >
       <div
         className={cn(
           "plate-ticks bg-surface-page relative bg-cover bg-center shadow-2xl shadow-black outline outline-green-500/40",
-          !ratio ? "size-full" : ratio >= 1 ? "w-full" : "h-full",
+          !ratio && "size-full",
         )}
         style={{
           aspectRatio: ratio,
+          width: ratio && `min(100cqw, calc(100cqh * ${ratio}))`,
           backgroundImage:
             !isLoaded && slide.placeholder
               ? `url(${slide.placeholder})`

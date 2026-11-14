@@ -99,6 +99,11 @@ export const Lightbox = ({
   const backdropUrl = slide && (carriedUrl(slide) ?? slide.placeholder);
   const ratio =
     slide?.width && slide.height ? slide.width / slide.height : undefined;
+  /** The photo and its caption dim under a scrub preview. They fade down but return at once: the photo's entrance is the transition out. */
+  const dimmed = previewIndex !== null ? DIMMED : undefined;
+  const dimming =
+    previewIndex !== null &&
+    "transition-opacity duration-150 ease-linear motion-reduce:transition-none";
 
   return (
     <Dialog.Root open={!!slide} onOpenChange={(open) => !open && onClose()}>
@@ -239,62 +244,88 @@ export const Lightbox = ({
                   />
                 )}
 
-                <figure
-                  /** Positioned so it paints over the outgoing photo. Dims with a fade but returns at once: the entrance is the transition out. */
-                  className={cn(
-                    "relative flex max-h-full max-w-full flex-col",
-                    previewIndex !== null &&
-                      "transition-opacity duration-150 ease-linear motion-reduce:transition-none",
-                  )}
-                  style={{
-                    opacity: previewIndex !== null ? DIMMED : undefined,
-                  }}
-                >
-                  <div
-                    ref={frameRef}
-                    /** Sized by the image, so the ticks sit on its corners. */
-                    className="plate-ticks relative mx-auto w-fit max-w-full bg-cover bg-center"
-                    style={{
-                      backgroundImage:
-                        !isLoaded && backdropUrl
-                          ? `url(${backdropUrl})`
-                          : undefined,
-                    }}
-                  >
-                    {/* Remounted per slide: a reused element keeps the last photo's size until the next one loads. */}
-                    <img
-                      key={slide.src}
-                      src={slide.src}
-                      srcSet={slide.srcSet}
-                      sizes={slide.srcSet && SIZES}
-                      alt={slide.alt}
-                      width={slide.width}
-                      height={slide.height}
-                      onLoad={() => setLoadedSrc(slide.src)}
-                      draggable={false}
+                {/* Positioned so it paints over the outgoing photo. */}
+                <figure className="relative flex max-h-full max-w-full flex-col">
+                  {/* The photo's own box, so the scrub preview can centre on the photo and stay within it. */}
+                  <div className="relative mx-auto w-fit max-w-full">
+                    <div
+                      ref={frameRef}
+                      /** Sized by the image, so the ticks sit on its corners. */
                       className={cn(
-                        "block h-auto max-h-(--photo-max-h) max-w-full border border-green-500/25 object-contain",
-                        aside
-                          ? "[--photo-max-h:62dvh] lg:[--photo-max-h:calc(100dvh-180px)]"
-                          : "[--photo-max-h:calc(100dvh-180px)]",
-                        !ratio && "w-auto",
-                        "transition-opacity duration-200",
-                        isLoaded ? "opacity-100" : "opacity-0",
+                        "plate-ticks relative bg-cover bg-center",
+                        dimming,
                       )}
-                      /** An explicit width: with both sides `auto` an image has no size until its file's header arrives, whatever its `width` and `height` say. */
-                      style={
-                        ratio
-                          ? {
-                              width: `min(100cqw, calc(var(--photo-max-h) * ${ratio}), ${slide.width}px)`,
-                            }
-                          : undefined
-                      }
-                    />
+                      style={{
+                        opacity: dimmed,
+                        backgroundImage:
+                          !isLoaded && backdropUrl
+                            ? `url(${backdropUrl})`
+                            : undefined,
+                      }}
+                    >
+                      {/* Remounted per slide: a reused element keeps the last photo's size until the next one loads. */}
+                      <img
+                        key={slide.src}
+                        src={slide.src}
+                        srcSet={slide.srcSet}
+                        sizes={slide.srcSet && SIZES}
+                        alt={slide.alt}
+                        width={slide.width}
+                        height={slide.height}
+                        onLoad={() => setLoadedSrc(slide.src)}
+                        draggable={false}
+                        className={cn(
+                          "block h-auto max-h-(--photo-max-h) max-w-full border border-green-500/25 object-contain",
+                          aside
+                            ? "[--photo-max-h:62dvh] lg:[--photo-max-h:calc(100dvh-180px)]"
+                            : "[--photo-max-h:calc(100dvh-180px)]",
+                          !ratio && "w-auto",
+                          "transition-opacity duration-200",
+                          isLoaded ? "opacity-100" : "opacity-0",
+                        )}
+                        /** An explicit width: with both sides `auto` an image has no size until its file's header arrives, whatever its `width` and `height` say. */
+                        style={
+                          ratio
+                            ? {
+                                width: `min(100cqw, calc(var(--photo-max-h) * ${ratio}), ${slide.width}px)`,
+                              }
+                            : undefined
+                        }
+                      />
+                    </div>
+
+                    {previewIndex !== null && slides[previewIndex] && (
+                      <ScrubPreview
+                        slide={slides[previewIndex]}
+                        imageRef={previewImageRef}
+                        onFileLoad={onPreviewFileLoad}
+                        position={`${zeroPad(previewIndex + 1)} / ${zeroPad(slides.length)}`}
+                      />
+                    )}
                   </div>
+
+                  {hasScrubber && (
+                    <Scrubber
+                      orientation="horizontal"
+                      count={slides.length}
+                      index={index!}
+                      onIndexChange={commit}
+                      onPreviewChange={setPreviewIndex}
+                      /** On a phone the rail goes under the photo, in reach of a thumb, where it costs the photo no room. */
+                      className="sm:hidden"
+                    />
+                  )}
+
                   {caption && (
                     <figcaption
                       ref={captionRef}
-                      className="mt-3 flex justify-between gap-4 font-mono text-[10px] tracking-wider text-neutral-500 uppercase tabular-nums"
+                      className={cn(
+                        "flex justify-between gap-4 font-mono text-[10px] tracking-wider text-neutral-500 uppercase tabular-nums",
+                        /** The phone rail's touch area already spaces it from the photo. */
+                        hasScrubber ? "sm:mt-3" : "mt-3",
+                        dimming,
+                      )}
+                      style={{ opacity: dimmed }}
                     >
                       {caption}
                     </figcaption>
@@ -309,15 +340,6 @@ export const Lightbox = ({
                     onPreviewChange={setPreviewIndex}
                     /** Height-gated as well as width-gated: a phone on its side is wide enough but too short for the preview. */
                     className="absolute top-1/2 left-0 hidden -translate-y-1/2 [@media(min-width:40rem)_and_(min-height:35rem)]:block"
-                  />
-                )}
-
-                {previewIndex !== null && slides[previewIndex] && (
-                  <ScrubPreview
-                    slide={slides[previewIndex]}
-                    imageRef={previewImageRef}
-                    onFileLoad={onPreviewFileLoad}
-                    position={`${zeroPad(previewIndex + 1)} / ${zeroPad(slides.length)}`}
                   />
                 )}
 

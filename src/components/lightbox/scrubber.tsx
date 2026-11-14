@@ -13,20 +13,62 @@ type ScrubberProps = {
   onIndexChange: (index: number) => void;
   /** The slide a drag or wheel run is passing, for a preview; `null` once it ends. */
   onPreviewChange?: (index: number | null) => void;
+  /** Which way the rail runs: `vertical` beside the photo for a pointer, `horizontal` under it for a finger. */
+  orientation?: keyof typeof LAYOUTS;
   className?: string;
 };
 
-/** Pixels from one tick to the next; also how far a drag travels per slide. */
-const TICK = 6;
+/** How the rail is drawn and read along one axis. */
+type RailLayout = {
+  /** Pixels from one tick to the next; also how far a drag travels per slide. */
+  tick: number;
+  /** Room in pixels a short strip keeps around itself, so its ends can fade in. */
+  margin: number;
+  /** The rail's thickness and which touch gestures the browser keeps. */
+  root: string;
+  /** Fades the strip out at both ends of the rail. */
+  mask: string;
+  /** Pins the strip's start to the middle of the rail. */
+  strip: string;
+  /** The slot one tick is centred in. */
+  cell: string;
+  /** A tick's thickness. */
+  mark: string;
+  /** A tick's length when it is the one on show, the one hovered, and any other. */
+  lengths: [current: string, hovered: string, rest: string];
+};
+
+const LAYOUTS = {
+  vertical: {
+    tick: 6,
+    margin: 48,
+    root: "w-8 touch-none",
+    mask: "[mask-image:linear-gradient(to_bottom,transparent,black_35%,black_65%,transparent)]",
+    strip: "top-1/2 left-0",
+    cell: "flex items-center pl-2",
+    mark: "h-px",
+    lengths: ["w-5", "w-4", "w-3"],
+  },
+  /** Sized for a finger: a 44px touch area, wider tick spacing, and vertical drags left to the page's scroll. */
+  horizontal: {
+    tick: 8,
+    margin: 96,
+    root: "mx-auto h-11 touch-pan-y",
+    mask: "[mask-image:linear-gradient(to_right,transparent,black_30%,black_70%,transparent)]",
+    strip: "top-0 left-1/2 flex h-full",
+    cell: "flex h-full items-center justify-center",
+    mark: "w-px",
+    lengths: ["h-5", "h-4", "h-3"],
+  },
+} as const satisfies Record<string, RailLayout>;
 /** Slides a Page Up or Page Down moves by. */
 const PAGE = 10;
 /** Wheel travel in pixels per slide, so one notch of a mouse wheel moves a slide or two. */
 const WHEEL_STEP = 60;
 /** Pointer travel in pixels before a press counts as a drag, not a click. */
 const DRAG_SLOP = 3;
-/** Height of the rail in pixels at its tallest, and the room it keeps around a short strip for its ends to fade in. */
+/** Height in pixels of the vertical rail at its tallest. */
 const RAIL_HEIGHT = 192;
-const RAIL_MARGIN = 48;
 /** Milliseconds without a wheel event before a run of the wheel counts as over. */
 const WHEEL_IDLE = 200;
 
@@ -39,11 +81,15 @@ export const Scrubber = ({
   index,
   onIndexChange,
   onPreviewChange,
+  orientation = "vertical",
   className,
 }: ScrubberProps) => {
+  const layout = LAYOUTS[orientation];
+  const isHorizontal = orientation === "horizontal";
+  const TICK = layout.tick;
   const railRef = useRef<HTMLDivElement>(null);
   /** Where a press began, and whether it has moved far enough to be a drag. */
-  const press = useRef<{ y: number; index: number; dragged: boolean }>(null);
+  const press = useRef<{ at: number; index: number; dragged: boolean }>(null);
   const wheelTravel = useRef(0);
   const wheelIdle = useRef<ReturnType<typeof setTimeout>>(undefined);
   /** Mirrors `preview` for the wheel's idle timer, which outlives the render that set it. */
@@ -73,18 +119,26 @@ export const Scrubber = ({
   };
 
   useEffect(() => () => clearTimeout(wheelIdle.current), []);
+  /** A pointer's position along the rail. */
+  const along = (event: React.PointerEvent) =>
+    isHorizontal ? event.clientX : event.clientY;
   /** The current tick sits at the rail's middle, so a tick's index follows from its distance to that. */
-  const indexAt = (clientY: number) => {
-    const { top, height } = railRef.current!.getBoundingClientRect();
-    return clamp(shown + Math.round((clientY - top - height / 2) / TICK));
+  const indexAt = (position: number) => {
+    const rect = railRef.current!.getBoundingClientRect();
+    const middle = isHorizontal
+      ? rect.left + rect.width / 2
+      : rect.top + rect.height / 2;
+    return clamp(shown + Math.round((position - middle) / TICK));
   };
+  /** A short set gets a short rail: on a long one, most of the grab area would be empty space that jumps to an end. */
+  const length = count * TICK + layout.margin;
 
   return (
     <div
       role="slider"
       tabIndex={0}
       aria-label="Position in the set"
-      aria-orientation="vertical"
+      aria-orientation={orientation}
       aria-valuemin={1}
       aria-valuemax={count}
       aria-valuenow={shown + 1}
@@ -118,25 +172,25 @@ export const Scrubber = ({
         if (event.button !== 0) return;
         /** Keeps the drag alive when the pointer strays off the rail. */
         event.currentTarget.setPointerCapture(event.pointerId);
-        press.current = { y: event.clientY, index, dragged: false };
+        press.current = { at: along(event), index, dragged: false };
         setHovered(null);
       }}
       onPointerMove={(event) => {
         const held = press.current;
-        if (!held) return setHovered(indexAt(event.clientY));
+        if (!held) return setHovered(indexAt(along(event)));
 
-        const travel = held.y - event.clientY;
+        const travel = held.at - along(event);
         if (!held.dragged && Math.abs(travel) > DRAG_SLOP) {
           held.dragged = true;
           setIsDragging(true);
         }
-        /** The strip follows the pointer, as a touch scroll does: drag up to move on. */
+        /** The strip follows the pointer, as a touch scroll does: drag up, or left, to move on. */
         if (held.dragged)
           previewAt(clamp(held.index + Math.round(travel / TICK)));
       }}
       onPointerUp={(event) => {
         if (press.current?.dragged) commitPreview();
-        else if (press.current) go(indexAt(event.clientY));
+        else if (press.current) go(indexAt(along(event)));
         endPress();
       }}
       onPointerCancel={() => {
@@ -145,42 +199,50 @@ export const Scrubber = ({
       }}
       onPointerLeave={() => setHovered(null)}
       className={cn(
-        "relative w-8 cursor-grab touch-none select-none active:cursor-grabbing",
-        "opacity-70 transition-opacity duration-150 ease-linear hover:opacity-100 focus-visible:opacity-100",
+        "relative cursor-grab select-none active:cursor-grabbing",
+        layout.root,
+        "opacity-70 transition-opacity duration-150 ease-linear hover:opacity-100 focus-visible:opacity-100 active:opacity-100",
         "focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-green-400",
         className,
       )}
-      /** A short set gets a short rail: on a tall one, most of the grab area would be empty space that jumps to an end. */
-      style={{ height: Math.min(RAIL_HEIGHT, count * TICK + RAIL_MARGIN) }}
+      style={
+        isHorizontal
+          ? { width: `min(100%, ${length}px)` }
+          : { height: Math.min(RAIL_HEIGHT, length) }
+      }
     >
       <div
         ref={railRef}
-        className="relative size-full overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,black_35%,black_65%,transparent)]"
+        className={cn("relative size-full overflow-hidden", layout.mask)}
       >
         <div
           /** No easing during a drag: each step would restart it and leave the strip trailing the pointer. */
           className={cn(
-            "absolute top-1/2 left-0",
+            "absolute",
+            layout.strip,
             !isDragging &&
               "transition-transform duration-150 ease-out motion-reduce:transition-none",
           )}
-          style={{ transform: `translateY(${-(shown + 0.5) * TICK}px)` }}
+          style={{
+            transform: `translate${isHorizontal ? "X" : "Y"}(${-(shown + 0.5) * TICK}px)`,
+          }}
         >
           {Array.from({ length: count }, (_, i) => (
             <span
               key={i}
               aria-hidden
-              className="flex items-center pl-2"
-              style={{ height: TICK }}
+              className={layout.cell}
+              style={{ [isHorizontal ? "width" : "height"]: TICK }}
             >
               <span
                 className={cn(
-                  "h-px transition-[width,background-color] duration-150 ease-linear",
+                  layout.mark,
+                  "transition-[width,height,background-color] duration-150 ease-linear",
                   i === shown
-                    ? "w-5 bg-green-400"
+                    ? [layout.lengths[0], "bg-green-400"]
                     : i === hovered
-                      ? "w-4 bg-neutral-200/80"
-                      : "w-3 bg-neutral-300/50",
+                      ? [layout.lengths[1], "bg-neutral-200/80"]
+                      : [layout.lengths[2], "bg-neutral-300/50"],
                 )}
               />
             </span>
@@ -188,15 +250,18 @@ export const Scrubber = ({
         </div>
       </div>
 
-      {hovered !== null && hovered !== shown && preview === null && (
-        <span
-          aria-hidden
-          /** Under the rail, not beside the tick, where it would sit over the previous button. */
-          className="pointer-events-none absolute top-full left-2 font-mono text-[10px] tracking-wider text-neutral-300 tabular-nums"
-        >
-          {zeroPad(hovered + 1)}
-        </span>
-      )}
+      {!isHorizontal &&
+        hovered !== null &&
+        hovered !== shown &&
+        preview === null && (
+          <span
+            aria-hidden
+            /** Under the rail, not beside the tick, where it would sit over the previous button. */
+            className="pointer-events-none absolute top-full left-2 font-mono text-[10px] tracking-wider text-neutral-300 tabular-nums"
+          >
+            {zeroPad(hovered + 1)}
+          </span>
+        )}
     </div>
   );
 };
