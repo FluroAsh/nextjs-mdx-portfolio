@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import * as Dialog from "@radix-ui/react-dialog";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
@@ -84,6 +84,10 @@ export const Lightbox = ({
   const touchStartX = useRef<number | null>(null);
   const opener = useRef<Element | null>(null);
   const [loadedSrc, setLoadedSrc] = useState<string | null>(null);
+  const [isScrubbing, setIsScrubbing] = useState(false);
+  const frameRef = useRef<HTMLDivElement>(null);
+  /** Size of the frame while scrubbing, kept so it can ease back to the photo afterwards. */
+  const steadySize = useRef<DOMRect | null>(null);
 
   const isSeries = slides.length > 1;
   const hasScrubber = scrubber && isSeries;
@@ -104,6 +108,33 @@ export const Lightbox = ({
   }, [index, slides]);
 
   const isLoaded = loadedSrc === slide?.src;
+  /** Caps the scrubbing frame at the photo's long edge, so a large screen does not show a frame far bigger than any photo in it. */
+  const longEdge =
+    slide?.width && slide.height
+      ? Math.max(slide.width, slide.height)
+      : undefined;
+
+  /** The frame cannot transition between a fixed box and a fitted one in CSS, so it is animated from the size it had. */
+  useLayoutEffect(() => {
+    const frame = frameRef.current;
+    if (!frame) return;
+    if (isScrubbing) {
+      steadySize.current = frame.getBoundingClientRect();
+      return;
+    }
+
+    const from = steadySize.current;
+    steadySize.current = null;
+    if (!from || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const to = frame.getBoundingClientRect();
+    frame.animate(
+      [
+        { width: `${from.width}px`, height: `${from.height}px` },
+        { width: `${to.width}px`, height: `${to.height}px` },
+      ],
+      { duration: 200, easing: "ease-out" },
+    );
+  }, [isScrubbing]);
 
   return (
     <Dialog.Root open={!!slide} onOpenChange={(open) => !open && onClose()}>
@@ -213,36 +244,61 @@ export const Lightbox = ({
                   event.target === event.currentTarget && onClose()
                 }
               >
-                <figure className="flex max-h-full max-w-full flex-col">
+                <figure
+                  className={cn(
+                    "flex max-h-full max-w-full flex-col",
+                    isScrubbing && "w-full",
+                  )}
+                >
                   <div
-                    /** Sized by the image, so the ticks sit on its corners. */
-                    className="plate-ticks relative mx-auto w-fit max-w-full bg-cover bg-center"
-                    style={{
-                      backgroundImage:
-                        !isLoaded && slide.placeholder
-                          ? `url(${slide.placeholder})`
-                          : undefined,
-                    }}
+                    ref={frameRef}
+                    /**
+                     * Sized by the photo, so the ticks sit on its corners. While scrubbing it holds the largest
+                     * box a photo can take, so landscape and portrait photos pass without the frame or caption moving.
+                     */
+                    className={cn(
+                      "plate-ticks relative mx-auto flex max-w-full items-center justify-center outline outline-green-500/25",
+                      !isScrubbing
+                        ? "w-fit"
+                        : aside
+                          ? "h-[62dvh] w-full lg:h-[calc(100dvh-180px)]"
+                          : "h-[calc(100dvh-180px)] w-full",
+                    )}
+                    style={
+                      isScrubbing
+                        ? { maxWidth: longEdge, maxHeight: longEdge }
+                        : undefined
+                    }
                   >
-                    {/* No `key`: changing `src` on the same element is what cancels a load the scrubber has moved past. */}
-                    <img
-                      src={slide.src}
-                      srcSet={slide.srcSet}
-                      sizes={slide.srcSet && SIZES}
-                      alt={slide.alt}
-                      width={slide.width}
-                      height={slide.height}
-                      onLoad={() => setLoadedSrc(slide.src)}
-                      draggable={false}
-                      className={cn(
-                        "block h-auto w-auto max-w-full border border-green-500/25 object-contain",
-                        aside
-                          ? "max-h-[62dvh] lg:max-h-[calc(100dvh-180px)]"
-                          : "max-h-[calc(100dvh-180px)]",
-                        "transition-opacity duration-200",
-                        isLoaded ? "opacity-100" : "opacity-0",
-                      )}
-                    />
+                    <div
+                      className="min-h-0 min-w-0 bg-cover bg-center"
+                      style={{
+                        backgroundImage:
+                          !isLoaded && slide.placeholder
+                            ? `url(${slide.placeholder})`
+                            : undefined,
+                      }}
+                    >
+                      {/* No `key`: changing `src` on the same element is what cancels a load the scrubber has moved past. */}
+                      <img
+                        src={slide.src}
+                        srcSet={slide.srcSet}
+                        sizes={slide.srcSet && SIZES}
+                        alt={slide.alt}
+                        width={slide.width}
+                        height={slide.height}
+                        onLoad={() => setLoadedSrc(slide.src)}
+                        draggable={false}
+                        className={cn(
+                          "block h-auto w-auto max-w-full object-contain",
+                          aside
+                            ? "max-h-[62dvh] lg:max-h-[calc(100dvh-180px)]"
+                            : "max-h-[calc(100dvh-180px)]",
+                          "transition-opacity duration-200",
+                          isLoaded ? "opacity-100" : "opacity-0",
+                        )}
+                      />
+                    </div>
                   </div>
                   {caption && (
                     <figcaption className="mt-3 flex justify-between gap-4 font-mono text-[10px] tracking-wider text-neutral-500 uppercase tabular-nums">
@@ -256,6 +312,7 @@ export const Lightbox = ({
                     count={slides.length}
                     index={index!}
                     onIndexChange={onIndexChange}
+                    onScrubbingChange={setIsScrubbing}
                     className="absolute top-1/2 left-0 hidden -translate-y-1/2 sm:block"
                   />
                 )}

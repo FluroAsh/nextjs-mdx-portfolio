@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { cn, zeroPad } from "@/utils/misc";
 
@@ -10,6 +10,8 @@ type ScrubberProps = {
   /** Index of the slide on show; its tick sits at the middle of the rail. */
   index: number;
   onIndexChange: (index: number) => void;
+  /** Told when a drag or a run of the wheel starts and ends: the moments slides change too fast to take in one at a time. */
+  onScrubbingChange?: (isScrubbing: boolean) => void;
   className?: string;
 };
 
@@ -21,22 +23,40 @@ const PAGE = 10;
 const WHEEL_STEP = 60;
 /** Pointer travel in pixels before a press counts as a drag, not a click. */
 const DRAG_SLOP = 3;
+/** Milliseconds without a wheel event before a run of the wheel counts as over. */
+const WHEEL_IDLE = 300;
 
 /** A short window onto a strip of ticks, one per slide, that fades out at both ends: click a tick to jump, or drag the strip to move through the set. */
 export const Scrubber = ({
   count,
   index,
   onIndexChange,
+  onScrubbingChange,
   className,
 }: ScrubberProps) => {
   const railRef = useRef<HTMLDivElement>(null);
   /** Where a press began, and whether it has moved far enough to be a drag. */
   const press = useRef<{ y: number; index: number; dragged: boolean }>(null);
   const wheelTravel = useRef(0);
+  const wheelIdle = useRef<ReturnType<typeof setTimeout>>(undefined);
   const [hovered, setHovered] = useState<number | null>(null);
 
   const clamp = (value: number) => Math.min(count - 1, Math.max(0, value));
   const go = (next: number) => next !== index && onIndexChange(next);
+
+  /** Closing the lightbox mid-drag unmounts this before the pointer lifts. */
+  useEffect(
+    () => () => {
+      clearTimeout(wheelIdle.current);
+      onScrubbingChange?.(false);
+    },
+    [onScrubbingChange],
+  );
+
+  const endPress = () => {
+    if (press.current?.dragged) onScrubbingChange?.(false);
+    press.current = null;
+  };
   /** The current tick sits at the rail's middle, so a tick's index follows from its distance to that. */
   const indexAt = (clientY: number) => {
     const { top, height } = railRef.current!.getBoundingClientRect();
@@ -67,6 +87,12 @@ export const Scrubber = ({
         go(clamp(target));
       }}
       onWheel={(event) => {
+        onScrubbingChange?.(true);
+        clearTimeout(wheelIdle.current);
+        wheelIdle.current = setTimeout(
+          () => onScrubbingChange?.(false),
+          WHEEL_IDLE,
+        );
         wheelTravel.current += event.deltaY;
         const steps = Math.trunc(wheelTravel.current / WHEEL_STEP);
         if (!steps) return;
@@ -84,15 +110,18 @@ export const Scrubber = ({
         if (!held) return setHovered(indexAt(event.clientY));
 
         const travel = held.y - event.clientY;
-        if (Math.abs(travel) > DRAG_SLOP) held.dragged = true;
+        if (!held.dragged && Math.abs(travel) > DRAG_SLOP) {
+          held.dragged = true;
+          onScrubbingChange?.(true);
+        }
         /** The strip follows the pointer, as a touch scroll does: drag up to move on. */
         if (held.dragged) go(clamp(held.index + Math.round(travel / TICK)));
       }}
       onPointerUp={(event) => {
         if (press.current && !press.current.dragged) go(indexAt(event.clientY));
-        press.current = null;
+        endPress();
       }}
-      onPointerCancel={() => (press.current = null)}
+      onPointerCancel={endPress}
       onPointerLeave={() => setHovered(null)}
       className={cn(
         "relative h-48 w-8 cursor-grab touch-none select-none active:cursor-grabbing",
