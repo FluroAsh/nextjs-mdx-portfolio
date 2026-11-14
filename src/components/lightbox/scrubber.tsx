@@ -166,6 +166,8 @@ export const Scrubber = ({
         clearTimeout(wheelIdle.current);
         wheelIdle.current = setTimeout(commitPreview, WHEEL_IDLE);
       }}
+      /** A drag here drifts sideways too, which the lightbox would read as a swipe. */
+      onTouchStart={(event) => event.stopPropagation()}
       onPointerDown={(event) => {
         if (event.button !== 0) return;
         /** Keeps the drag alive when the pointer strays off the rail. */
