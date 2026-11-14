@@ -12,6 +12,8 @@ type LightboxViewProps = {
   variant: CollectionVariant;
   slides: PostSlide[];
   images: React.ReactNode[];
+  /** Adds the lightbox's rail of ticks for moving through the collection. */
+  scrubber?: boolean;
   className?: string;
 };
 
@@ -27,6 +29,7 @@ export const LightboxView = ({
   variant,
   slides,
   images,
+  scrubber,
   className,
 }: LightboxViewProps) => {
   const [index, setIndex] = useState<number | null>(null);
@@ -59,6 +62,7 @@ export const LightboxView = ({
         index={index}
         onIndexChange={setIndex}
         onClose={() => setIndex(null)}
+        scrubber={scrubber}
       />
     </div>
   );

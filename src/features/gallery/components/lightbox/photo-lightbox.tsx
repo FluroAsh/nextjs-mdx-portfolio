@@ -4,6 +4,7 @@ import { useMemo } from "react";
 
 import { downloadImage } from "@/components/lightbox/download-image";
 import { Lightbox } from "@/components/lightbox/lightbox";
+import { formatSrcSet } from "@/utils/image";
 
 import type { GalleryPhoto, ResolvedCollection } from "../../types";
 import { formatAspectRatio, frameNumber } from "../../utils";
@@ -34,8 +35,9 @@ export const PhotoLightbox = ({
   const collection = collections.find((c) => c.slug === photo?.collection);
   const slides = useMemo(
     () =>
-      photos.map(({ src, alt, width, height, placeholder }) => ({
+      photos.map(({ src, candidates, alt, width, height, placeholder }) => ({
         src,
+        srcSet: candidates.length ? formatSrcSet(candidates) : undefined,
         alt,
         width,
         height,
@@ -50,6 +52,7 @@ export const PhotoLightbox = ({
       index={index}
       onIndexChange={onIndexChange}
       onClose={onClose}
+      scrubber
       /** The gallery moves focus to the tile last viewed, not the one first opened. */
       onCloseAutoFocus={(event) => event.preventDefault()}
       meta={[collection?.title, photo?.location?.label]

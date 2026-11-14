@@ -8,27 +8,15 @@ import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { cn, zeroPad } from "@/utils/misc";
 
 import { IconButton } from "./icon-button";
+import { ScrubPreview } from "./scrub-preview";
+import { Scrubber } from "./scrubber";
+import { type LightboxSlide, SIZES, preload } from "./slide";
+import { DIMMED, useScrubPreview } from "./use-scrub-preview";
+
+export type { LightboxSlide };
 
 /** Horizontal travel in pixels before a touch counts as a swipe. */
 const SWIPE_DISTANCE = 50;
-
-/** The photo is bounded by height, so this over-asks on wide screens rather than under-asks on tall ones. */
-const SIZES = "100vw";
-
-export type LightboxSlide = {
-  /** Largest file; also what identifies the slide, so it must be unique in the list. */
-  src: string;
-  /** Narrower files the browser may pick in place of `src`. */
-  srcSet?: string;
-  /** Alternative text for the image. */
-  alt: string;
-  /** Intrinsic width of `src` in pixels; reserves the frame before the file loads. */
-  width?: number;
-  /** Intrinsic height of `src` in pixels. */
-  height?: number;
-  /** Base64 blur shown until the file loads. */
-  placeholder?: string;
-};
 
 type LightboxProps = {
   /** The whole set being browsed, in order; the arrows stop at both ends. */
@@ -45,6 +33,8 @@ type LightboxProps = {
   actions?: React.ReactNode;
   /** Panel beside the photo, below it on a phone. It names the dialog, so it must render `Dialog.Title`, and it carries the close button at desktop widths. */
   aside?: React.ReactNode;
+  /** Adds a short rail of ticks, one per slide, to jump or drag through the set; shown where there is room beside the photo. */
+  scrubber?: boolean;
   /** Runs before focus returns to whatever opened the dialog; prevent it to place focus elsewhere. */
   onCloseAutoFocus?: (event: Event) => void;
 };
@@ -54,15 +44,6 @@ const Kbd = ({ children }: { children: React.ReactNode }) => (
     {children}
   </kbd>
 );
-
-const preload = ({ src, srcSet }: LightboxSlide) => {
-  const image = new Image();
-  if (srcSet) {
-    image.sizes = SIZES;
-    image.srcset = srcSet;
-  }
-  image.src = src;
-};
 
 /** The one photo viewer: a fixed set of slides, with slots for what differs between the gallery and a post. */
 export const Lightbox = ({
@@ -74,28 +55,55 @@ export const Lightbox = ({
   caption,
   actions,
   aside,
+  scrubber,
   onCloseAutoFocus,
 }: LightboxProps) => {
   const slide = index === null ? undefined : slides[index];
   const touchStartX = useRef<number | null>(null);
   const opener = useRef<Element | null>(null);
   const [loadedSrc, setLoadedSrc] = useState<string | null>(null);
+  /** Destructured, not kept as one object: the refs lint reads a member of an object holding refs as a ref read. */
+  const {
+    previewIndex,
+    setPreviewIndex,
+    commit,
+    ghost,
+    carriedUrl,
+    onPreviewFileLoad,
+    stageRef,
+    frameRef,
+    captionRef,
+    ghostRef,
+    previewImageRef,
+  } = useScrubPreview(slides, index, onIndexChange);
 
   const isSeries = slides.length > 1;
+  const hasScrubber = scrubber && isSeries;
   const hasPrev = index !== null && index > 0;
   const hasNext = index !== null && index < slides.length - 1;
   const goPrev = () => hasPrev && onIndexChange(index - 1);
   const goNext = () => hasNext && onIndexChange(index + 1);
 
-  /** Neighbours load while this one is viewed, so stepping through is instant. */
+  /** Neighbours load once this one has settled, so stepping is instant but a held arrow key does not fetch every photo it passes. */
   useEffect(() => {
     if (index === null) return;
-    for (const neighbour of [slides[index - 1], slides[index + 1]]) {
-      if (neighbour) preload(neighbour);
-    }
+    const timeout = setTimeout(() => {
+      for (const neighbour of [slides[index - 1], slides[index + 1]]) {
+        if (neighbour) preload(neighbour);
+      }
+    }, 150);
+    return () => clearTimeout(timeout);
   }, [index, slides]);
 
   const isLoaded = loadedSrc === slide?.src;
+  const backdropUrl = slide && (carriedUrl(slide) ?? slide.placeholder);
+  const ratio =
+    slide?.width && slide.height ? slide.width / slide.height : undefined;
+  /** The photo and its caption dim under a scrub preview. They fade down but return at once: the photo's entrance is the transition out. */
+  const dimmed = previewIndex !== null ? DIMMED : undefined;
+  const dimming =
+    previewIndex !== null &&
+    "transition-opacity duration-150 ease-linear motion-reduce:transition-none";
 
   return (
     <Dialog.Root open={!!slide} onOpenChange={(open) => !open && onClose()}>
@@ -156,28 +164,46 @@ export const Lightbox = ({
               }}
             >
               <div className="flex items-center justify-between gap-4 px-4 py-3 font-mono text-[11px] tracking-wider uppercase sm:px-6 lg:py-5">
-                <span
-                  className="text-neutral-400 tabular-nums"
-                  aria-live="polite"
-                >
+                {/* On a phone the counter carries the previous and next buttons, which have no room beside the photo; swipe alone would leave no way through for anyone who cannot swipe. */}
+                <div className="flex items-center gap-3">
                   {isSeries && (
-                    <>
-                      <span className="text-green-400">
-                        {zeroPad(index! + 1)}
-                      </span>
-                      <span className="mx-1.5 text-green-700">/</span>
-                      {zeroPad(slides.length)}
-                    </>
+                    <IconButton
+                      label="Previous photo"
+                      onClick={goPrev}
+                      disabled={!hasPrev}
+                      className="sm:hidden"
+                    >
+                      <ChevronLeft />
+                    </IconButton>
                   )}
-                </span>
+                  <span
+                    className="text-neutral-400 tabular-nums"
+                    aria-live="polite"
+                  >
+                    {isSeries && (
+                      <>
+                        <span className="text-green-400">
+                          {zeroPad(index! + 1)}
+                        </span>
+                        <span className="mx-1.5 text-green-700">/</span>
+                        {zeroPad(slides.length)}
+                      </>
+                    )}
+                  </span>
+                  {isSeries && (
+                    <IconButton
+                      label="Next photo"
+                      onClick={goNext}
+                      disabled={!hasNext}
+                      className="sm:hidden"
+                    >
+                      <ChevronRight />
+                    </IconButton>
+                  )}
+                </div>
                 {meta && (
                   <span className="hidden truncate text-neutral-400 lg:block">
                     {meta}
-                  </span>
-                )}
-                {isSeries && (
-                  <span aria-hidden className="text-neutral-500 lg:hidden">
-                    Swipe ← →
                   </span>
                 )}
                 <div
@@ -196,49 +222,126 @@ export const Lightbox = ({
               </div>
 
               <div
-                className="relative flex min-h-0 flex-1 items-center justify-center px-4 pb-2 sm:px-20 lg:pb-0"
+                ref={stageRef}
+                className={cn(
+                  /** A container, so the photo can size itself from the room it has before its file loads. */
+                  "@container relative flex min-h-0 flex-1 items-center justify-center px-4 pb-2 lg:pb-0",
+                  hasScrubber ? "sm:px-28" : "sm:px-20",
+                )}
                 /** Only the empty space around the photo closes; a click on the photo or a button must not. */
                 onClick={(event) =>
                   event.target === event.currentTarget && onClose()
                 }
               >
-                <figure className="flex max-h-full max-w-full flex-col">
-                  <div
-                    /** Sized by the image, so the ticks sit on its corners. */
-                    className="plate-ticks relative mx-auto w-fit max-w-full bg-cover bg-center"
-                    style={{
-                      backgroundImage:
-                        !isLoaded && slide.placeholder
-                          ? `url(${slide.placeholder})`
-                          : undefined,
-                    }}
-                  >
-                    <img
-                      key={slide.src}
-                      src={slide.src}
-                      srcSet={slide.srcSet}
-                      sizes={slide.srcSet && SIZES}
-                      alt={slide.alt}
-                      width={slide.width}
-                      height={slide.height}
-                      onLoad={() => setLoadedSrc(slide.src)}
-                      draggable={false}
+                {ghost && (
+                  <img
+                    ref={ghostRef}
+                    src={ghost.url}
+                    alt=""
+                    aria-hidden
+                    className="pointer-events-none absolute"
+                    style={{ ...ghost.box, opacity: DIMMED }}
+                  />
+                )}
+
+                {/* Positioned so it paints over the outgoing photo. */}
+                <figure className="relative flex max-h-full max-w-full flex-col">
+                  {/* The photo's own box, so the scrub preview can centre on the photo and stay within it. */}
+                  <div className="relative mx-auto w-fit max-w-full">
+                    <div
+                      ref={frameRef}
+                      /** Sized by the image, so the ticks sit on its corners. */
                       className={cn(
-                        "block h-auto w-auto max-w-full border border-green-500/25 object-contain",
-                        aside
-                          ? "max-h-[62dvh] lg:max-h-[calc(100dvh-180px)]"
-                          : "max-h-[calc(100dvh-180px)]",
-                        "transition-opacity duration-200",
-                        isLoaded ? "opacity-100" : "opacity-0",
+                        "plate-ticks relative bg-cover bg-center",
+                        dimming,
                       )}
-                    />
+                      style={{
+                        opacity: dimmed,
+                        backgroundImage:
+                          !isLoaded && backdropUrl
+                            ? `url(${backdropUrl})`
+                            : undefined,
+                      }}
+                    >
+                      {/* Remounted per slide: a reused element keeps the last photo's size until the next one loads. */}
+                      <img
+                        key={slide.src}
+                        src={slide.src}
+                        srcSet={slide.srcSet}
+                        sizes={slide.srcSet && SIZES}
+                        alt={slide.alt}
+                        width={slide.width}
+                        height={slide.height}
+                        onLoad={() => setLoadedSrc(slide.src)}
+                        draggable={false}
+                        className={cn(
+                          "block h-auto max-h-(--photo-max-h) max-w-full border border-green-500/25 object-contain",
+                          aside
+                            ? "[--photo-max-h:62dvh] lg:[--photo-max-h:calc(100dvh-180px)]"
+                            : "[--photo-max-h:calc(100dvh-180px)]",
+                          !ratio && "w-auto",
+                          "transition-opacity duration-200",
+                          isLoaded ? "opacity-100" : "opacity-0",
+                        )}
+                        /** An explicit width: with both sides `auto` an image has no size until its file's header arrives, whatever its `width` and `height` say. */
+                        style={
+                          ratio
+                            ? {
+                                width: `min(100cqw, calc(var(--photo-max-h) * ${ratio}), ${slide.width}px)`,
+                              }
+                            : undefined
+                        }
+                      />
+                    </div>
+
+                    {previewIndex !== null && slides[previewIndex] && (
+                      <ScrubPreview
+                        slide={slides[previewIndex]}
+                        imageRef={previewImageRef}
+                        onFileLoad={onPreviewFileLoad}
+                        position={`${zeroPad(previewIndex + 1)} / ${zeroPad(slides.length)}`}
+                      />
+                    )}
                   </div>
+
+                  {hasScrubber && (
+                    <Scrubber
+                      orientation="horizontal"
+                      count={slides.length}
+                      index={index!}
+                      onIndexChange={commit}
+                      onPreviewChange={setPreviewIndex}
+                      /** On a phone the rail goes under the photo, in reach of a thumb, where it costs the photo no room. */
+                      className="sm:hidden"
+                    />
+                  )}
+
                   {caption && (
-                    <figcaption className="mt-3 flex justify-between gap-4 font-mono text-[10px] tracking-wider text-neutral-500 uppercase tabular-nums">
+                    <figcaption
+                      ref={captionRef}
+                      className={cn(
+                        "flex justify-between gap-4 font-mono text-[10px] tracking-wider text-neutral-500 uppercase tabular-nums",
+                        /** The phone rail's touch area already spaces it from the photo. */
+                        hasScrubber ? "sm:mt-3" : "mt-3",
+                        dimming,
+                      )}
+                      style={{ opacity: dimmed }}
+                    >
                       {caption}
                     </figcaption>
                   )}
                 </figure>
+
+                {hasScrubber && (
+                  <Scrubber
+                    count={slides.length}
+                    index={index!}
+                    onIndexChange={commit}
+                    onPreviewChange={setPreviewIndex}
+                    /** Height-gated as well as width-gated: a phone on its side is wide enough but too short for the preview. */
+                    className="absolute top-1/2 left-0 hidden -translate-y-1/2 [@media(min-width:40rem)_and_(min-height:35rem)]:block"
+                  />
+                )}
 
                 {isSeries && (
                   <>
@@ -246,7 +349,10 @@ export const Lightbox = ({
                       label="Previous photo"
                       onClick={goPrev}
                       disabled={!hasPrev}
-                      className="absolute top-1/2 left-2 hidden -translate-y-1/2 sm:grid lg:left-6 lg:size-12"
+                      className={cn(
+                        "absolute top-1/2 hidden -translate-y-1/2 sm:grid lg:size-12",
+                        hasScrubber ? "left-10 lg:left-12" : "left-2 lg:left-6",
+                      )}
                     >
                       <ChevronLeft />
                     </IconButton>
@@ -254,7 +360,12 @@ export const Lightbox = ({
                       label="Next photo"
                       onClick={goNext}
                       disabled={!hasNext}
-                      className="absolute top-1/2 right-2 hidden -translate-y-1/2 sm:grid lg:right-6 lg:size-12"
+                      className={cn(
+                        "absolute top-1/2 hidden -translate-y-1/2 sm:grid lg:size-12",
+                        hasScrubber
+                          ? "right-10 lg:right-12"
+                          : "right-2 lg:right-6",
+                      )}
                     >
                       <ChevronRight />
                     </IconButton>

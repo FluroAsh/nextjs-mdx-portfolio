@@ -15,11 +15,14 @@ type ImageCollectionProps = {
   images: ImageProps[];
   /** Uses "large" res images by default, if true will use "medium" res. */
   useLowerRes?: boolean;
+  /** Adds the lightbox's rail of ticks for moving through the collection; worth it on the longer ones. */
+  scrubber?: boolean;
 };
 
 export const ImageCollection = async ({
   images,
   useLowerRes = true,
+  scrubber,
 }: ImageCollectionProps) => {
   const variant = variantMapping[images.length] || CollectionVariant.TwoUp;
   const slides = await Promise.all(
@@ -47,6 +50,7 @@ export const ImageCollection = async ({
         />
       ))}
       slides={slides}
+      scrubber={scrubber}
     />
   );
 };
