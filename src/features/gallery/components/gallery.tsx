@@ -88,7 +88,7 @@ export const Gallery = ({ photos, collections }: GalleryProps) => {
     /* eslint-enable react-hooks/set-state-in-effect */
   }, [collections, photos]);
 
-  /** Written once the state settles: a drag along the lightbox scrubber changes photo faster than Safari lets `replaceState` run. Must stay below the effect that reads the URL, or it would clear a shared link first. */
+  /** Written once the state settles: a held arrow key in the lightbox changes photo faster than Safari lets `replaceState` run. Must stay below the effect that reads the URL, or it would clear a shared link first. */
   useEffect(() => {
     const timeout = setTimeout(() => writeParams(collection, openId), 150);
     return () => clearTimeout(timeout);
