@@ -18,6 +18,8 @@ type PostLightboxProps = {
   index: number | null;
   onIndexChange: (index: number) => void;
   onClose: () => void;
+  /** Adds the rail of ticks for moving through a collection. */
+  scrubber?: boolean;
 };
 
 /** The lightbox as a post uses it: no side panel, so download sits in the header. */
