@@ -11,6 +11,7 @@ import { IconButton } from "./icon-button";
 import { ScrubPreview } from "./scrub-preview";
 import { Scrubber } from "./scrubber";
 import { type LightboxSlide, SIZES, preload } from "./slide";
+import { useBackToClose } from "./use-back-to-close";
 import { DIMMED, useScrubPreview } from "./use-scrub-preview";
 
 export type { LightboxSlide };
@@ -83,6 +84,8 @@ export const Lightbox = ({
   const hasNext = index !== null && index < slides.length - 1;
   const goPrev = () => hasPrev && onIndexChange(index - 1);
   const goNext = () => hasNext && onIndexChange(index + 1);
+
+  useBackToClose(!!slide, onClose);
 
   /** Neighbours load once this one has settled, so stepping is instant but a held arrow key does not fetch every photo it passes. */
   useEffect(() => {
