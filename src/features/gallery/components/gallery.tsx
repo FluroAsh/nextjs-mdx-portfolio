@@ -203,13 +203,11 @@ export const Gallery = ({ photos, collections }: GalleryProps) => {
           url.searchParams.set("photo", photo.id);
           return url.toString();
         }}
-        onIndexChange={(index) => {
-          setOpenId(filtered[index].id);
-          /** Keeps the tile on the page, so closing can return focus to it. */
-          setVisibleCount((count) => Math.max(count, index + 1));
-        }}
+        onIndexChange={(index) => setOpenId(filtered[index].id)}
         onClose={() => {
           const frame = filtered[openIndex]?.frame;
+          /** Brings the tile onto the page, so focus can return to it. Done here, not per photo, where a long jump would mount many tiles mid-animation. */
+          setVisibleCount((count) => Math.max(count, openIndex + 1));
           setOpenId(null);
           if (frame) setFocusFrame(frame);
         }}

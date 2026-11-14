@@ -9,7 +9,7 @@ type ScrubberProps = {
   count: number;
   /** Index of the slide on show; its tick sits at the middle of the rail. */
   index: number;
-  /** Called once a move is final: a click, a key, or the end of a drag or wheel run. */
+  /** Called once a move is final: a click, a key, or the end of a drag or wheel run. A drag or wheel run calls it before its preview clears. */
   onIndexChange: (index: number) => void;
   /** The slide a drag or wheel run is passing, for a preview; `null` once it ends. */
   onPreviewChange?: (index: number | null) => void;
@@ -24,8 +24,11 @@ const PAGE = 10;
 const WHEEL_STEP = 60;
 /** Pointer travel in pixels before a press counts as a drag, not a click. */
 const DRAG_SLOP = 3;
+/** Height of the rail in pixels at its tallest, and the room it keeps around a short strip for its ends to fade in. */
+const RAIL_HEIGHT = 192;
+const RAIL_MARGIN = 48;
 /** Milliseconds without a wheel event before a run of the wheel counts as over. */
-const WHEEL_IDLE = 300;
+const WHEEL_IDLE = 200;
 
 /**
  * A short window onto a strip of ticks, one per slide, that fades out at both ends: click a tick to jump, or drag the strip to move through the set.
@@ -47,6 +50,7 @@ export const Scrubber = ({
   const previewRef = useRef<number | null>(null);
   const [preview, setPreview] = useState<number | null>(null);
   const [hovered, setHovered] = useState<number | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
   /** The tick at the middle of the rail: the previewed slide during a drag, else the one on show. */
   const shown = preview ?? index;
 
@@ -59,8 +63,13 @@ export const Scrubber = ({
   };
   const commitPreview = () => {
     const target = previewRef.current;
-    previewAt(null);
+    wheelTravel.current = 0;
     if (target !== null) go(target);
+    previewAt(null);
+  };
+  const endPress = () => {
+    press.current = null;
+    setIsDragging(false);
   };
 
   useEffect(() => () => clearTimeout(wheelIdle.current), []);
@@ -98,11 +107,15 @@ export const Scrubber = ({
         const steps = Math.trunc(wheelTravel.current / WHEEL_STEP);
         if (!steps) return;
         wheelTravel.current -= steps * WHEEL_STEP;
-        previewAt(clamp(shown + steps));
+        /** Read from the ref: several wheel events can land before one render. */
+        previewAt(clamp((previewRef.current ?? index) + steps));
         clearTimeout(wheelIdle.current);
         wheelIdle.current = setTimeout(commitPreview, WHEEL_IDLE);
       }}
+      /** A drag here drifts sideways too, which the lightbox would read as a swipe. */
+      onTouchStart={(event) => event.stopPropagation()}
       onPointerDown={(event) => {
+        if (event.button !== 0) return;
         /** Keeps the drag alive when the pointer strays off the rail. */
         event.currentTarget.setPointerCapture(event.pointerId);
         press.current = { y: event.clientY, index, dragged: false };
@@ -113,7 +126,10 @@ export const Scrubber = ({
         if (!held) return setHovered(indexAt(event.clientY));
 
         const travel = held.y - event.clientY;
-        if (Math.abs(travel) > DRAG_SLOP) held.dragged = true;
+        if (!held.dragged && Math.abs(travel) > DRAG_SLOP) {
+          held.dragged = true;
+          setIsDragging(true);
+        }
         /** The strip follows the pointer, as a touch scroll does: drag up to move on. */
         if (held.dragged)
           previewAt(clamp(held.index + Math.round(travel / TICK)));
@@ -121,26 +137,33 @@ export const Scrubber = ({
       onPointerUp={(event) => {
         if (press.current?.dragged) commitPreview();
         else if (press.current) go(indexAt(event.clientY));
-        press.current = null;
+        endPress();
       }}
       onPointerCancel={() => {
-        press.current = null;
+        endPress();
         previewAt(null);
       }}
       onPointerLeave={() => setHovered(null)}
       className={cn(
-        "relative h-48 w-8 cursor-grab touch-none select-none active:cursor-grabbing",
+        "relative w-8 cursor-grab touch-none select-none active:cursor-grabbing",
         "opacity-70 transition-opacity duration-150 ease-linear hover:opacity-100 focus-visible:opacity-100",
         "focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-green-400",
         className,
       )}
+      /** A short set gets a short rail: on a tall one, most of the grab area would be empty space that jumps to an end. */
+      style={{ height: Math.min(RAIL_HEIGHT, count * TICK + RAIL_MARGIN) }}
     >
       <div
         ref={railRef}
         className="relative size-full overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,black_35%,black_65%,transparent)]"
       >
         <div
-          className="absolute top-1/2 left-0 transition-transform duration-150 ease-out"
+          /** No easing during a drag: each step would restart it and leave the strip trailing the pointer. */
+          className={cn(
+            "absolute top-1/2 left-0",
+            !isDragging &&
+              "transition-transform duration-150 ease-out motion-reduce:transition-none",
+          )}
           style={{ transform: `translateY(${-(shown + 0.5) * TICK}px)` }}
         >
           {Array.from({ length: count }, (_, i) => (
@@ -168,8 +191,8 @@ export const Scrubber = ({
       {hovered !== null && hovered !== shown && preview === null && (
         <span
           aria-hidden
-          className="bg-surface-page/85 pointer-events-none absolute top-1/2 left-full z-10 -translate-y-1/2 px-1.5 py-0.5 font-mono text-[10px] tracking-wider text-neutral-300 tabular-nums"
-          style={{ marginTop: (hovered - shown) * TICK }}
+          /** Under the rail, not beside the tick, where it would sit over the previous button. */
+          className="pointer-events-none absolute top-full left-2 font-mono text-[10px] tracking-wider text-neutral-300 tabular-nums"
         >
           {zeroPad(hovered + 1)}
         </span>
