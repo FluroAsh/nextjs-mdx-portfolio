@@ -11,12 +11,11 @@ import { IconButton } from "./icon-button";
 import { ScrubPreview } from "./scrub-preview";
 import { Scrubber } from "./scrubber";
 import { type LightboxSlide, SIZES, preload } from "./slide";
+import { useBackToClose } from "./use-back-to-close";
 import { DIMMED, useScrubPreview } from "./use-scrub-preview";
+import { useTouchGestures } from "./use-touch-gestures";
 
 export type { LightboxSlide };
-
-/** Horizontal travel in pixels before a touch counts as a swipe. */
-const SWIPE_DISTANCE = 50;
 
 type LightboxProps = {
   /** The whole set being browsed, in order; the arrows stop at both ends. */
@@ -59,8 +58,8 @@ export const Lightbox = ({
   onCloseAutoFocus,
 }: LightboxProps) => {
   const slide = index === null ? undefined : slides[index];
-  const touchStartX = useRef<number | null>(null);
   const opener = useRef<Element | null>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
   const [loadedSrc, setLoadedSrc] = useState<string | null>(null);
   /** Destructured, not kept as one object: the refs lint reads a member of an object holding refs as a ref read. */
   const {
@@ -83,6 +82,14 @@ export const Lightbox = ({
   const hasNext = index !== null && index < slides.length - 1;
   const goPrev = () => hasPrev && onIndexChange(index - 1);
   const goNext = () => hasNext && onIndexChange(index + 1);
+
+  useBackToClose(!!slide, onClose);
+  const gestureArea = useTouchGestures({
+    onPrevious: goPrev,
+    onNext: goNext,
+    onDismiss: onClose,
+    overlayRef,
+  });
 
   /** Neighbours load once this one has settled, so stepping is instant but a held arrow key does not fetch every photo it passes. */
   useEffect(() => {
@@ -108,7 +115,10 @@ export const Lightbox = ({
   return (
     <Dialog.Root open={!!slide} onOpenChange={(open) => !open && onClose()}>
       <Dialog.Portal>
-        <Dialog.Overlay className="data-[state=open]:animate-in data-[state=open]:fade-in-0 fixed inset-0 z-[60] bg-black/90 backdrop-blur-sm" />
+        <Dialog.Overlay
+          ref={overlayRef}
+          className="data-[state=open]:animate-in data-[state=open]:fade-in-0 fixed inset-0 z-[60] bg-black/90 backdrop-blur-sm"
+        />
         {slide && (
           <Dialog.Content
             onKeyDown={(event) => {
@@ -151,17 +161,7 @@ export const Lightbox = ({
                 "relative flex shrink-0 flex-col",
                 aside ? "lg:h-dvh" : "h-dvh",
               )}
-              onTouchStart={(event) => {
-                touchStartX.current = event.touches[0].clientX;
-              }}
-              onTouchEnd={(event) => {
-                if (touchStartX.current === null) return;
-                const distance =
-                  event.changedTouches[0].clientX - touchStartX.current;
-                touchStartX.current = null;
-                if (distance > SWIPE_DISTANCE) goPrev();
-                if (distance < -SWIPE_DISTANCE) goNext();
-              }}
+              ref={gestureArea}
             >
               <div className="flex items-center justify-between gap-4 px-4 py-3 font-mono text-[11px] tracking-wider uppercase sm:px-6 lg:py-5">
                 {/* On a phone the counter carries the previous and next buttons, which have no room beside the photo; swipe alone would leave no way through for anyone who cannot swipe. */}
