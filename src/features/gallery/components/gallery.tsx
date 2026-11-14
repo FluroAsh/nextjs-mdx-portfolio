@@ -9,7 +9,7 @@ import type {
   GalleryPhoto,
   ResolvedCollection,
 } from "../types";
-import { CollectionFilter } from "./collection-filter";
+import { PrototypeCollectionFilter } from "./prototype-collection-filter";
 import { PhotoLightbox } from "./lightbox/photo-lightbox";
 import { PhotoTile } from "./photo-tile";
 
@@ -129,7 +129,7 @@ export const Gallery = ({ photos, collections }: GalleryProps) => {
 
   return (
     <div className="max-w-frame mx-auto w-full px-6 pt-6">
-      <CollectionFilter
+      <PrototypeCollectionFilter
         collections={resolved}
         total={photos.length}
         active={collection}
