@@ -1,6 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
-import { containedRect } from "./scrub-preview";
 import { type LightboxSlide, preload } from "./slide";
 
 /** Milliseconds the photo takes to grow from the preview into the frame. */
@@ -45,7 +44,7 @@ export const useScrubPreview = (
   const previewImageRef = useRef<HTMLImageElement>(null);
   /** The preview reuses one image element, so what it has loaded is tracked by slide, not read off the element. */
   const previewFile = useRef<SlideFile | null>(null);
-  /** Where the preview's photo sat when the scrub ended; the photo enters the frame from there. */
+  /** Where the preview sat when the scrub ended; the photo enters the frame from there. Photo-shaped only when the slide's size is known, which `commit` requires. */
   const entrance = useRef<DOMRect | null>(null);
 
   /** Closing mid-scrub unmounts the scrubber before it can end the preview. */
@@ -69,7 +68,7 @@ export const useScrubPreview = (
       !matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     if (isAnimated) {
-      entrance.current = containedRect(image, target.width! / target.height!);
+      entrance.current = image.getBoundingClientRect();
       if (previewFile.current?.src === target.src)
         setCarried(previewFile.current);
 

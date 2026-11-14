@@ -19,20 +19,11 @@ type ScrubPreviewProps = {
   onFileLoad: (src: string, url: string) => void;
 };
 
-/** Where a photo of the given width-to-height ratio sits inside an `object-contain` image, which letterboxes it within the element's box. */
-export const containedRect = (image: HTMLImageElement, ratio: number) => {
-  const box = image.getBoundingClientRect();
-  const width = Math.min(box.width, box.height * ratio);
-  const height = width / ratio;
-  return new DOMRect(
-    box.left + (box.width - width) / 2,
-    box.top + (box.height - height) / 2,
-    width,
-    height,
-  );
-};
-
-/** What the scrubber is passing, in a frame of fixed size over the photo on show, so photos of any shape pass without the page moving. */
+/**
+ * What the scrubber is passing, over the photo on show. It is the photo and nothing else, so on release the picture
+ * that grows into the frame is the one already on screen. Its box is fixed and the photo is fitted inside it,
+ * so photos of any shape pass without the page moving.
+ */
 export const ScrubPreview = ({
   slide,
   position,
@@ -41,19 +32,25 @@ export const ScrubPreview = ({
 }: ScrubPreviewProps) => {
   const [loadedSrc, setLoadedSrc] = useState<string | null>(null);
   const isLoaded = loadedSrc === slide.src;
+  const ratio =
+    slide.width && slide.height ? slide.width / slide.height : undefined;
 
   return (
     <div
       aria-hidden
       className={cn(
-        "plate-ticks bg-surface-page/90 pointer-events-none absolute top-1/2 left-1/2 z-10 -translate-x-1/2 -translate-y-1/2",
-        "flex size-[clamp(18rem,40vmin,36rem)] flex-col gap-2 p-2 outline outline-green-500/40 backdrop-blur-sm",
+        "pointer-events-none absolute top-1/2 left-1/2 z-10 -translate-x-1/2 -translate-y-1/2",
+        "flex size-[clamp(18rem,40vmin,36rem)] items-center justify-center",
         "animate-in fade-in-0 zoom-in-95 duration-150 motion-reduce:animate-none",
       )}
     >
       <div
-        className="relative min-h-0 flex-1 bg-contain bg-center bg-no-repeat"
+        className={cn(
+          "plate-ticks bg-surface-page relative bg-cover bg-center shadow-2xl shadow-black outline outline-green-500/40",
+          !ratio ? "size-full" : ratio >= 1 ? "w-full" : "h-full",
+        )}
         style={{
+          aspectRatio: ratio,
           backgroundImage:
             !isLoaded && slide.placeholder
               ? `url(${slide.placeholder})`
@@ -76,10 +73,8 @@ export const ScrubPreview = ({
             isLoaded ? "opacity-100" : "opacity-0",
           )}
         />
+        <span className="image-caption tabular-nums">{position}</span>
       </div>
-      <p className="font-mono text-[10px] tracking-wider text-neutral-400 tabular-nums">
-        {position}
-      </p>
     </div>
   );
 };
