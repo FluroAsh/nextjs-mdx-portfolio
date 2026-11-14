@@ -88,6 +88,12 @@ export const Gallery = ({ photos, collections }: GalleryProps) => {
     /* eslint-enable react-hooks/set-state-in-effect */
   }, [collections, photos]);
 
+  /** Written once the state settles: a drag along the lightbox scrubber changes photo faster than Safari lets `replaceState` run. Must stay below the effect that reads the URL, or it would clear a shared link first. */
+  useEffect(() => {
+    const timeout = setTimeout(() => writeParams(collection, openId), 150);
+    return () => clearTimeout(timeout);
+  }, [collection, openId]);
+
   useEffect(() => {
     if (focusFrame === null) return;
     document
@@ -101,12 +107,6 @@ export const Gallery = ({ photos, collections }: GalleryProps) => {
     setCollection(slug);
     setVisibleCount(PAGE_SIZE);
     setOpenId(null);
-    writeParams(slug, null);
-  };
-
-  const openPhoto = (id: string | null) => {
-    setOpenId(id);
-    writeParams(collection, id);
   };
 
   const hasMore = visibleCount < filtered.length;
@@ -170,7 +170,7 @@ export const Gallery = ({ photos, collections }: GalleryProps) => {
                 collectionTitle={
                   collection ? undefined : titles.get(photo.collection)
                 }
-                onOpen={() => openPhoto(photo.id)}
+                onOpen={() => setOpenId(photo.id)}
               />
             </div>
           );
@@ -204,13 +204,13 @@ export const Gallery = ({ photos, collections }: GalleryProps) => {
           return url.toString();
         }}
         onIndexChange={(index) => {
-          openPhoto(filtered[index].id);
+          setOpenId(filtered[index].id);
           /** Keeps the tile on the page, so closing can return focus to it. */
           setVisibleCount((count) => Math.max(count, index + 1));
         }}
         onClose={() => {
           const frame = filtered[openIndex]?.frame;
-          openPhoto(null);
+          setOpenId(null);
           if (frame) setFocusFrame(frame);
         }}
         onShowCollection={selectCollection}

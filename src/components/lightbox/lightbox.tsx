@@ -8,6 +8,7 @@ import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { cn, zeroPad } from "@/utils/misc";
 
 import { IconButton } from "./icon-button";
+import { Scrubber } from "./scrubber";
 
 /** Horizontal travel in pixels before a touch counts as a swipe. */
 const SWIPE_DISTANCE = 50;
@@ -45,6 +46,8 @@ type LightboxProps = {
   actions?: React.ReactNode;
   /** Panel beside the photo, below it on a phone. It names the dialog, so it must render `Dialog.Title`, and it carries the close button at desktop widths. */
   aside?: React.ReactNode;
+  /** Adds a short rail of ticks, one per slide, to jump or drag through the set; shown from tablet widths. */
+  scrubber?: boolean;
   /** Runs before focus returns to whatever opened the dialog; prevent it to place focus elsewhere. */
   onCloseAutoFocus?: (event: Event) => void;
 };
@@ -74,6 +77,7 @@ export const Lightbox = ({
   caption,
   actions,
   aside,
+  scrubber,
   onCloseAutoFocus,
 }: LightboxProps) => {
   const slide = index === null ? undefined : slides[index];
@@ -82,17 +86,21 @@ export const Lightbox = ({
   const [loadedSrc, setLoadedSrc] = useState<string | null>(null);
 
   const isSeries = slides.length > 1;
+  const hasScrubber = scrubber && isSeries;
   const hasPrev = index !== null && index > 0;
   const hasNext = index !== null && index < slides.length - 1;
   const goPrev = () => hasPrev && onIndexChange(index - 1);
   const goNext = () => hasNext && onIndexChange(index + 1);
 
-  /** Neighbours load while this one is viewed, so stepping through is instant. */
+  /** Neighbours load once this one has settled, so stepping is instant but a drag along the scrubber does not fetch every photo it passes. */
   useEffect(() => {
     if (index === null) return;
-    for (const neighbour of [slides[index - 1], slides[index + 1]]) {
-      if (neighbour) preload(neighbour);
-    }
+    const timeout = setTimeout(() => {
+      for (const neighbour of [slides[index - 1], slides[index + 1]]) {
+        if (neighbour) preload(neighbour);
+      }
+    }, 150);
+    return () => clearTimeout(timeout);
   }, [index, slides]);
 
   const isLoaded = loadedSrc === slide?.src;
@@ -196,7 +204,10 @@ export const Lightbox = ({
               </div>
 
               <div
-                className="relative flex min-h-0 flex-1 items-center justify-center px-4 pb-2 sm:px-20 lg:pb-0"
+                className={cn(
+                  "relative flex min-h-0 flex-1 items-center justify-center px-4 pb-2 lg:pb-0",
+                  hasScrubber ? "sm:px-28" : "sm:px-20",
+                )}
                 /** Only the empty space around the photo closes; a click on the photo or a button must not. */
                 onClick={(event) =>
                   event.target === event.currentTarget && onClose()
@@ -213,8 +224,8 @@ export const Lightbox = ({
                           : undefined,
                     }}
                   >
+                    {/* No `key`: changing `src` on the same element is what cancels a load the scrubber has moved past. */}
                     <img
-                      key={slide.src}
                       src={slide.src}
                       srcSet={slide.srcSet}
                       sizes={slide.srcSet && SIZES}
@@ -240,13 +251,25 @@ export const Lightbox = ({
                   )}
                 </figure>
 
+                {hasScrubber && (
+                  <Scrubber
+                    count={slides.length}
+                    index={index!}
+                    onIndexChange={onIndexChange}
+                    className="absolute top-1/2 left-0 hidden -translate-y-1/2 sm:block"
+                  />
+                )}
+
                 {isSeries && (
                   <>
                     <IconButton
                       label="Previous photo"
                       onClick={goPrev}
                       disabled={!hasPrev}
-                      className="absolute top-1/2 left-2 hidden -translate-y-1/2 sm:grid lg:left-6 lg:size-12"
+                      className={cn(
+                        "absolute top-1/2 hidden -translate-y-1/2 sm:grid lg:size-12",
+                        hasScrubber ? "left-10 lg:left-12" : "left-2 lg:left-6",
+                      )}
                     >
                       <ChevronLeft />
                     </IconButton>
@@ -254,7 +277,12 @@ export const Lightbox = ({
                       label="Next photo"
                       onClick={goNext}
                       disabled={!hasNext}
-                      className="absolute top-1/2 right-2 hidden -translate-y-1/2 sm:grid lg:right-6 lg:size-12"
+                      className={cn(
+                        "absolute top-1/2 hidden -translate-y-1/2 sm:grid lg:size-12",
+                        hasScrubber
+                          ? "right-10 lg:right-12"
+                          : "right-2 lg:right-6",
+                      )}
                     >
                       <ChevronRight />
                     </IconButton>

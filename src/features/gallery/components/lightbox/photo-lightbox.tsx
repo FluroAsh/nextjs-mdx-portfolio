@@ -50,6 +50,7 @@ export const PhotoLightbox = ({
       index={index}
       onIndexChange={onIndexChange}
       onClose={onClose}
+      scrubber
       /** The gallery moves focus to the tile last viewed, not the one first opened. */
       onCloseAutoFocus={(event) => event.preventDefault()}
       meta={[collection?.title, photo?.location?.label]
