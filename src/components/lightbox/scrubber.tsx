@@ -36,8 +36,10 @@ type RailLayout = {
   cell: string;
   /** A tick's thickness. */
   mark: string;
-  /** A tick's length when it is the one on show, the one hovered, and any other. */
-  lengths: [current: string, hovered: string, rest: string];
+  /** Pins the needle to the middle of the rail, over the tick on show. */
+  needle: string;
+  /** The needle's length, then a tick's when hovered and otherwise. */
+  lengths: [needle: string, hovered: string, rest: string];
 };
 
 const LAYOUTS = {
@@ -49,6 +51,7 @@ const LAYOUTS = {
     strip: "top-1/2 left-0",
     cell: "flex items-center pl-2",
     mark: "h-px",
+    needle: "top-1/2 left-2 -translate-y-1/2",
     lengths: ["w-5", "w-4", "w-3"],
   },
   /** Sized for a finger: a 44px touch area, wider tick spacing, and vertical drags left to the page's scroll. */
@@ -60,6 +63,7 @@ const LAYOUTS = {
     strip: "top-0 left-1/2 flex h-full",
     cell: "flex h-full items-center justify-center",
     mark: "w-px",
+    needle: "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
     lengths: ["h-5", "h-4", "h-3"],
   },
 } as const satisfies Record<string, RailLayout>;
@@ -228,16 +232,24 @@ export const Scrubber = ({
                 className={cn(
                   layout.mark,
                   "transition-[width,height,background-color] duration-150 ease-linear",
-                  i === shown
-                    ? [layout.lengths[0], "bg-green-400"]
-                    : i === hovered
-                      ? [layout.lengths[1], "bg-neutral-200/80"]
-                      : [layout.lengths[2], "bg-neutral-300/50"],
+                  i === hovered && i !== shown
+                    ? [layout.lengths[1], "bg-neutral-200/80"]
+                    : [layout.lengths[2], "bg-neutral-300/50"],
                 )}
               />
             </span>
           ))}
         </m.div>
+        <span
+          aria-hidden
+          /** Fixed, not a tick in the strip: a tick marked as current blurs away when the strip moves fast. */
+          className={cn(
+            "pointer-events-none absolute bg-green-400",
+            layout.mark,
+            layout.needle,
+            layout.lengths[0],
+          )}
+        />
       </div>
 
       {!isHorizontal &&
