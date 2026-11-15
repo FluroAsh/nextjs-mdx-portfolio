@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 
+import { motion as m } from "motion/react";
+
 import { cn, zeroPad } from "@/utils/misc";
 
 type ScrubberProps = {
@@ -34,8 +36,10 @@ type RailLayout = {
   cell: string;
   /** A tick's thickness. */
   mark: string;
-  /** A tick's length when it is the one on show, the one hovered, and any other. */
-  lengths: [current: string, hovered: string, rest: string];
+  /** Pins the needle to the middle of the rail, over the tick on show. */
+  needle: string;
+  /** The needle's length at rest, then a tick's when hovered and otherwise; the needle drops to the hovered length during a drag or wheel run. */
+  lengths: [needle: string, hovered: string, rest: string];
 };
 
 const LAYOUTS = {
@@ -47,6 +51,7 @@ const LAYOUTS = {
     strip: "top-1/2 left-0",
     cell: "flex items-center pl-2",
     mark: "h-px",
+    needle: "top-1/2 left-2 -translate-y-1/2",
     lengths: ["w-5", "w-4", "w-3"],
   },
   /** Sized for a finger: a 44px touch area, wider tick spacing, and vertical drags left to the page's scroll. */
@@ -58,6 +63,7 @@ const LAYOUTS = {
     strip: "top-0 left-1/2 flex h-full",
     cell: "flex h-full items-center justify-center",
     mark: "w-px",
+    needle: "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
     lengths: ["h-5", "h-4", "h-3"],
   },
 } as const satisfies Record<string, RailLayout>;
@@ -71,6 +77,8 @@ const DRAG_SLOP = 3;
 const RAIL_HEIGHT = 192;
 /** Milliseconds without a wheel event before a run of the wheel counts as over; long enough to take in the preview before the photo changes. */
 const WHEEL_IDLE = 400;
+/** Slightly underdamped, so the strip trails the pointer and settles with a small overshoot, as if it had weight. */
+const GLIDE = { type: "spring", stiffness: 300, damping: 28 } as const;
 
 /**
  * A short window onto a strip of ticks, one per slide, that fades out at both ends: click a tick to jump, or drag the strip to move through the set.
@@ -96,7 +104,6 @@ export const Scrubber = ({
   const previewRef = useRef<number | null>(null);
   const [preview, setPreview] = useState<number | null>(null);
   const [hovered, setHovered] = useState<number | null>(null);
-  const [isDragging, setIsDragging] = useState(false);
   /** The tick at the middle of the rail: the previewed slide during a drag, else the one on show. */
   const shown = preview ?? index;
 
@@ -112,10 +119,6 @@ export const Scrubber = ({
     wheelTravel.current = 0;
     if (target !== null) go(target);
     previewAt(null);
-  };
-  const endPress = () => {
-    press.current = null;
-    setIsDragging(false);
   };
 
   useEffect(() => () => clearTimeout(wheelIdle.current), []);
@@ -180,10 +183,7 @@ export const Scrubber = ({
         if (!held) return setHovered(indexAt(along(event)));
 
         const travel = held.at - along(event);
-        if (!held.dragged && Math.abs(travel) > DRAG_SLOP) {
-          held.dragged = true;
-          setIsDragging(true);
-        }
+        if (Math.abs(travel) > DRAG_SLOP) held.dragged = true;
         /** The strip follows the pointer, as a touch scroll does: drag up, or left, to move on. */
         if (held.dragged)
           previewAt(clamp(held.index + Math.round(travel / TICK)));
@@ -191,10 +191,10 @@ export const Scrubber = ({
       onPointerUp={(event) => {
         if (press.current?.dragged) commitPreview();
         else if (press.current) go(indexAt(along(event)));
-        endPress();
+        press.current = null;
       }}
       onPointerCancel={() => {
-        endPress();
+        press.current = null;
         previewAt(null);
       }}
       onPointerLeave={() => setHovered(null)}
@@ -215,17 +215,11 @@ export const Scrubber = ({
         ref={railRef}
         className={cn("relative size-full overflow-hidden", layout.mask)}
       >
-        <div
-          /** No easing during a drag: each step would restart it and leave the strip trailing the pointer. */
-          className={cn(
-            "absolute",
-            layout.strip,
-            !isDragging &&
-              "transition-transform duration-150 ease-out motion-reduce:transition-none",
-          )}
-          style={{
-            transform: `translate${isHorizontal ? "X" : "Y"}(${-(shown + 0.5) * TICK}px)`,
-          }}
+        <m.div
+          className={cn("absolute", layout.strip)}
+          initial={false}
+          animate={{ [isHorizontal ? "x" : "y"]: -(shown + 0.5) * TICK }}
+          transition={GLIDE}
         >
           {Array.from({ length: count }, (_, i) => (
             <span
@@ -238,16 +232,25 @@ export const Scrubber = ({
                 className={cn(
                   layout.mark,
                   "transition-[width,height,background-color] duration-150 ease-linear",
-                  i === shown
-                    ? [layout.lengths[0], "bg-green-400"]
-                    : i === hovered
-                      ? [layout.lengths[1], "bg-neutral-200/80"]
-                      : [layout.lengths[2], "bg-neutral-300/50"],
+                  i === hovered && i !== shown
+                    ? [layout.lengths[1], "bg-neutral-200/80"]
+                    : [layout.lengths[2], "bg-neutral-300/50"],
                 )}
               />
             </span>
           ))}
-        </div>
+        </m.div>
+        <span
+          aria-hidden
+          /** Fixed, not a tick in the strip: a tick marked as current blurs away when the strip moves fast. Its length follows the preview, not the strip's spring, so it is back to full as the photo lands. */
+          className={cn(
+            "pointer-events-none absolute bg-green-400",
+            "transition-[width,height] duration-150 ease-linear",
+            layout.mark,
+            layout.needle,
+            layout.lengths[preview === null ? 0 : 1],
+          )}
+        />
       </div>
 
       {!isHorizontal &&
