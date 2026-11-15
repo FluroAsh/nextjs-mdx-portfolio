@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 
+import { motion as m } from "motion/react";
+
 import { cn, zeroPad } from "@/utils/misc";
 
 type ScrubberProps = {
@@ -71,6 +73,8 @@ const DRAG_SLOP = 3;
 const RAIL_HEIGHT = 192;
 /** Milliseconds without a wheel event before a run of the wheel counts as over; long enough to take in the preview before the photo changes. */
 const WHEEL_IDLE = 400;
+/** Slightly underdamped, so the strip trails the pointer and settles with a small overshoot, as if it had weight. */
+const GLIDE = { type: "spring", stiffness: 300, damping: 28 } as const;
 
 /**
  * A short window onto a strip of ticks, one per slide, that fades out at both ends: click a tick to jump, or drag the strip to move through the set.
@@ -96,7 +100,6 @@ export const Scrubber = ({
   const previewRef = useRef<number | null>(null);
   const [preview, setPreview] = useState<number | null>(null);
   const [hovered, setHovered] = useState<number | null>(null);
-  const [isDragging, setIsDragging] = useState(false);
   /** The tick at the middle of the rail: the previewed slide during a drag, else the one on show. */
   const shown = preview ?? index;
 
@@ -112,10 +115,6 @@ export const Scrubber = ({
     wheelTravel.current = 0;
     if (target !== null) go(target);
     previewAt(null);
-  };
-  const endPress = () => {
-    press.current = null;
-    setIsDragging(false);
   };
 
   useEffect(() => () => clearTimeout(wheelIdle.current), []);
@@ -180,10 +179,7 @@ export const Scrubber = ({
         if (!held) return setHovered(indexAt(along(event)));
 
         const travel = held.at - along(event);
-        if (!held.dragged && Math.abs(travel) > DRAG_SLOP) {
-          held.dragged = true;
-          setIsDragging(true);
-        }
+        if (Math.abs(travel) > DRAG_SLOP) held.dragged = true;
         /** The strip follows the pointer, as a touch scroll does: drag up, or left, to move on. */
         if (held.dragged)
           previewAt(clamp(held.index + Math.round(travel / TICK)));
@@ -191,10 +187,10 @@ export const Scrubber = ({
       onPointerUp={(event) => {
         if (press.current?.dragged) commitPreview();
         else if (press.current) go(indexAt(along(event)));
-        endPress();
+        press.current = null;
       }}
       onPointerCancel={() => {
-        endPress();
+        press.current = null;
         previewAt(null);
       }}
       onPointerLeave={() => setHovered(null)}
@@ -215,17 +211,11 @@ export const Scrubber = ({
         ref={railRef}
         className={cn("relative size-full overflow-hidden", layout.mask)}
       >
-        <div
-          /** No easing during a drag: each step would restart it and leave the strip trailing the pointer. */
-          className={cn(
-            "absolute",
-            layout.strip,
-            !isDragging &&
-              "transition-transform duration-150 ease-out motion-reduce:transition-none",
-          )}
-          style={{
-            transform: `translate${isHorizontal ? "X" : "Y"}(${-(shown + 0.5) * TICK}px)`,
-          }}
+        <m.div
+          className={cn("absolute", layout.strip)}
+          initial={false}
+          animate={{ [isHorizontal ? "x" : "y"]: -(shown + 0.5) * TICK }}
+          transition={GLIDE}
         >
           {Array.from({ length: count }, (_, i) => (
             <span
@@ -247,7 +237,7 @@ export const Scrubber = ({
               />
             </span>
           ))}
-        </div>
+        </m.div>
       </div>
 
       {!isHorizontal &&
