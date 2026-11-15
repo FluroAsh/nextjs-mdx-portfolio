@@ -38,7 +38,7 @@ type RailLayout = {
   mark: string;
   /** Pins the needle to the middle of the rail, over the tick on show. */
   needle: string;
-  /** The needle's length, then a tick's when hovered and otherwise. */
+  /** The needle's length at rest, then a tick's when hovered and otherwise; the needle drops to the hovered length while the strip moves. */
   lengths: [needle: string, hovered: string, rest: string];
 };
 
@@ -104,6 +104,7 @@ export const Scrubber = ({
   const previewRef = useRef<number | null>(null);
   const [preview, setPreview] = useState<number | null>(null);
   const [hovered, setHovered] = useState<number | null>(null);
+  const [isMoving, setIsMoving] = useState(false);
   /** The tick at the middle of the rail: the previewed slide during a drag, else the one on show. */
   const shown = preview ?? index;
 
@@ -135,6 +136,9 @@ export const Scrubber = ({
   };
   /** A short set gets a short rail: on a long one, most of the grab area would be empty space that jumps to an end. */
   const length = count * TICK + layout.margin;
+  const axis = isHorizontal ? "x" : "y";
+  /** Where the strip sits to put the shown tick at the rail's middle. */
+  const offset = -(shown + 0.5) * TICK;
 
   return (
     <div
@@ -218,8 +222,14 @@ export const Scrubber = ({
         <m.div
           className={cn("absolute", layout.strip)}
           initial={false}
-          animate={{ [isHorizontal ? "x" : "y"]: -(shown + 0.5) * TICK }}
+          animate={{ [axis]: offset }}
           transition={GLIDE}
+          onAnimationStart={() => setIsMoving(true)}
+          /** A glide cut short by the next one reports as complete too, so only the one that reached the current offset counts. */
+          onAnimationComplete={(done) =>
+            (done as Record<string, unknown>)[axis] === offset &&
+            setIsMoving(false)
+          }
         >
           {Array.from({ length: count }, (_, i) => (
             <span
@@ -245,9 +255,10 @@ export const Scrubber = ({
           /** Fixed, not a tick in the strip: a tick marked as current blurs away when the strip moves fast. */
           className={cn(
             "pointer-events-none absolute bg-green-400",
+            "transition-[width,height] duration-150 ease-linear",
             layout.mark,
             layout.needle,
-            layout.lengths[0],
+            layout.lengths[isMoving ? 1 : 0],
           )}
         />
       </div>
